@@ -1,6 +1,7 @@
 import React from 'react';
 import TaskCard from './TaskCard';
 import { ITask } from '~types/taskTypes';
+import { Box, Heading, Stack } from '@chakra-ui/react';
 
 interface TaskColumnProps {
   columnTitle: string;
@@ -11,16 +12,26 @@ interface TaskColumnProps {
 
 const TaskColumn: React.FC<TaskColumnProps> = ({ columnTitle, tasks, onDragStart, onDrop }) => {
   return (
-    <div
-      className="task-column"
+    <Box
+      p={4}
+      borderWidth={1}
+      borderRadius="md"
+      boxShadow="md"
+      bg="white"
+      minW="300px"
+      maxW="350px"
       onDragOver={(e) => e.preventDefault()}
       onDrop={(e) => onDrop(e, columnTitle)}
     >
-      <h2>{columnTitle}</h2>
-      {tasks.map(task => (
-        <TaskCard key={task._id} task={task} onDragStart={onDragStart} />
-      ))}
-    </div>
+      <Heading as="h2" size="md" mb={4}>
+        {columnTitle}
+      </Heading>
+      <Stack spacing={4}>
+        {tasks.map(task => (
+          <TaskCard key={task._id} task={task} onDragStart={onDragStart} />
+        ))}
+      </Stack>
+    </Box>
   );
 };
 

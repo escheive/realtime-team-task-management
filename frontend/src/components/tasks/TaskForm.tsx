@@ -61,34 +61,31 @@ const TaskForm: React.FC<{ onTaskCreated: (task: ITask) => void }> = ({ onTaskCr
   };
 
   return (
-    <Box p={4} borderWidth={1} borderRadius="md" boxShadow="md">
+    <Box p={4} borderWidth={1} borderRadius="md" boxShadow="md" bg="white">
       <form onSubmit={handleSubmit}>
         <Stack spacing={4}>
-          <FormControl isRequired>
+          <FormControl id="title" isRequired>
             <FormLabel>Title</FormLabel>
             <Input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Enter task title"
             />
           </FormControl>
 
-          <FormControl>
+          <FormControl id="description">
             <FormLabel>Description</FormLabel>
             <Textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Enter task description"
             />
           </FormControl>
 
-          <FormControl isRequired>
+          <FormControl id="status">
             <FormLabel>Status</FormLabel>
             <Select
               value={status}
               onChange={(e) => setStatus(e.target.value)}
-              placeholder="Select status"
             >
               <option value="To Do">To Do</option>
               <option value="In Progress">In Progress</option>
@@ -96,17 +93,16 @@ const TaskForm: React.FC<{ onTaskCreated: (task: ITask) => void }> = ({ onTaskCr
             </Select>
           </FormControl>
 
-          <FormControl>
+          <FormControl id="assignedTo">
             <FormLabel>Assigned To</FormLabel>
             <Input
               type="text"
               value={assignedTo}
               onChange={(e) => setAssignedTo(e.target.value)}
-              placeholder="Enter person assigned to"
             />
           </FormControl>
 
-          <FormControl>
+          <FormControl id="dueDate">
             <FormLabel>Due Date</FormLabel>
             <Input
               type="date"
@@ -115,7 +111,7 @@ const TaskForm: React.FC<{ onTaskCreated: (task: ITask) => void }> = ({ onTaskCr
             />
           </FormControl>
 
-          <Button type="submit" colorScheme="teal">
+          <Button colorScheme="teal" type="submit">
             Create Task
           </Button>
         </Stack>
