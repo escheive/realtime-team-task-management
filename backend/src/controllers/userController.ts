@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { User } from '../models/User';
+import jwt from 'jsonwebtoken'; 
 
 // Get all users
 export const getUsers = async (req: Request, res: Response) => {
@@ -56,5 +57,25 @@ export const deleteUser = async (req: Request, res: Response) => {
   } catch (error) {
     console.error('Error deleting user:', error);
     res.status(500).json({ message: 'Error deleting user' });
+  }
+};
+
+// Login user
+export const loginUser = async (req: Request, res: Response) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user || !(await user.validatePassword(password))) {
+      return res.status(401).json({ message: 'Invalid email or password' });
+    }
+
+    // Generate a JWT token
+    const token = jwt.sign({ userId: user._id }, 'your_jwt_secret', { expiresIn: '1h '});
+
+    res.status(200).json({ token });
+  } catch (error) {
+    console.error('Error logging in user:', error);
+    res.status(500).json({ message: 'Error logging in user' });
   }
 };
