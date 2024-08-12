@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import TaskColumn from './TaskColumn';
+import TaskForm from './TaskForm';
 import { ITask } from '~types/taskTypes';
 
 
@@ -11,8 +12,12 @@ const TaskBoard: React.FC = () => {
     const fetchTasks = async () => {
       try {
         const response = await axios.get('/api/tasks');
-        console.log('Fetched tasks:', response.data);
-        setTasks(response.data);
+        
+        if (Array.isArray(response.data)) {
+          setTasks(response.data);
+        } else {
+          console.error('Unexpected data format:', response.data);
+        }
       } catch (error) {
         console.error('Error fetching tasks:', error);
       }
@@ -20,6 +25,10 @@ const TaskBoard: React.FC = () => {
 
     fetchTasks();
   }, []);
+
+  const handleTaskCreated = (task: ITask) => {
+    setTasks((prevTasks) => [...prevTasks, task]);
+  };
 
   const columns = ['To Do', 'In Progress', 'Done'];
 
@@ -37,6 +46,7 @@ const TaskBoard: React.FC = () => {
 
   return (
     <div className="task-board">
+      <TaskForm onTaskCreated={handleTaskCreated} />
       {columns.map((column) => (
         <TaskColumn
           key={column}
