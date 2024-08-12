@@ -31,6 +31,15 @@ const TaskBoard: React.FC = () => {
     setTasks((prevTasks) => [...prevTasks, task]);
   };
 
+  const handleTaskDeleted = async (taskId: string) => {
+    try {
+      await axios.delete(`/api/tasks/${taskId}`);
+      setTasks((prevTasks) => prevTasks.filter(task => task._id !== taskId));
+    } catch (error) {
+      console.error('Error deleting task:', error);
+    }
+  };
+
   const columns = ['To Do', 'In Progress', 'Done'];
 
   const handleDragStart = (e: React.DragEvent, taskId: string) => {
@@ -74,6 +83,7 @@ const TaskBoard: React.FC = () => {
             tasks={tasks.filter(task => task.status === column)}
             onDragStart={handleDragStart}
             onDrop={handleDrop}
+            onDelete={handleTaskDeleted}
           />
         ))}
       </Grid>

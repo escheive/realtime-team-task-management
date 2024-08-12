@@ -8,9 +8,10 @@ interface TaskColumnProps {
   tasks: ITask[];
   onDragStart: (e: React.DragEvent, taskId: string) => void;
   onDrop: (e: React.DragEvent, status: string) => void;
+  onDelete: (taskId: string) => void;
 }
 
-const TaskColumn: React.FC<TaskColumnProps> = ({ columnTitle, tasks, onDragStart, onDrop }) => {
+const TaskColumn: React.FC<TaskColumnProps> = ({ columnTitle, tasks, onDragStart, onDrop, onDelete }) => {
   return (
     <Box
       p={4}
@@ -28,7 +29,12 @@ const TaskColumn: React.FC<TaskColumnProps> = ({ columnTitle, tasks, onDragStart
       </Heading>
       <Stack spacing={4}>
         {tasks.map(task => (
-          <TaskCard key={task._id} task={task} onDragStart={onDragStart} />
+          <TaskCard 
+            key={task._id} 
+            task={task} 
+            onDragStart={onDragStart} 
+            onDelete={onDelete} 
+          />
         ))}
       </Stack>
     </Box>
