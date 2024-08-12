@@ -3,6 +3,7 @@ import axios from 'axios';
 import TaskColumn from './TaskColumn';
 import TaskForm from './TaskForm';
 import { ITask } from '~types/taskTypes';
+import { Box, Grid, useBreakpointValue } from '@chakra-ui/react';
 
 
 const TaskBoard: React.FC = () => {
@@ -44,19 +45,29 @@ const TaskBoard: React.FC = () => {
     setTasks(updatedTasks);
   };
 
+  // Use Chakra UI Grid for responsive column layout
+  const gridTemplateColumns = useBreakpointValue({
+    base: '1fr', // Single column on small screens
+    md: 'repeat(3, 1fr)', // Three columns on medium and larger screens
+  });
+
   return (
-    <div className="task-board">
-      <TaskForm onTaskCreated={handleTaskCreated} />
-      {columns.map((column) => (
-        <TaskColumn
-          key={column}
-          columnTitle={column}
-          tasks={tasks.filter(task => task.status === column)}
-          onDragStart={handleDragStart}
-          onDrop={handleDrop}
-        />
-      ))}
-    </div>
+    <Box p={4} bg="gray.100" minHeight="100vh">
+      <Box mb={6}>
+        <TaskForm onTaskCreated={handleTaskCreated} />
+      </Box>
+      <Grid templateColumns={gridTemplateColumns} gap={4}>
+        {columns.map((column) => (
+          <TaskColumn
+            key={column}
+            columnTitle={column}
+            tasks={tasks.filter(task => task.status === column)}
+            onDragStart={handleDragStart}
+            onDrop={handleDrop}
+          />
+        ))}
+      </Grid>
+    </Box>
   );
 };
 
