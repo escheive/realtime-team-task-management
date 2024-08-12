@@ -37,12 +37,22 @@ const TaskBoard: React.FC = () => {
     e.dataTransfer.setData('taskId', taskId);
   };
 
-  const handleDrop = (e: React.DragEvent, status: string) => {
+  const handleDrop = async (e: React.DragEvent, status: string) => {
     const taskId = e.dataTransfer.getData('taskId');
-    const updatedTasks = tasks.map(task =>
-      task._id === taskId ? { ...task, status } : task
-    );
-    setTasks(updatedTasks);
+
+    try {
+      // Update the task locally
+      const updatedTasks = tasks.map(task =>
+        task._id === taskId ? { ...task, status } : task
+      );
+      setTasks(updatedTasks);
+  
+      // Send a request to update the task in the database
+      await axios.put(`/api/tasks/${taskId}`, { status });
+  
+    } catch (error) {
+      console.error('Error updating task status:', error);
+    }
   };
 
   // Use Chakra UI Grid for responsive column layout
