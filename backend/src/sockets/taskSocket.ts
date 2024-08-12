@@ -5,18 +5,21 @@ export const setupTaskSockets = (io: SocketIOServer) => {
   io.on('connection', (socket: Socket) => {
     console.log('A user connected');
 
-    socket.on('createTask', async (taskData) => {
-      const task = new Task(taskData);
+    socket.on('taskCreated', async (taskData) => {
+      const task = new Task({
+        ...taskData,
+        _id: undefined
+      });
       await task.save();
       io.emit('taskCreated', task);
     });
 
-    socket.on('updateTask', async (taskData) => {
+    socket.on('taskUpdated', async (taskData) => {
       const task = await Task.findByIdAndUpdate(taskData._id, taskData, { new: true });
       io.emit('taskUpdated', task);
     });
 
-    socket.on('deleteTask', async (taskId) => {
+    socket.on('taskDeleted', async (taskId) => {
       await Task.findByIdAndDelete(taskId);
       io.emit('taskDeleted', taskId);
     });

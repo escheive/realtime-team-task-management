@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import io from 'socket.io-client';
 import TaskColumn from './TaskColumn';
 import TaskForm from './TaskForm';
 import { ITask } from '~types/taskTypes';
 import { Box, Grid, useBreakpointValue } from '@chakra-ui/react';
+
+const socket = io('http://localhost:5000');
 
 
 const TaskBoard: React.FC = () => {
@@ -25,16 +28,57 @@ const TaskBoard: React.FC = () => {
     };
 
     fetchTasks();
+
+    socket.on('connect', () => {
+      console.log('Connected to WebSocket server');
+    });
+
+    socket.on('taskCreated', (newTask: ITask) => {
+      setTasks((prevTasks) => [...prevTasks, newTask]);
+    });
+
+    socket.on('taskDeleted', (deletedTaskId: string) => {
+      setTasks((prevTasks) => prevTasks.filter(task => task._id !== deletedTaskId));
+    });
+    
+
+    socket.on('taskUpdated', (updatedTask: ITask) => {
+      console.log('Task updated on socket')
+      if (updatedTask._id) {
+        setTasks((prevTasks) => {
+          const existingTaskIndex = prevTasks.findIndex(task => task._id === updatedTask._id);
+          if (existingTaskIndex > -1) {
+            const updatedTasks = [...prevTasks];
+            updatedTasks[existingTaskIndex] = updatedTask;
+            return updatedTasks;
+          }
+          return [...prevTasks, updatedTask];
+        });
+      } else {
+        setTasks((prevTasks) => prevTasks.filter(task => task._id !== updatedTask._id));
+      }
+    });
+
+    // Cleanup
+    return () => {
+      socket.off('taskCreated');
+      socket.off('taskUpdated');
+      socket.off('taskDeleted');
+    };
+
   }, []);
 
   const handleTaskCreated = (task: ITask) => {
-    setTasks((prevTasks) => [...prevTasks, task]);
+    // Emit the taskCreated event to server
+    socket.emit('taskCreated', task)
   };
 
   const handleTaskDeleted = async (taskId: string) => {
     try {
       await axios.delete(`/api/tasks/${taskId}`);
-      setTasks((prevTasks) => prevTasks.filter(task => task._id !== taskId));
+
+      // Emit the taskDeleted event to server
+      socket.emit('taskDeleted', taskId)
     } catch (error) {
       console.error('Error deleting task:', error);
     }
@@ -58,6 +102,9 @@ const TaskBoard: React.FC = () => {
   
       // Send a request to update the task in the database
       await axios.put(`/api/tasks/${taskId}`, { status });
+
+      // Emit WebSocket event to notify other clients
+      socket.emit('updateTask', { _id: taskId, status })
   
     } catch (error) {
       console.error('Error updating task status:', error);

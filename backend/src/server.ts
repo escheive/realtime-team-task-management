@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import taskRoutes from './routes/taskRoutes';
+import { setupTaskSockets } from './sockets/taskSocket';
 
 dotenv.config();
 
@@ -20,6 +21,8 @@ const io = new SocketIOServer(server, {
 app.use(cors());
 app.use(express.json());
 app.use('/api/tasks', taskRoutes);
+
+setupTaskSockets(io); // Setup websocket events
 
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/realtime-team-task-management';
