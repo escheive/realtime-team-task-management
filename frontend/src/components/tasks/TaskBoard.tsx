@@ -3,6 +3,7 @@ import axios from 'axios';
 import io from 'socket.io-client';
 import TaskColumn from './TaskColumn';
 import TaskForm from './TaskForm';
+import UserList from '~components/users/UserList';
 import { ITask } from '~types/taskTypes';
 import { Box, Grid, useBreakpointValue } from '@chakra-ui/react';
 

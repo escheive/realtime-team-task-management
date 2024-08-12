@@ -7,5 +7,5 @@ export const setupSockets = (io: SocketIOServer) => {
   const userNamespace = io.of('/users');
 
   setupTaskSockets(taskNamespace);
-  setupUserSockets(userNamespace);
+  // setupUserSockets(userNamespace);
 };
