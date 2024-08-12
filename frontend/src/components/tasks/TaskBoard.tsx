@@ -6,7 +6,8 @@ import TaskForm from './TaskForm';
 import { ITask } from '~types/taskTypes';
 import { Box, Grid, useBreakpointValue } from '@chakra-ui/react';
 
-const socket = io('http://localhost:5000');
+// Connect to the tasks namespace websocket
+const socket = io('http://localhost:5000/tasks');
 
 
 const TaskBoard: React.FC = () => {

@@ -6,6 +6,8 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import taskRoutes from './routes/taskRoutes';
 import { setupTaskSockets } from './sockets/taskSocket';
+import { setupUserSockets } from './sockets/userSocket';
+import { setupSockets } from './sockets';
 
 dotenv.config();
 
@@ -22,7 +24,11 @@ app.use(cors());
 app.use(express.json());
 app.use('/api/tasks', taskRoutes);
 
-setupTaskSockets(io); // Setup websocket events
+// Setup socket namespaces and handlers
+setupSockets(io);
+//// Setups Sockets
+// setupTaskSockets(io); // Task sockets
+// setupUserSockets(io); // User sockets
 
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/realtime-team-task-management';
