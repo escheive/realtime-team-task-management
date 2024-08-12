@@ -1,7 +1,47 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ]
+  "compilerOptions": {
+    "composite": true,
+    "target": "ES2022",  // Targeting a more recent ECMAScript version that covers both Node.js and web
+    "useDefineForClassFields": true,
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],  // Combined libraries for both browser and Node.js environments
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+
+    /* Module Resolution and Bundling */
+    "moduleResolution": "bundler",
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "jsx": "react-jsx",  // For React JSX support
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+
+    /* Paths for Aliases */
+    "baseUrl": ".",
+    "paths": {
+      "~api/*": ["./src/api/*"],
+      "~assets/*": ["./src/assets/*"],
+      "~components/*": ["./src/components/*"],
+      "~context/*": ["./src/context/*"],
+      "~hooks/*": ["./src/hooks/*"],
+      "~pages/*": ["./src/pages/*"],
+      "~types/*": ["./src/types/*"],
+      "~utils/*": ["./src/utils/*"],
+      "~/*": ["./src/*"]
+    },
+
+    /* Emit and Build Settings */
+    "noEmit": true  // Ensures TypeScript does not emit any output files
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.d.ts",
+    "vite.config.ts"  // Ensures Vite config is included
+  ],
+  "exclude": ["node_modules"]
 }
