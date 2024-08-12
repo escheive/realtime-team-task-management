@@ -104,7 +104,7 @@ const TaskBoard: React.FC = () => {
       await axios.put(`/api/tasks/${taskId}`, { status });
 
       // Emit WebSocket event to notify other clients
-      socket.emit('updateTask', { _id: taskId, status })
+      socket.emit('taskUpdated', { _id: taskId, status })
   
     } catch (error) {
       console.error('Error updating task status:', error);
