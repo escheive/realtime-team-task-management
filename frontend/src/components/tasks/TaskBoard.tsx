@@ -1,14 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import TaskColumn from './TaskColumn';
+import { ITask } from '~types/taskTypes';
 
-const initialTasks = [
-  // Sample tasks
-  { id: '1', title: 'Task 1', description: 'Description 1', status: 'To Do' },
-  { id: '2', title: 'Task 2', description: 'Description 2', status: 'In Progress' },
-];
 
 const TaskBoard: React.FC = () => {
-  const [tasks, setTasks] = useState(initialTasks);
+  const [tasks, setTasks] = useState<ITask[]>([]);
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const response = await axios.get('/api/tasks');
+        console.log('Fetched tasks:', response.data);
+        setTasks(response.data);
+      } catch (error) {
+        console.error('Error fetching tasks:', error);
+      }
+    };
+
+    fetchTasks();
+  }, []);
+
+  const columns = ['To Do', 'In Progress', 'Done'];
 
   const handleDragStart = (e: React.DragEvent, taskId: string) => {
     e.dataTransfer.setData('taskId', taskId);
@@ -17,18 +30,18 @@ const TaskBoard: React.FC = () => {
   const handleDrop = (e: React.DragEvent, status: string) => {
     const taskId = e.dataTransfer.getData('taskId');
     const updatedTasks = tasks.map(task =>
-      task.id === taskId ? { ...task, status } : task
+      task._id === taskId ? { ...task, status } : task
     );
     setTasks(updatedTasks);
   };
 
   return (
     <div className="task-board">
-      {['To Do', 'In Progress', 'Done'].map(status => (
+      {columns.map((column) => (
         <TaskColumn
-          key={status}
-          columnTitle={status}
-          tasks={tasks.filter(task => task.status === status)}
+          key={column}
+          columnTitle={column}
+          tasks={tasks.filter(task => task.status === column)}
           onDragStart={handleDragStart}
           onDrop={handleDrop}
         />
