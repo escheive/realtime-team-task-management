@@ -89,3 +89,21 @@ export const loginUser = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Error logging in user' });
   }
 };
+
+// Refresh token endpoint
+export const refreshToken = async (req: Request, res: Response) => {
+  const refreshToken = req.cookies.refreshToken;
+
+  if (!refreshToken) {
+    return res.status(401).send('No refresh token');
+  }
+
+  jwt.verify(refreshToken, 'refresh_secret', (error, user) => {
+    if (error) {
+      return res.status(403).send('Invalid refresh token');
+    }
+
+    const { accessToken } = generateTokens(user);
+    res.json({ accessToken });
+  });
+};
