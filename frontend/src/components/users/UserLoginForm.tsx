@@ -11,7 +11,7 @@ const Login: React.FC = () => {
     e.preventDefault();
     try {
       const response = await axios.post('/api/users/login', { email, password });
-      const token = response.data.token;
+      const token = response.data.accessToken;
 
       // Store token in localStorage
       login(token);

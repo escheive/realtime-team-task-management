@@ -5,14 +5,14 @@ import { AppRoot } from '~pages/Root';
 
 const router = createBrowserRouter([
   {
-    path: '/login',
+    path: '/auth/login',
     lazy: async () => {
       const { LoginPage } = await import('~pages/auth/LoginPage')
       return { Component: LoginPage }
     }
   },
   {
-    path: '/register',
+    path: '/auth/register',
     lazy: async () => {
       const { RegisterPage } = await import('~pages/auth/RegisterPage')
       return { Component: RegisterPage }

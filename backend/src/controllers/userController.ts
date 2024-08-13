@@ -1,6 +1,13 @@
 import { Request, Response } from 'express';
 import { User } from '../models/User';
 import jwt from 'jsonwebtoken'; 
+import cookieParser from 'cookie-parser';
+
+const generateTokens = (user: any) => {
+  const accessToken = jwt.sign({ userId: user._id }, 'access_secret', { expiresIn: '1hr' });
+  const refreshToken = jwt.sign({ userId: user._id }, 'refresh_secret', { expiresIn: '7d' });
+  return { accessToken, refreshToken };
+};
 
 // Get all users
 export const getUsers = async (req: Request, res: Response) => {
@@ -71,9 +78,12 @@ export const loginUser = async (req: Request, res: Response) => {
     }
 
     // Generate a JWT token
-    const token = jwt.sign({ userId: user._id }, 'your_jwt_secret', { expiresIn: "1h" });
+    // const token = jwt.sign({ userId: user._id }, 'your_jwt_secret', { expiresIn: "1h" });
+    const { accessToken, refreshToken } = generateTokens(user);
 
-    res.status(200).json({ token });
+    res.cookie('refresh_token', refreshToken, { httpOnly: true, secure: true });
+
+    res.status(200).json({ accessToken });
   } catch (error) {
     console.error('Error logging in user:', error);
     res.status(500).json({ message: 'Error logging in user' });

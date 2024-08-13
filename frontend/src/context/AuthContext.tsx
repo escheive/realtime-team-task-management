@@ -10,6 +10,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [authToken, setAuthToken] = useState<string | null>(localStorage.getItem('authToken'));
+  console.log(authToken)
 
   const login = (token: React.SetStateAction<string | null>) => {
     if (token && typeof token == 'string') {
