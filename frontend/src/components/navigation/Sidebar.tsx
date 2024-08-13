@@ -1,28 +1,57 @@
-// components/Navigation/Sidebar.tsx
-import { Box, Stack, Button } from '@chakra-ui/react';
-import NavLink from './NavLink';
+import { Box, Stack, IconButton } from "@chakra-ui/react";
+import NavLink from "./NavLink";
+import { ArrowLeftIcon, ArrowRightIcon } from "@chakra-ui/icons";
 
 const Sidebar = ({ isOpen, onOpen, onClose }: { isOpen: boolean, onOpen: () => void, onClose: () => void }) => {
   return (
-    <Box
-      position="fixed"
-      top="0"
-      left="0"
-      height="100vh"
-      width={isOpen ? '250px' : '60px'}
-      bg="gray.700"
-      transition="width 0.2s"
-      zIndex="999"
-    >
-      <Button onClick={isOpen ? onClose : onOpen} mt="4" ml="4">
-        {isOpen ? 'Close' : 'Open'}
-      </Button>
-      <Stack spacing={4} mt={4}>
-        <NavLink to="/">Dashboard</NavLink>
-        <NavLink to="/about">About</NavLink>
-        <NavLink to="/contact">Contact</NavLink>
-      </Stack>
-    </Box>
+    <>
+      <Box
+        position="fixed"
+        top="0"
+        left={isOpen ? "0" : "-250px"} // Move out of view when closed
+        height="100vh"
+        width="250px"
+        bg="gray.700"
+        transition="left 0.3s ease" // Smooth transition for sliding effect
+        zIndex="999"
+      >
+
+        {/* Hide content when sidebar is closed */}
+        <Box display={isOpen ? "block" : "none"}>
+          <Stack spacing={4} mt={4}>
+            <NavLink to="/">Dashboard</NavLink>
+            <NavLink to="/about">About</NavLink>
+            <NavLink to="/contact">Contact</NavLink>
+          </Stack>
+        </Box>
+      </Box>
+
+      {/* Sidebar Toggle Button */}
+      <IconButton
+        aria-label={isOpen ? "Close sidebar" : "Open sidebar"}
+        icon={isOpen ? <ArrowLeftIcon /> : <ArrowRightIcon />}
+        onClick={isOpen ? onClose : onOpen}
+        position="fixed"
+        left={isOpen ? "250px" : "0"} // Position button based on sidebar state
+        top="50%"
+        transform="translateY(-50%)"
+        transition="left 0.3s ease" // Smooth transition for button
+        zIndex="1000" // Ensure button is above other content
+        borderRadius="md"
+        bg="blue.500"
+        color="white"
+        _hover={{ bg: "blue.600" }} // Color change on hover
+        _active={{ bg: "blue.700" }} // Color change on active state
+        css={{ // Set with css to allow size to dip below chakra button min
+          width: "5vw",
+          height: "70px",
+          minWidth: "30px",
+          maxWidth: "40px",
+          minHeight: "70px",
+          transform: isOpen ? "translateX(-50%)" : "translateX(0)", // Close button straddles sidebar
+        }}
+      />
+    </>
   );
 };
 
