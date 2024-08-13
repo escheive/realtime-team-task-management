@@ -1,7 +1,7 @@
 import React from 'react';
 import RegisterForm from '~components/users/UserRegistrationForm';
 
-const RegisterPage: React.FC = () => {
+export const RegisterPage: React.FC = () => {
   return (
     <div>
       <h1>Register</h1>
@@ -9,5 +9,3 @@ const RegisterPage: React.FC = () => {
     </div>
   );
 };
-
-export default RegisterPage;
