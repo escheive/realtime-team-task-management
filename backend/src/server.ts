@@ -1,13 +1,13 @@
 import express from 'express';
 import http from 'http';
+import cookieParser from 'cookie-parser';
 import { Server as SocketIOServer } from 'socket.io';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import authRoutes from './routes/authRoutes';
 import taskRoutes from './routes/taskRoutes';
 import userRoutes from './routes/userRoutes';
-import { setupTaskSockets } from './sockets/taskSocket';
-import { setupUserSockets } from './sockets/userSocket';
 import { setupSockets } from './sockets';
 
 dotenv.config();
@@ -23,14 +23,15 @@ const io = new SocketIOServer(server, {
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
+
+// Routes
+app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api/users', userRoutes);
 
 // Setup socket namespaces and handlers
 setupSockets(io);
-//// Setups Sockets
-// setupTaskSockets(io); // Task sockets
-// setupUserSockets(io); // User sockets
 
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/realtime-team-task-management';

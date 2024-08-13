@@ -8,7 +8,7 @@ const Register: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post('/api/users', { email, password });
+      await axios.post('/api/auth', { email, password });
       alert('User registered successfully');
     } catch (error) {
       console.error('Error registering user:', error);
