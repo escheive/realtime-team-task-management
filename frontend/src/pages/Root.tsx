@@ -1,18 +1,39 @@
-import { Suspense } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Outlet, useLocation } from 'react-router-dom';
-import { Box, Flex, Spinner } from '@chakra-ui/react';
 import Header from '~components/navigation/Header';
 import Sidebar from '~components/navigation/Sidebar';
 
+import { Box, Spinner, useDisclosure } from '@chakra-ui/react';
+
 export const AppRoot = () => {
   const location = useLocation();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isScrollingDown, setIsScrollingDown] = useState(false);
+
+  let lastScrollY = 0;
+
+  const handleScroll = () => {
+    const scrollY = window.scrollY;
+    if (scrollY > lastScrollY) {
+      setIsScrollingDown(true);
+    } else {
+      setIsScrollingDown(false);
+    }
+    lastScrollY = scrollY;
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <Flex direction="column" minH="100vh">
-      <Header />
-      <Flex direction="row" flex="1">
-        <Sidebar />
-        <Box ml={{ base: 0, md: 60 }} p="4" flex="1">
+    <Box display="flex" minH="100vh">
+      <Sidebar isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
+      <Box flex="1" ml={isOpen ? '250px' : '0'} transition="margin-left 0.2s">
+        <Header isScrollingDown={isScrollingDown} />
+        <Box as="main" p="4">
           <Suspense
             fallback={
               <div className="flex size-full items-center justify-center">
@@ -28,7 +49,7 @@ export const AppRoot = () => {
             </ErrorBoundary>
           </Suspense>
         </Box>
-      </Flex>
-    </Flex>
+      </Box>
+    </Box>
   );
 };

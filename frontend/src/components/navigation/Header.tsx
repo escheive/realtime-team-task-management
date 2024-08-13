@@ -3,7 +3,6 @@ import {
   Flex,
   HStack,
   IconButton,
-  useColorModeValue,
   useDisclosure,
   Stack,
 } from '@chakra-ui/react';
@@ -17,11 +16,20 @@ const Links = [
   { to: '/contact', label: 'Contact' },
 ];
 
-const Header = () => {
+const Header = ({ isScrollingDown }: { isScrollingDown: boolean }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
-    <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
+    <Box
+      position="fixed"
+      top={isScrollingDown ? '-60px' : '0'}
+      left="0"
+      right="0"
+      height="60px"
+      bg="blue.500"
+      zIndex="1000"
+      transition="top 0.3s"
+    >
       <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
         <IconButton
           size={'md'}
