@@ -5,7 +5,6 @@ import { useAuth } from '~context/AuthContext';
 export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
   const { authToken } = useAuth();
-  // const isAuthenticated = !!localStorage.getItem('authToken');
 
   if (!authToken) {
     return (

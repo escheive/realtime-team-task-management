@@ -1,7 +1,5 @@
 import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-// import { Dashboard } from '~pages/Dashboard';
-// import AuthWrapper from '~components/auth/AuthWrapper';
 import { ProtectedRoute } from '~components/auth/ProtectedRoute';
 import { AppRoot } from '~pages/Root';
 
@@ -37,34 +35,12 @@ const router = createBrowserRouter([
       }
     ]
   },
-  // {
-  //   path: '/',
-  //   element: (
-  //     <AuthWrapper>
-  //       <Dashboard />
-  //     </AuthWrapper>
-  //   ),
-  // },
 ]);
 
 
 const App: React.FC = () => {
   return (
     <RouterProvider router={router} />
-    // <Router>
-    //   <Routes>
-    //     <Route path="/login" element={<LoginPage />} />
-    //     <Route path="/register" element={<RegisterPage />} />
-    //     <Route 
-    //       path="/" 
-    //       element={
-    //         <AuthWrapper>
-    //           <Dashboard />
-    //         </AuthWrapper>
-    //       } 
-    //     />
-    //   </Routes>
-    // </Router>
   );
 };
 
