@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema, Document, CallbackError } from 'mongoose';
 import argon2 from 'argon2';
 
 interface IUser extends Document {
@@ -27,7 +27,7 @@ userSchema.pre('save', async function (next) {
     user.password = await argon2.hash(user.password, { type: argon2.argon2id });
     next();
   } catch (error) {
-    next(error);
+    next(error as CallbackError);
   }
 });
 

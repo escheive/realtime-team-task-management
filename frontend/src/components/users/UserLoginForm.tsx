@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios from '~utils/axiosConfig';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -10,8 +10,11 @@ const Login: React.FC = () => {
     e.preventDefault();
     try {
       const response = await axios.post('/api/users/login', { email, password });
-      setToken(response.data.token);
-      localStorage.setItem('authToken', response.data.token); // Store the token
+      const token = response.data.token;
+
+      // Store token in localStorage
+      localStorage.setItem('authToken', token);
+
       alert('Login successful');
     } catch (error) {
       console.error('Error logging in user:', error);

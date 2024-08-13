@@ -1,23 +1,20 @@
 import express from 'express';
-import { getTasks, createTask, updateTask, deleteTask } from '../controllers/taskController';
+import { getUsers, updateUser, createUser, deleteUser, loginUser } from '../controllers/userController';
 
 const router = express.Router();
 
-router.get('/', getTasks);
-router.post('/', createTask);
-router.put('/:id', updateTask);
-router.delete('/:id', deleteTask);
+// GET
+router.get('/', getUsers); // Route for querying users
 
-// router.post('/create', async (req, res) => {
-//   try {
-//     const { email, password } = req.body;
-//     const user = new User({ email, password });
-//     await user.save();
-//     res.status(201).json(user);
-//   } catch (error) {
-//     console.error('Error creating user:', error);
-//     res.status(400).json({ error: error.message });
-//   }
-// })
+// POST
+router.post('/', createUser); // Route for creating user
+router.post('/login', loginUser); // Route for user login
+
+// PUT
+router.put('/:id', updateUser); // Route for updating users
+
+// DELETE
+router.delete('/:id', deleteUser); // Route for deleting users
+
 
 export default router;

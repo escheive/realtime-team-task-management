@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import taskRoutes from './routes/taskRoutes';
+import userRoutes from './routes/userRoutes';
 import { setupTaskSockets } from './sockets/taskSocket';
 import { setupUserSockets } from './sockets/userSocket';
 import { setupSockets } from './sockets';
@@ -23,6 +24,7 @@ const io = new SocketIOServer(server, {
 app.use(cors());
 app.use(express.json());
 app.use('/api/tasks', taskRoutes);
+app.use('/api/users', userRoutes);
 
 // Setup socket namespaces and handlers
 setupSockets(io);
