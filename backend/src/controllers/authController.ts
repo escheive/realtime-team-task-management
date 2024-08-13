@@ -23,8 +23,8 @@ export const loginUser = async (req: Request, res: Response) => {
     // Generate a JWT accessToken and refreshToken
     const { accessToken, refreshToken } = generateTokens(user);
 
-    // Store refresh token securely in http cookie
-    res.cookie('refresh_token', refreshToken, { httpOnly: true, secure: true });
+    // Store refresh token securely in httpOnly cookie
+    res.cookie('refresh_token', refreshToken, { httpOnly: true, secure: true, sameSite: 'strict' });
 
     res.status(200).json({ accessToken });
   } catch (error) {
@@ -32,6 +32,12 @@ export const loginUser = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Error logging in user' });
   }
 };
+
+// Logout user endpoint
+export const logoutUser = async (req: Request, res: Response) => {
+  res.clearCookie('refreshToken')
+  res.status(200).json({ message: 'Logged out' });
+}
 
 // Refresh token endpoint
 export const refreshToken = async (req: Request, res: Response) => {
