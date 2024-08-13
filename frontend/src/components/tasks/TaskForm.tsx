@@ -24,7 +24,7 @@ const TaskForm: React.FC<{ onTaskCreated: (task: ITask) => void }> = ({ onTaskCr
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const newTask: Omit<ITask, '_id' | 'createdBy'> = {
+    const newTask: Omit<ITask, '_id'> = {
       title,
       description,
       status,

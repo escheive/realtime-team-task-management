@@ -4,10 +4,15 @@ import jwt from 'jsonwebtoken';
 
 // Generate accessToken and refreshToken with jwt
 const generateTokens = (user: any) => {
-  const accessToken = jwt.sign({ userId: user._id }, 'access_secret', { expiresIn: '1hr' });
+  const accessToken = jwt.sign({ userId: user._id }, 'access_secret', { expiresIn: '5s' });
   const refreshToken = jwt.sign({ userId: user._id }, 'refresh_secret', { expiresIn: '7d' });
   return { accessToken, refreshToken };
 };
+// const generateTokens = (user: any) => {
+//   const accessToken = jwt.sign({ userId: user._id }, 'access_secret', { expiresIn: '1hr' });
+//   const refreshToken = jwt.sign({ userId: user._id }, 'refresh_secret', { expiresIn: '7d' });
+//   return { accessToken, refreshToken };
+// };
 
 // Login user endpoint
 export const loginUser = async (req: Request, res: Response) => {
@@ -41,7 +46,7 @@ export const logoutUser = async (req: Request, res: Response) => {
 
 // Refresh token endpoint
 export const refreshToken = async (req: Request, res: Response) => {
-  const refreshToken = req.cookies.refreshToken;
+  const refreshToken = req.cookies.refresh_token;
 
   // Check for refresh token
   if (!refreshToken) {
@@ -51,6 +56,7 @@ export const refreshToken = async (req: Request, res: Response) => {
   // Validate refresh token
   jwt.verify(refreshToken, 'refresh_secret', (error: any, user: any) => {
     if (error) {
+      console.error('JWT error:', error);
       return res.status(403).send('Invalid refresh token');
     }
 
