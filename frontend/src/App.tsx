@@ -1,7 +1,9 @@
 import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Dashboard from '~pages/Dashboard';
-import AuthWrapper from '~components/auth/AuthWrapper';
+// import { Dashboard } from '~pages/Dashboard';
+// import AuthWrapper from '~components/auth/AuthWrapper';
+import { ProtectedRoute } from '~components/auth/ProtectedRoute';
+import { AppRoot } from '~pages/Root';
 
 const router = createBrowserRouter([
   {
@@ -19,13 +21,30 @@ const router = createBrowserRouter([
     }
   },
   {
-    path: '/',
+    path: '/*',
     element: (
-      <AuthWrapper>
-        <Dashboard />
-      </AuthWrapper>
+      <ProtectedRoute>
+        <AppRoot />
+      </ProtectedRoute>
     ),
+    children: [
+      {
+        path: '',
+        lazy: async () => {
+          const { Dashboard } = await import('~pages/Dashboard')
+          return { Component: Dashboard }
+        }
+      }
+    ]
   },
+  // {
+  //   path: '/',
+  //   element: (
+  //     <AuthWrapper>
+  //       <Dashboard />
+  //     </AuthWrapper>
+  //   ),
+  // },
 ]);
 
 

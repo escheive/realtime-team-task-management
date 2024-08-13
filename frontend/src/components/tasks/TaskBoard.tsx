@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '~utils/axiosConfig'
 import io from 'socket.io-client';
 import TaskColumn from './TaskColumn';
 import TaskForm from './TaskForm';

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useAuth } from '~context/AuthContext';
 import axios from '~utils/axiosConfig';
 
 const Login: React.FC = () => {
+  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -12,7 +14,7 @@ const Login: React.FC = () => {
       const token = response.data.token;
 
       // Store token in localStorage
-      localStorage.setItem('authToken', token);
+      login(token);
 
       alert('Login successful');
     } catch (error) {

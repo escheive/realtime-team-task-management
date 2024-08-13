@@ -1,17 +1,20 @@
 import React from 'react';
-import { redirect, Route } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
+import { useAuth } from '~context/AuthContext';
 
-const ProtectedRoute = ({ component: Component, ...rest }) => {
-  const isAuthenticated = !!localStorage.getItem('authToken');
+export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const location = useLocation();
+  const { authToken } = useAuth();
+  // const isAuthenticated = !!localStorage.getItem('authToken');
 
-  return (
-    <Route
-      {...rest}
-      render={(props) =>
-        isAuthenticated ? <Component {...props} /> : <Redirect to="/login" />
-      }
-    />
-  );
+  if (!authToken) {
+    return (
+      <Navigate
+        to={`/auth/login?redirectTo=${encodeURIComponent(location.pathname)}`}
+        replace
+      />
+    );
+  }
+
+  return children;
 };
-
-export default ProtectedRoute;
