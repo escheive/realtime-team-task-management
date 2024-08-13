@@ -13,7 +13,7 @@ const Sidebar = ({ isOpen, onOpen, onClose }: { isOpen: boolean, onOpen: () => v
         width="250px"
         bg="gray.700"
         transition="left 0.3s ease" // Smooth transition for sliding effect
-        zIndex="999"
+        zIndex="1100"
       >
 
         {/* Hide content when sidebar is closed */}
@@ -36,7 +36,7 @@ const Sidebar = ({ isOpen, onOpen, onClose }: { isOpen: boolean, onOpen: () => v
         top="50%"
         transform="translateY(-50%)"
         transition="left 0.3s ease" // Smooth transition for button
-        zIndex="1000" // Ensure button is above other content
+        zIndex="1200" // Ensure button is above other content
         borderRadius="md"
         bg="blue.500"
         color="white"
