@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
+import useAuthRedirect from '~hooks/auth';
 import axios from '~utils/axiosConfig';
+import { useAuth } from '~context/AuthContext';
 
 const Register: React.FC = () => {
+  const { isAuthenticated } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  useAuthRedirect(isAuthenticated, "/");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
