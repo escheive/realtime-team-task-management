@@ -3,7 +3,7 @@ import { Box, Text, Stack, Badge, Flex, Tooltip, IconButton } from '@chakra-ui/r
 import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import axios from '~utils/axiosConfig';
 import { TaskStatus } from '~types/taskTypes';
-import { updateTask, deleteTask } from '~utils/taskUtils';
+import { updateTask, deleteTask } from '~api/taskApi';
 import { useWebSockets } from '~context/WebSocketContext';
 
 export const TaskListPage: React.FC = () => {
@@ -75,7 +75,7 @@ export const TaskListPage: React.FC = () => {
                   <IconButton
                     aria-label="Edit Task"
                     icon={<EditIcon />}
-                    onClick={() => updateTask(task, setTasks)}
+                    onClick={() => updateTask(task)}
                     mr={2}
                   />
                 </Tooltip>
@@ -83,7 +83,7 @@ export const TaskListPage: React.FC = () => {
                   <IconButton
                     aria-label="Delete Task"
                     icon={<DeleteIcon />}
-                    onClick={() => deleteTask(task._id, setTasks)}
+                    onClick={() => deleteTask(task._id)}
                   />
                 </Tooltip>
               </Flex>
