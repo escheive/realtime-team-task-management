@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Task } from '../models/Task';
+import { Task, TaskStatus } from '../models/Task';
 
 // Get all tasks
 export const getTasks = async (req: Request, res: Response) => {
@@ -13,10 +13,19 @@ export const getTasks = async (req: Request, res: Response) => {
 };
 
 // Get incomplete task count
-export const getIncompleteTaskCount = async (req: Request, res: Response) => {
+export const getTaskStatusCounts = async (req: Request, res: Response) => {
   try {
-    const count = await Task.countDocuments({ status: "Incomplete" });
-    res.status(200).json(count);
+    // Count tasks for each status
+    const unassignedCount = await Task.countDocuments({ status: TaskStatus.UNASSIGNED });
+    const incompleteCount = await Task.countDocuments({ status: TaskStatus.INCOMPLETE });
+    const inProgressCount = await Task.countDocuments({ status: TaskStatus.IN_PROGRESS });
+
+    // Respond with the counts
+    res.status(200).json({
+      unassigned: unassignedCount,
+      incomplete: incompleteCount,
+      inProgress: inProgressCount,
+    });
   } catch (error) {
     console.error('Error retrieving task count:', error);
     res.status(500).json({ message: 'Error retrieving task count' });

@@ -1,4 +1,4 @@
-// import TaskBoard from '../components/tasks/TaskBoard';
+import TaskBoard from '~components/tasks/TaskBoard';
 import React, { useEffect, useState } from 'react';
 import axios from "~utils/axiosConfig";
 import { Box, Grid, Flex, Text } from '@chakra-ui/react';
@@ -7,7 +7,11 @@ import { onTaskCreated, onTaskUpdated, onTaskDeleted, emitTaskCreated, cleanupTa
 import { ITask } from '~types/taskTypes';
 
 export const Dashboard = () => {
-  const [incompleteCount, setIncompleteCount] = useState<number | null>(null);
+  const [taskStatusCounts, setTaskStatusCounts] = useState({
+    unassigned: 0,
+    incomplete: 0,
+    inProgress: 0,
+  });
   const [tasks, setTasks] = useState<ITask[]>([]);
 
   useEffect(() => {
@@ -23,16 +27,16 @@ export const Dashboard = () => {
       setTasks((prevTasks) => prevTasks.filter((t) => t._id !== taskId));
     });
 
-    const fetchIncompleteCount = async () => {
+    const fetchTaskStatusCounts = async () => {
       try {
-        const response = await axios.get('/api/tasks/incomplete/count');
-        setIncompleteCount(response.data.count);
+        const response = await axios.get('/api/tasks/status-counts');
+        setTaskStatusCounts(response.data);
       } catch (error) {
         console.error('Error fetching incomplete tasks count:', error);
       }
     };
 
-    fetchIncompleteCount();
+    fetchTaskStatusCounts();
 
     // Cleanup
     return () => {
@@ -48,10 +52,9 @@ export const Dashboard = () => {
         {/* Data Breakdown */}
         <Box bg="gray.100" p={4} borderRadius="md">
           <Text fontSize="lg" mb={2}>Data Breakdown</Text>
-          <Box padding="4" borderWidth="1px" borderRadius="lg">
-            <Text fontSize="lg" fontWeight="bold">Incomplete Tasks</Text>
-            <Text fontSize="xl">{incompleteCount !== null ? incompleteCount : 'Loading...'}</Text>
-          </Box>
+          <Text>Unassigned: {taskStatusCounts.unassigned}</Text>
+          <Text>Incomplete: {taskStatusCounts.incomplete}</Text>
+          <Text>In Progress: {taskStatusCounts.inProgress}</Text>
         </Box>
 
         {/* Current Tasks */}
@@ -81,6 +84,7 @@ export const Dashboard = () => {
           {/* section 3 content here */}
         </Box>
       </Flex>
+      <TaskBoard />
     </Box>
   );
 };

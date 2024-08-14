@@ -1,7 +1,7 @@
 import express from 'express';
 import { 
   getTasks, 
-  getIncompleteTaskCount, 
+  getTaskStatusCounts, 
   createTask, 
   updateTask, 
   deleteTask 
@@ -12,7 +12,7 @@ const router = express.Router();
 
 // Get
 router.get('/', authMiddleware, getTasks); // All tasks
-router.get('/incomplete/count', authMiddleware, getIncompleteTaskCount) // All incomplete tasks
+router.get('/status-counts', authMiddleware, getTaskStatusCounts) // Count for incomplete, in-progress, and unassigned tasks
 
 // Post
 router.post('/', authMiddleware, createTask); // Create a task
