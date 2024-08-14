@@ -4,15 +4,10 @@ import jwt from 'jsonwebtoken';
 
 // Generate accessToken and refreshToken with jwt
 const generateTokens = (user: any) => {
-  const accessToken = jwt.sign({ userId: user._id }, 'access_secret', { expiresIn: '5s' });
+  const accessToken = jwt.sign({ userId: user._id }, 'access_secret', { expiresIn: '1h' });
   const refreshToken = jwt.sign({ userId: user._id }, 'refresh_secret', { expiresIn: '7d' });
   return { accessToken, refreshToken };
 };
-// const generateTokens = (user: any) => {
-//   const accessToken = jwt.sign({ userId: user._id }, 'access_secret', { expiresIn: '1hr' });
-//   const refreshToken = jwt.sign({ userId: user._id }, 'refresh_secret', { expiresIn: '7d' });
-//   return { accessToken, refreshToken };
-// };
 
 // Login user endpoint
 export const loginUser = async (req: Request, res: Response) => {
