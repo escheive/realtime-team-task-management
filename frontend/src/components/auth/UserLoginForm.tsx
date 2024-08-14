@@ -1,25 +1,27 @@
-import React, { useState } from 'react';
-import { useAuth } from '~context/AuthContext';
-import axios from '~utils/axiosConfig';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "~context/AuthContext";
+import axios from "~utils/axiosConfig";
 
 const Login: React.FC = () => {
   const { login } = useAuth();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/api/auth/login', { email, password });
+      const response = await axios.post("/api/auth/login", { email, password });
       const token = response.data.accessToken;
 
       // Store token in localStorage
       login(token);
 
-      alert('Login successful');
+      navigate("/");
     } catch (error) {
-      console.error('Error logging in user:', error);
-      alert('Error logging in user');
+      console.error("Error logging in user:", error);
+      alert("Error logging in user");
     }
   };
 
