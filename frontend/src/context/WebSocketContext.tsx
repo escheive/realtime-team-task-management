@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import io, { Socket } from 'socket.io-client';
 import { ITask } from '~types/taskTypes';
+import { onTaskCreated } from '~services/sockets';
 
 interface WebSocketContextProps {
   taskSocket: Socket | null;
@@ -14,13 +15,26 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const [taskSocket, setTaskSocket] = useState<Socket | null>(null);
   const [tasks, setTasks] = useState<ITask[]>([]);
 
+  const handleTaskCreated = (newTask: ITask) => {
+    setTasks((prevTasks) => {
+      // Check if the task already exists
+      if (prevTasks.some(task => task._id === newTask._id)) {
+          return prevTasks; // Do not add a duplicate task
+      }
+      return [...prevTasks, newTask];
+  });
+  }
+
   useEffect(() => {
     const newTaskSocket = io('http://localhost:5000/tasks');
     setTaskSocket(newTaskSocket);
 
-    newTaskSocket.on('taskCreated', (task: ITask) => {
-      setTasks((prevTasks) => [...prevTasks, task]);
-    });
+    onTaskCreated(handleTaskCreated)
+    // newTaskSocket.on('taskCreated', handleTaskCreated);
+
+    // newTaskSocket.on('taskCreated', (task: ITask) => {
+    //   setTasks((prevTasks) => [...prevTasks, task]);
+    // });
 
     newTaskSocket.on('taskUpdated', (updatedTask: ITask) => {
       setTasks((prevTasks) => prevTasks.map((task) => (task._id === updatedTask._id ? updatedTask : task)));

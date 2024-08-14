@@ -5,6 +5,7 @@ import { Box, Grid, Flex, Text } from '@chakra-ui/react';
 import TaskForm from '~components/tasks/TaskForm';
 import { onTaskCreated, onTaskUpdated, onTaskDeleted, emitTaskCreated, cleanupTaskSockets } from "~services/sockets/index";
 import { ITask } from '~types/taskTypes';
+import { useWebSockets } from '~context/WebSocketContext';
 
 export const Dashboard = () => {
   const [taskStatusCounts, setTaskStatusCounts] = useState({
@@ -12,20 +13,9 @@ export const Dashboard = () => {
     incomplete: 0,
     inProgress: 0,
   });
-  const [tasks, setTasks] = useState<ITask[]>([]);
+  const { tasks } = useWebSockets();
 
   useEffect(() => {
-    onTaskCreated((task: ITask) => {
-      setTasks((prevTasks) => [...prevTasks, task]);
-    });
-
-    onTaskUpdated((task: ITask) => {
-      setTasks((prevTasks) => prevTasks.map((t) => (t._id === task._id ? task : t)));
-    });
-
-    onTaskDeleted((taskId: string) => {
-      setTasks((prevTasks) => prevTasks.filter((t) => t._id !== taskId));
-    });
 
     const fetchTaskStatusCounts = async () => {
       try {
@@ -38,10 +28,6 @@ export const Dashboard = () => {
 
     fetchTaskStatusCounts();
 
-    // Cleanup
-    return () => {
-      cleanupTaskSockets();
-    };
   }, []);
 
   return (

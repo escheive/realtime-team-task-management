@@ -16,8 +16,8 @@ import {
   TagLabel,
   IconButton,
 } from '@chakra-ui/react';
-import { emitTaskCreated } from '~services/sockets';
-import { AddIcon } from '@chakra-ui/icons';
+import { onTaskCreated } from '~utils/taskUtils';
+import { useWebSockets } from '~context/WebSocketContext';
 
 const TaskForm = () => {
   const [title, setTitle] = useState('');
@@ -32,6 +32,7 @@ const TaskForm = () => {
   const [reminderDate, setReminderDate] = useState('');
   const [reminderMessage, setReminderMessage] = useState('');
   const toast = useToast();
+  const { setTasks } = useWebSockets();
 
   const handleAddTag = () => {
     if (tagInput && !tags.includes(tagInput)) {
@@ -70,11 +71,13 @@ const TaskForm = () => {
 
     try {
       // Send task to server and get response back with _id
-      const response = await axios.post('/api/tasks', newTask);
-      const createdTask = response.data;
+      // const response = await axios.post('/api/tasks', newTask);
+      // const createdTask = response.data;
 
       // Emit the task to socket
-      emitTaskCreated(createdTask);
+      // emitTaskCreated(createdTask);
+
+      onTaskCreated(newTask, setTasks)
 
       // Reset form fields
       setTitle('');

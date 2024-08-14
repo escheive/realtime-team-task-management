@@ -14,61 +14,61 @@ const socket = io('http://localhost:5000/tasks');
 const TaskBoard: React.FC = () => {
   const [tasks, setTasks] = useState<ITask[]>([]);
 
-  useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const response = await axios.get('/api/tasks');
+  // useEffect(() => {
+  //   const fetchTasks = async () => {
+  //     try {
+  //       const response = await axios.get('/api/tasks');
         
-        if (Array.isArray(response.data)) {
-          setTasks(response.data);
-        } else {
-          console.error('Unexpected data format:', response.data);
-        }
-      } catch (error) {
-        console.error('Error fetching tasks:', error);
-      }
-    };
+  //       if (Array.isArray(response.data)) {
+  //         setTasks(response.data);
+  //       } else {
+  //         console.error('Unexpected data format:', response.data);
+  //       }
+  //     } catch (error) {
+  //       console.error('Error fetching tasks:', error);
+  //     }
+  //   };
 
-    fetchTasks();
+  //   fetchTasks();
 
-    socket.on('connect', () => {
-      console.log('Connected to WebSocket server');
-    });
+  //   socket.on('connect', () => {
+  //     console.log('Connected to WebSocket server');
+  //   });
 
-    socket.on('taskCreated', (newTask: ITask) => {
-      setTasks((prevTasks) => [...prevTasks, newTask]);
-    });
+  //   socket.on('taskCreated', (newTask: ITask) => {
+  //     setTasks((prevTasks) => [...prevTasks, newTask]);
+  //   });
 
-    socket.on('taskDeleted', (deletedTaskId: string) => {
-      setTasks((prevTasks) => prevTasks.filter(task => task._id !== deletedTaskId));
-    });
+  //   socket.on('taskDeleted', (deletedTaskId: string) => {
+  //     setTasks((prevTasks) => prevTasks.filter(task => task._id !== deletedTaskId));
+  //   });
     
 
-    socket.on('taskUpdated', (updatedTask: ITask) => {
-      console.log('Task updated on socket')
-      if (updatedTask._id) {
-        setTasks((prevTasks) => {
-          const existingTaskIndex = prevTasks.findIndex(task => task._id === updatedTask._id);
-          if (existingTaskIndex > -1) {
-            const updatedTasks = [...prevTasks];
-            updatedTasks[existingTaskIndex] = updatedTask;
-            return updatedTasks;
-          }
-          return [...prevTasks, updatedTask];
-        });
-      } else {
-        setTasks((prevTasks) => prevTasks.filter(task => task._id !== updatedTask._id));
-      }
-    });
+  //   socket.on('taskUpdated', (updatedTask: ITask) => {
+  //     console.log('Task updated on socket')
+  //     if (updatedTask._id) {
+  //       setTasks((prevTasks) => {
+  //         const existingTaskIndex = prevTasks.findIndex(task => task._id === updatedTask._id);
+  //         if (existingTaskIndex > -1) {
+  //           const updatedTasks = [...prevTasks];
+  //           updatedTasks[existingTaskIndex] = updatedTask;
+  //           return updatedTasks;
+  //         }
+  //         return [...prevTasks, updatedTask];
+  //       });
+  //     } else {
+  //       setTasks((prevTasks) => prevTasks.filter(task => task._id !== updatedTask._id));
+  //     }
+  //   });
 
-    // Cleanup
-    return () => {
-      socket.off('taskCreated');
-      socket.off('taskUpdated');
-      socket.off('taskDeleted');
-    };
+  //   // Cleanup
+  //   return () => {
+  //     socket.off('taskCreated');
+  //     socket.off('taskUpdated');
+  //     socket.off('taskDeleted');
+  //   };
 
-  }, []);
+  // }, []);
 
   const handleTaskCreated = (task: ITask) => {
     // Emit the taskCreated event to server

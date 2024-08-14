@@ -44,6 +44,7 @@ export const createTask = async (req: Request, res: Response) => {
   try {
     const task = new Task(req.body);
     await task.save();
+
     res.status(201).json(task);
   } catch (error) {
     console.error('Error creating task:', error);
