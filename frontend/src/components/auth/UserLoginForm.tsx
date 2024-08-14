@@ -2,13 +2,16 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "~context/AuthContext";
 import axios from "~utils/axiosConfig";
+import useAuthRedirect from "~hooks/auth";
 
 const Login: React.FC = () => {
-  const { login } = useAuth();
+  const { login, isAuthenticated } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
+  useAuthRedirect(isAuthenticated, "/");
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {

@@ -4,12 +4,15 @@ interface AuthContextType {
   authToken: string | null;
   login: (token: string) => void;
   logout: () => void;
+  isAuthenticated: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [authToken, setAuthToken] = useState<string | null>(localStorage.getItem('authToken'));
+
+  const isAuthenticated = !!authToken;
 
   const login = (token: React.SetStateAction<string | null>) => {
     if (token && typeof token == 'string') {
@@ -29,7 +32,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ authToken, login, logout }}>
+    <AuthContext.Provider value={{ authToken, login, logout, isAuthenticated }}>
       {children}
     </AuthContext.Provider>
   );
