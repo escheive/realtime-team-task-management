@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from '~utils/axiosConfig';
 import io from 'socket.io-client';
 import TaskColumn from './TaskColumn';
-import TaskForm from './TaskForm';
+import TaskForm from '../../features/tasks/components/TaskForm';
 // import UserList from '~components/users/UserList';
 import { ITask } from '~types/taskTypes';
 import { Box, Grid, useBreakpointValue } from '@chakra-ui/react';

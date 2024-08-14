@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from "~utils/axiosConfig";
 import { Link } from 'react-router-dom';
 import { Box, Grid, Flex, Text } from '@chakra-ui/react';
-import TaskForm from '~components/tasks/TaskForm';
+import TaskForm from '~tasks/components/TaskForm';
 
 export const Dashboard = () => {
   const [taskStatusCounts, setTaskStatusCounts] = useState({

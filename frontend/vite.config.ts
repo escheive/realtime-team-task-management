@@ -25,6 +25,8 @@ export default defineConfig({
       '~services': path.resolve(__dirname, './src/services'),
       '~types': path.resolve(__dirname, './src/types'),
       '~utils': path.resolve(__dirname, './src/utils'),
+      '~features': path.resolve(__dirname, 'src/features'),
+      '~tasks': path.resolve(__dirname, 'src/features/tasks'),
     },
   },
 })

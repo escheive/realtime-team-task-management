@@ -32,7 +32,9 @@
       "~services/*": ["./src/services/*"],
       "~types/*": ["./src/types/*"],
       "~utils/*": ["./src/utils/*"],
-      "~/*": ["./src/*"]
+      "~/*": ["./src/*"],
+      "~features/*": ["./src/features/*"],
+      "~tasks/*": ["./src/features/tasks/*"],
     },
 
     /* Emit and Build Settings */
