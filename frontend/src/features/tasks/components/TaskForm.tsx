@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { ITask, TaskStatus, TaskPriority } from '~types/taskTypes';
 import {
   Box,
@@ -14,11 +13,8 @@ import {
   Tag,
   TagCloseButton,
   TagLabel,
-  IconButton,
 } from '@chakra-ui/react';
-// import { createTask } from '~utils/taskUtils';
-import { createTask } from '~api/taskApi';
-import { useWebSockets } from '~context/WebSocketContext';
+import { createTask } from '~tasks/api';
 
 const TaskForm = () => {
   const [title, setTitle] = useState('');
@@ -33,7 +29,6 @@ const TaskForm = () => {
   const [reminderDate, setReminderDate] = useState('');
   const [reminderMessage, setReminderMessage] = useState('');
   const toast = useToast();
-  const { setTasks } = useWebSockets();
 
   const handleAddTag = () => {
     if (tagInput && !tags.includes(tagInput)) {

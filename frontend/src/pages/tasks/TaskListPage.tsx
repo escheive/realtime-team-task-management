@@ -3,7 +3,7 @@ import { Box, Text, Stack, Badge, Flex, Tooltip, IconButton } from '@chakra-ui/r
 import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import axios from '~utils/axiosConfig';
 import { TaskStatus } from '~types/taskTypes';
-import { updateTask, deleteTask } from '~api/taskApi';
+import { updateTask, deleteTask } from '~tasks/api';
 import { useWebSockets } from '~context/WebSocketContext';
 
 export const TaskListPage: React.FC = () => {
