@@ -1,6 +1,6 @@
-import TaskBoard from '~components/tasks/TaskBoard';
 import React, { useEffect, useState } from 'react';
 import axios from "~utils/axiosConfig";
+import { Link } from 'react-router-dom';
 import { Box, Grid, Flex, Text } from '@chakra-ui/react';
 import TaskForm from '~components/tasks/TaskForm';
 import { onTaskCreated, onTaskUpdated, onTaskDeleted, emitTaskCreated, cleanupTaskSockets } from "~services/sockets/index";
@@ -52,9 +52,15 @@ export const Dashboard = () => {
         {/* Data Breakdown */}
         <Box bg="gray.100" p={4} borderRadius="md">
           <Text fontSize="lg" mb={2}>Data Breakdown</Text>
-          <Text>Unassigned: {taskStatusCounts.unassigned}</Text>
-          <Text>Incomplete: {taskStatusCounts.incomplete}</Text>
-          <Text>In Progress: {taskStatusCounts.inProgress}</Text>
+          <Text>
+            <Link to="/tasks/unassigned">Unassigned: {taskStatusCounts.unassigned}</Link>
+          </Text>
+          <Text>
+            <Link to="/tasks/incomplete">Incomplete: {taskStatusCounts.incomplete}</Link>
+          </Text>
+          <Text>
+            <Link to="/tasks/in-progress">In Progress: {taskStatusCounts.inProgress}</Link>
+          </Text>
         </Box>
 
         {/* Current Tasks */}
@@ -84,7 +90,7 @@ export const Dashboard = () => {
           {/* section 3 content here */}
         </Box>
       </Flex>
-      <TaskBoard />
+      {/* <TaskBoard /> */}
     </Box>
   );
 };

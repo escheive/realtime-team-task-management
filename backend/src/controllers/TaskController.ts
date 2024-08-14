@@ -1,10 +1,17 @@
 import { Request, Response } from 'express';
 import { Task, TaskStatus } from '../models/Task';
 
-// Get all tasks
+// Get all tasks with optional filtering
 export const getTasks = async (req: Request, res: Response) => {
   try {
-    const tasks = await Task.find();
+    const { status } = req.query;
+
+    const query: any = {};
+    if (status) {
+      query.status = status;
+    }
+
+    const tasks = await Task.find(query);
     res.status(200).json(tasks);
   } catch (error) {
     console.error('Error retrieving tasks:', error);

@@ -19,7 +19,7 @@ const router = createBrowserRouter([
     }
   },
   {
-    path: '/*',
+    path: '/',
     element: (
       <ProtectedRoute>
         <AppRoot />
@@ -32,7 +32,14 @@ const router = createBrowserRouter([
           const { Dashboard } = await import('~pages/Dashboard')
           return { Component: Dashboard }
         }
-      }
+      },
+      {
+        path: '/tasks/:status',
+        lazy: async () => {
+          const { TaskListPage } = await import('~pages/tasks/TaskListPage')
+          return { Component: TaskListPage }
+        }
+      },
     ]
   },
 ]);
