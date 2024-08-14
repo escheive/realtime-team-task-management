@@ -1,11 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from "~utils/axiosConfig";
 import { Link } from 'react-router-dom';
 import { Box, Grid, Flex, Text } from '@chakra-ui/react';
 import TaskForm from '~components/tasks/TaskForm';
-import { onTaskCreated, onTaskUpdated, onTaskDeleted, emitTaskCreated, cleanupTaskSockets } from "~services/sockets/index";
-import { ITask } from '~types/taskTypes';
-import { useWebSockets } from '~context/WebSocketContext';
 
 export const Dashboard = () => {
   const [taskStatusCounts, setTaskStatusCounts] = useState({
@@ -13,7 +10,6 @@ export const Dashboard = () => {
     incomplete: 0,
     inProgress: 0,
   });
-  const { tasks } = useWebSockets();
 
   useEffect(() => {
 

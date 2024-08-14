@@ -16,8 +16,7 @@ import {
   TagLabel,
   IconButton,
 } from '@chakra-ui/react';
-import { emitTaskCreated } from '~services/sockets';
-import { onTaskCreated } from '~utils/taskUtils';
+import { createTask } from '~utils/taskUtils';
 import { useWebSockets } from '~context/WebSocketContext';
 
 const TaskForm = () => {
@@ -71,10 +70,8 @@ const TaskForm = () => {
     };
 
     try {
-      const response = await axios.post(`/api/tasks`, newTask);
-      const createdTask = response.data as ITask; // Cast response task as ITask type
-
-      emitTaskCreated(createdTask)
+      // await axios.post(`/api/tasks`, newTask);
+      createTask(newTask)
 
       // Reset form fields
       setTitle('');
