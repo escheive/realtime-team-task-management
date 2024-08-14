@@ -1,5 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom';
-import { AppRoot } from '~app/Root';
+import { AppRoot } from '~app/root';
 import { authRoutes } from './authRoutes';
 import { taskRoutes } from './taskRoutes';
 import { dashboardRoute, ProtectedRoute } from './miscRoutes';
