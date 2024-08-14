@@ -2,6 +2,7 @@ import React from 'react';
 import { ITask } from '~types/taskTypes';
 import { Box, Text, Badge, Stack, IconButton } from '@chakra-ui/react';
 import { DragHandleIcon, DeleteIcon } from '@chakra-ui/icons';
+
 interface TaskCardProps {
   task: ITask;
   onDragStart: (e: React.DragEvent, taskId: string) => void;

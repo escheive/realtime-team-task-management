@@ -2,6 +2,7 @@ import axios, { AxiosError } from 'axios';
 
 let isRefreshing = false;
 let failedQueue: any[] = [];
+let retryPending = false;
 
 const processQueue = (error: any, token: string | null = null) => {
   failedQueue.forEach(prom => {
@@ -29,6 +30,7 @@ const refreshAccessToken = async () => {
   isRefreshing = true;
 
   try {
+    console.log('Attempting to refresh access token...')
     const response = await axios.post('/api/auth/refresh-token', null, {
       withCredentials: true,
     });
@@ -47,7 +49,7 @@ const refreshAccessToken = async () => {
     processQueue(error, null);
 
     // Handle 401 by logging out the user and redirecting to login
-    if (axiosError && axiosError.response && axiosError.response.status === 401) {
+    if (axiosError.response && axiosError.response.status === 401) {
       localStorage.removeItem('authToken');
       localStorage.removeItem('refreshToken');
       window.location.href = '/auth/login';
@@ -57,6 +59,8 @@ const refreshAccessToken = async () => {
     isRefreshing = false;
   }
 };
+
+axios.defaults.withCredentials = true;
 
 // Request interceptor to add the access token to headers
 axios.interceptors.request.use(
@@ -79,7 +83,12 @@ axios.interceptors.response.use(
     const originalRequest = error.config;
 
     if (error.response && error.response.status == 401 && !originalRequest._retry) {
+      if (retryPending) return Promise.reject(error);
+
+      retryPending = true;
       originalRequest._retry = true;
+
+      console.log('401 unauthorized error detected. Attempting to refresh token...')
 
       try {
         // Delay to prevent simultaneous retries
@@ -98,9 +107,15 @@ axios.interceptors.response.use(
         console.error('Token refresh failure:', refreshError);
 
         // Redirect user to login page
-        // window.location.href = '/auth/login';
-        return Promise.reject(refreshError);
+        window.location.href = '/auth/login';
       }
+    }
+
+    // Check if this error is due to an expired token
+    if (error.response && error.response.status === 401 && originalRequest._retry) {
+      // Suppress logging for retryable 401 errors
+      console.log('Token was refreshed, retrying request...');
+      // return Promise.reject(error);
     }
 
     return Promise.reject(error);
