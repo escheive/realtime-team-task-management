@@ -6,7 +6,7 @@ import {
   Avatar,
   IconButton,
 } from '@chakra-ui/react';
-import { useAuth } from '~context/AuthContext';
+import { useAuth } from '~auth/context/AuthContext';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 
 const UserMenu = () => {

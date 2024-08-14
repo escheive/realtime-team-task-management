@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import useAuthRedirect from '~hooks/auth';
 import axios from '~utils/axiosConfig';
-import { useAuth } from '~context/AuthContext';
+import { useAuth } from '~auth/context/AuthContext';
 
 export const RegisterForm: React.FC = () => {
   const { isAuthenticated } = useAuth();

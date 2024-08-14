@@ -1,3 +1,17 @@
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '~auth/context/AuthContext';
+
+export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const navigate = useNavigate();
+  const { authToken } = useAuth();
+
+  if (!authToken) {
+    navigate("/")
+  }
+
+  return children;
+};
 
 export const dashboardRoute = {
   path: '',
@@ -6,3 +20,4 @@ export const dashboardRoute = {
     return { Component: Dashboard };
   }
 }
+

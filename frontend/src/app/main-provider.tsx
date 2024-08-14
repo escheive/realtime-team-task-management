@@ -1,8 +1,8 @@
 import React from 'react';
 import { Spinner } from '@chakra-ui/react';
 
-import { ChakraProvider } from '@chakra-ui/react'
-import { AuthProvider } from '~context/AuthContext'
+import { ChakraProvider } from '@chakra-ui/react';
+import { AuthProvider } from '~auth/context/AuthContext';
 
 type AppProviderProps = {
   children: React.ReactNode;
