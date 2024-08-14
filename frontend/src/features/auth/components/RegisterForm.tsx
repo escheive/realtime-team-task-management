@@ -3,7 +3,7 @@ import useAuthRedirect from '~hooks/auth';
 import axios from '~utils/axiosConfig';
 import { useAuth } from '~context/AuthContext';
 
-const Register: React.FC = () => {
+export const RegisterForm: React.FC = () => {
   const { isAuthenticated } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -29,5 +29,3 @@ const Register: React.FC = () => {
     </form>
   );
 };
-
-export default Register;

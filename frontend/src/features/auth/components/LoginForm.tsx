@@ -4,7 +4,7 @@ import { useAuth } from "~context/AuthContext";
 import axios from "~utils/axiosConfig";
 import useAuthRedirect from "~hooks/auth";
 
-const Login: React.FC = () => {
+export const LoginForm: React.FC = () => {
   const { login, isAuthenticated } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -48,5 +48,3 @@ const Login: React.FC = () => {
     </form>
   );
 };
-
-export default Login;
