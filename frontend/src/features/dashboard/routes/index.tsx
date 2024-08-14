@@ -35,13 +35,13 @@ export const Dashboard = () => {
         <Box bg="gray.100" p={4} borderRadius="md">
           <Text fontSize="lg" mb={2}>Data Breakdown</Text>
           <Text>
-            <Link to="/tasks/unassigned">Unassigned: {taskStatusCounts.unassigned}</Link>
+            <Link to="/tasks/status/unassigned">Unassigned: {taskStatusCounts.unassigned}</Link>
           </Text>
           <Text>
-            <Link to="/tasks/incomplete">Incomplete: {taskStatusCounts.incomplete}</Link>
+            <Link to="/tasks/status/incomplete">Incomplete: {taskStatusCounts.incomplete}</Link>
           </Text>
           <Text>
-            <Link to="/tasks/in-progress">In Progress: {taskStatusCounts.inProgress}</Link>
+            <Link to="/tasks/status/in-progress">In Progress: {taskStatusCounts.inProgress}</Link>
           </Text>
         </Box>
 

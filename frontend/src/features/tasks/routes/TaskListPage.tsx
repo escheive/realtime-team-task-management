@@ -5,8 +5,10 @@ import axios from '~utils/axiosConfig';
 import { TaskStatus } from '~tasks/types';
 import { updateTask, deleteTask } from '~tasks/api';
 import { useTaskContext } from '~/features/tasks/context';
+import { useNavigate } from 'react-router-dom';
 
 export const TaskListPage: React.FC = () => {
+  const navigate = useNavigate();
   const { tasks, setTasks } = useTaskContext();
 
   const getStatusColor = (status: TaskStatus) => {
@@ -53,6 +55,7 @@ export const TaskListPage: React.FC = () => {
             borderRadius="md"
             boxShadow="md"
             bg="white"
+            onClick={() => navigate(`/tasks/${task._id}`)}
           >
             <Flex justify="space-between" align="center">
               <Box>
