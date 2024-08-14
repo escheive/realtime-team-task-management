@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import io, { Socket } from 'socket.io-client';
-import { ITask } from '~types/taskTypes';
+import { ITask } from '~tasks/types';
 import { onTaskCreated } from '~services/sockets';
 
 interface WebSocketContextProps {

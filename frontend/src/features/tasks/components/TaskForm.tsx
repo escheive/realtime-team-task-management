@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ITask, TaskStatus, TaskPriority } from '~types/taskTypes';
+import { ITask, TaskStatus, TaskPriority } from '~tasks/types';
 import {
   Box,
   Button,

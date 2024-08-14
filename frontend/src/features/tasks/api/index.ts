@@ -1,5 +1,5 @@
 import axios from '~utils/axiosConfig';
-import { ITask } from '~types/taskTypes';
+import { ITask } from '~tasks/types';
 
 export const createTask = async (task: Omit<ITask, '_id'>): Promise<ITask> => {
   const response = await axios.post<ITask>(`/api/tasks`, task);

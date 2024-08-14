@@ -4,7 +4,7 @@ import io from 'socket.io-client';
 import TaskColumn from './TaskColumn';
 import TaskForm from '../../features/tasks/components/TaskForm';
 // import UserList from '~components/users/UserList';
-import { ITask } from '~types/taskTypes';
+import { ITask } from '~tasks/types';
 import { Box, Grid, useBreakpointValue } from '@chakra-ui/react';
 
 // Connect to the tasks namespace websocket

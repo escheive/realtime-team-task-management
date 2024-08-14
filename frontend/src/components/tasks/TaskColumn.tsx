@@ -1,6 +1,6 @@
 import React from 'react';
 import TaskCard from './TaskCard';
-import { ITask } from '~types/taskTypes';
+import { ITask } from '~tasks/types';
 import { Box, Heading, Stack } from '@chakra-ui/react';
 
 interface TaskColumnProps {

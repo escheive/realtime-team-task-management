@@ -1,5 +1,5 @@
 import io from 'socket.io-client';
-import { ITask } from '~types/taskTypes';
+import { ITask } from '~tasks/types';
 
 const taskSocket = io('http://localhost:5000/tasks', {
   transports: ['websocket'],

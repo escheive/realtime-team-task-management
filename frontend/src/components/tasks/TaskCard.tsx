@@ -1,5 +1,5 @@
 import React from 'react';
-import { ITask } from '~types/taskTypes';
+import { ITask } from '~tasks/types';
 import { Box, Text, Badge, Stack, IconButton } from '@chakra-ui/react';
 import { DragHandleIcon, DeleteIcon } from '@chakra-ui/icons';
 
