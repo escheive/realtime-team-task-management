@@ -31,7 +31,7 @@ export interface ITask extends Document {
     user: string;
     action: string;
     comment?: string;
-  };
+  }[];
   attachments?: {
     filename: string;
     url: string;

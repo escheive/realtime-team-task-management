@@ -13,7 +13,7 @@ export interface ITask {
     user: string;
     action: string;
     comment?: string;
-  };
+  }[];
   attachments?: {          // Option for attachments
     filename: string;
     url: string;

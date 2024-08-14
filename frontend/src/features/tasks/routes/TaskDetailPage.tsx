@@ -24,7 +24,7 @@ import {
   IconButton,
   useDisclosure,
 } from '@chakra-ui/react';
-import { EditIcon, CheckIcon, AttachmentIcon, CalendarIcon, AddIcon } from '@chakra-ui/icons';
+import { EditIcon, CheckIcon, AttachmentIcon, CalendarIcon, AddIcon, DeleteIcon } from '@chakra-ui/icons';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ITask, TaskStatus, TaskPriority } from '~tasks/types';
 import { updateTask } from '~tasks/api';
@@ -32,7 +32,7 @@ import { useTaskContext } from '~/features/tasks/context';
 
 export const TaskDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { tasks, setTasks } = useTaskContext();
+  const { tasks } = useTaskContext();
   const [task, setTask] = useState<ITask | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [newAttachmentUrl, setNewAttachmentUrl] = useState('');
@@ -246,7 +246,7 @@ export const TaskDetailPage: React.FC = () => {
             Activity Log
           </Text>
           <List spacing={3} mb={6}>
-            {task.activityLog?.map((log, index) => (
+            {task.activityLog?.map((log: any, index: any) => (
               <ListItem key={index}>
                 <ListIcon as={CalendarIcon} color="gray.500" />
                 {log.user} {log.action} on {new Date(log.timestamp).toLocaleString()}
