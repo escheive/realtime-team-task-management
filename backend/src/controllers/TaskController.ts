@@ -12,6 +12,17 @@ export const getTasks = async (req: Request, res: Response) => {
   }
 };
 
+// Get incomplete task count
+export const getIncompleteTasks = async (req: Request, res: Response) => {
+  try {
+    const count = await Task.countDocuments({ status: "Incomplete" });
+    res.status(200).json(count);
+  } catch (error) {
+    console.error('Error retrieving task count:', error);
+    res.status(500).json({ message: 'Error retrieving task count' });
+  }
+};
+
 // Create a new task
 export const createTask = async (req: Request, res: Response) => {
   try {
