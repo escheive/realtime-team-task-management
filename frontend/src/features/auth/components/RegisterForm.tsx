@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import useAuthRedirect from '~hooks/auth';
+import useAuthRedirect from '~auth/hooks/authRedirect';
 import axios from '~utils/axiosConfig';
 import { useAuth } from '~auth/context/AuthContext';
 
