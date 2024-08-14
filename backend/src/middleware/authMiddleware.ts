@@ -31,7 +31,7 @@ export const authMiddleware = async (req: AuthenticatedRequest, res: Response, n
           req.userId = decoded.userId;
           return next();
         }
-      } catch (err) {
+      } catch (error) {
         return res.status(401).json({ message: 'Token refresh failed' });
       }
     }

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from '~utils/axiosConfig';
-import { AxiosError } from 'axios';
 import io from 'socket.io-client';
 import TaskColumn from './TaskColumn';
 import TaskForm from './TaskForm';
@@ -26,17 +25,7 @@ const TaskBoard: React.FC = () => {
           console.error('Unexpected data format:', response.data);
         }
       } catch (error) {
-        if (error instanceof AxiosError) {
-          // Suppress logging for errors that will be retried
-          if (error.response?.status === 401 && !error.config._retry) {
-            // Log suppressed due to retry
-            console.log('Token was refreshed, retrying request...');
-          } else {
-            console.error('Error fetching tasks:', error);
-          } 
-        } else {
-          console.error('Unexpected error:', error);
-        }
+        console.error('Error fetching tasks:', error);
       }
     };
 
