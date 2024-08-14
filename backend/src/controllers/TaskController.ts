@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { Task, TaskStatus } from '../models/Task';
+import { taskNamespace } from '../sockets';
 
 // Get all tasks with optional filtering
 export const getTasks = async (req: Request, res: Response) => {
@@ -12,6 +13,7 @@ export const getTasks = async (req: Request, res: Response) => {
     }
 
     const tasks = await Task.find(query);
+
     res.status(200).json(tasks);
   } catch (error) {
     console.error('Error retrieving tasks:', error);
@@ -45,6 +47,8 @@ export const createTask = async (req: Request, res: Response) => {
     const task = new Task(req.body);
     await task.save();
 
+    taskNamespace.emit('taskCreated', task);
+
     res.status(201).json(task);
   } catch (error) {
     console.error('Error creating task:', error);
@@ -59,6 +63,9 @@ export const updateTask = async (req: Request, res: Response) => {
     if (!task) {
       return res.status(404).json({ message: 'Task not found' });
     }
+
+    taskNamespace.emit('taskUpdated', task);
+
     res.status(200).json(task);
   } catch (error) {
     console.error('Error updating task:', error);
@@ -74,6 +81,9 @@ export const deleteTask = async (req: Request, res: Response) => {
     if (!task) {
       return res.status(404).json({ message: 'Task not found' });
     }
+
+    taskNamespace.emit('taskDeleted', task._id);
+
     res.status(200).json({ message: 'Task deleted' });
   } catch (error) {
     console.error('Error deleting task:', error);

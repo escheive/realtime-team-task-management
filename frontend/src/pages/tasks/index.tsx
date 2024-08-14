@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import axios from '~utils/axiosConfig';
 import { Box, Heading, Stack, Text, VStack } from '@chakra-ui/react';
 import { useWebSockets } from '~context/WebSocketContext';
-import { ITask } from '~types/taskTypes';
 
 export const TasksPage: React.FC = () => {
   const { tasks, setTasks } = useWebSockets();

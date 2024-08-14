@@ -2,17 +2,13 @@ import axios from '~utils/axiosConfig';
 import { ITask } from '~types/taskTypes';
 import { emitTaskCreated, emitTaskUpdated, emitTaskDeleted } from '~services/sockets';
 
-export const onTaskCreated = async (task: ITask) => {
+export const onTaskCreated = async (task: Omit<ITask, '_id'>) => {
   try {
     console.log('Creating task:', task);
-    // Delete task from the database
-    await axios.post(`/api/tasks`, task);
 
     // Emit the deletion event to WebSocket
-    emitTaskCreated(task);
+    emitTaskCreated(createdTask);
 
-    // Update local state immediately (optimistic UI)
-    // setTasks((prevTasks) => prevTasks.filter((t) => t._id !== taskId));
   } catch (error) {
     console.error('Error deleting task:', error);
   }
