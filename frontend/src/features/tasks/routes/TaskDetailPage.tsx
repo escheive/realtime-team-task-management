@@ -1,4 +1,3 @@
-// src/features/tasks/pages/TaskDetailPage.tsx
 import React, { useEffect, useState } from 'react';
 import {
   Box,
@@ -12,14 +11,20 @@ import {
   Select,
   Button,
   Stack,
-  Avatar,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
   List,
   ListItem,
   ListIcon,
   Divider,
   IconButton,
+  useDisclosure,
 } from '@chakra-ui/react';
-import { EditIcon, CheckIcon, AttachmentIcon, CalendarIcon } from '@chakra-ui/icons';
+import { EditIcon, CheckIcon, AttachmentIcon, CalendarIcon, AddIcon } from '@chakra-ui/icons';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ITask, TaskStatus, TaskPriority } from '~tasks/types';
 import { updateTask } from '~tasks/api';
@@ -28,14 +33,20 @@ import { useTaskContext } from '~/features/tasks/context';
 export const TaskDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { tasks, setTasks } = useTaskContext();
-  const [isEditing, setIsEditing] = useState(false);
-  // const task = tasks.find((task) => task._id === id);
   const [task, setTask] = useState<ITask | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [newAttachmentUrl, setNewAttachmentUrl] = useState('');
+  const [newAttachmentName, setNewAttachmentName] = useState('');
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
 
   useEffect(() => {
     const foundTask = tasks.find((task) => task._id === id);
-    if (foundTask) setTask(foundTask);
+    if (foundTask) {
+      setTask(foundTask);
+    } else {
+      navigate(-1);
+    }
   }, [id, tasks]);
 
   if (!task) return <Text>Task not found</Text>;
@@ -52,11 +63,27 @@ export const TaskDetailPage: React.FC = () => {
 
     try {
       await updateTask(task);
-      // setTasks((prevTasks) => prevTasks.map((t) => (t._id === task._id ? updatedTask : t)));
       setIsEditing(false);
     } catch (error) {
       console.error('Error updating task:', error);
     }
+  };
+
+  const handleAddAttachment = () => {
+    if (newAttachmentUrl && newAttachmentName) {
+      const updatedAttachments = [
+        ...task!.attachments!,
+        { filename: newAttachmentName, url: newAttachmentUrl },
+      ];
+      setTask({ ...task!, attachments: updatedAttachments });
+      setNewAttachmentUrl('');
+      setNewAttachmentName('');
+    }
+  };
+
+  const handleRemoveAttachment = (index: number) => {
+    const updatedAttachments = task!.attachments!.filter((_, i) => i !== index);
+    setTask({ ...task!, attachments: updatedAttachments });
   };
 
   return (
@@ -123,6 +150,68 @@ export const TaskDetailPage: React.FC = () => {
             <FormLabel>Assigned To</FormLabel>
             <Input name="assignedTo" value={task.assignedTo || ''} onChange={handleInputChange} />
           </FormControl>
+
+          <Divider my={6} />
+
+          <Text fontSize="lg" fontWeight="bold" mb={4}>
+            Attachments
+          </Text>
+          <List spacing={3}>
+            {task.attachments?.map((attachment, index) => (
+              <ListItem key={index}>
+                <ListIcon as={AttachmentIcon} color="gray.500" />
+                <a href={attachment.url} target="_blank" rel="noopener noreferrer">
+                  {attachment.filename}
+                </a>
+                <IconButton
+                  aria-label="Delete Attachment"
+                  icon={<DeleteIcon />}
+                  size="sm"
+                  ml={2}
+                  onClick={() => handleRemoveAttachment(index)}
+                />
+              </ListItem>
+            ))}
+          </List>
+
+          <Button leftIcon={<AddIcon />} colorScheme="teal" mt={4} onClick={onOpen}>
+            Add Attachment
+          </Button>
+
+          <Modal isOpen={isOpen} onClose={onClose}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>Add New Attachment</ModalHeader>
+              <ModalBody>
+                <Stack spacing={4}>
+                  <FormControl>
+                    <FormLabel>Attachment URL</FormLabel>
+                    <Input
+                      value={newAttachmentUrl}
+                      onChange={(e) => setNewAttachmentUrl(e.target.value)}
+                      placeholder="Enter URL"
+                    />
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel>Attachment Name</FormLabel>
+                    <Input
+                      value={newAttachmentName}
+                      onChange={(e) => setNewAttachmentName(e.target.value)}
+                      placeholder="Enter filename"
+                    />
+                  </FormControl>
+                </Stack>
+              </ModalBody>
+              <ModalFooter>
+                <Button variant="ghost" onClick={onClose}>
+                  Cancel
+                </Button>
+                <Button colorScheme="teal" ml={3} onClick={handleAddAttachment}>
+                  Add
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
         </>
       ) : (
         <>
@@ -139,144 +228,48 @@ export const TaskDetailPage: React.FC = () => {
             <strong>Created By:</strong> {task.createdBy}
           </Text>
 
+          {task.completedAt && (
+            <Text mb={4} color="green.500">
+              <strong>Completed At:</strong> {new Date(task.completedAt).toLocaleDateString()}
+            </Text>
+          )}
+
           {task.dueDate && (
             <Text mb={4}>
               <strong>Due Date:</strong> {new Date(task.dueDate).toLocaleDateString()}
             </Text>
           )}
+
+          <Divider my={6} />
+
+          <Text fontSize="lg" fontWeight="bold" mb={4}>
+            Activity Log
+          </Text>
+          <List spacing={3} mb={6}>
+            {task.activityLog?.map((log, index) => (
+              <ListItem key={index}>
+                <ListIcon as={CalendarIcon} color="gray.500" />
+                {log.user} {log.action} on {new Date(log.timestamp).toLocaleString()}
+                {log.comment && <Text ml={8}>{log.comment}</Text>}
+              </ListItem>
+            ))}
+          </List>
+
+          <Text fontSize="lg" fontWeight="bold" mb={4}>
+            Attachments
+          </Text>
+          <List spacing={3}>
+            {task.attachments?.map((attachment, index) => (
+              <ListItem key={index}>
+                <ListIcon as={AttachmentIcon} color="gray.500" />
+                <a href={attachment.url} target="_blank" rel="noopener noreferrer">
+                  {attachment.filename}
+                </a>
+              </ListItem>
+            ))}
+          </List>
         </>
       )}
     </Box>
   );
 };
-
-
-//   return (
-//     <Box p={6} boxShadow="lg" bg="white" borderRadius="md">
-//       <Flex justify="space-between" align="center" mb={6}>
-//         <Box>
-//           <Text fontSize="2xl" fontWeight="bold">
-//             {task.title}
-//           </Text>
-//           <Text fontSize="md" color="gray.500">
-//             {task.description || 'No description provided'}
-//           </Text>
-//         </Box>
-//         <IconButton
-//           icon={isEditing ? <CheckIcon /> : <EditIcon />}
-//           aria-label="Edit task"
-//           onClick={isEditing ? handleSaveChanges : handleEditToggle}
-//         />
-//       </Flex>
-
-//       {isEditing ? (
-//         <>
-//           <FormControl mb={4}>
-//             <FormLabel>Title</FormLabel>
-//             <Input defaultValue={task.title} />
-//           </FormControl>
-
-//           <FormControl mb={4}>
-//             <FormLabel>Description</FormLabel>
-//             <Textarea defaultValue={task.description} />
-//           </FormControl>
-
-//           <FormControl mb={4}>
-//             <FormLabel>Status</FormLabel>
-//             <Select defaultValue={task.status}>
-//               {Object.values(TaskStatus).map((status) => (
-//                 <option key={status} value={status}>
-//                   {status}
-//                 </option>
-//               ))}
-//             </Select>
-//           </FormControl>
-
-//           <FormControl mb={4}>
-//             <FormLabel>Priority</FormLabel>
-//             <Select defaultValue={task.priority}>
-//               {Object.values(TaskPriority).map((priority) => (
-//                 <option key={priority} value={priority}>
-//                   {priority}
-//                 </option>
-//               ))}
-//             </Select>
-//           </FormControl>
-
-//           <FormControl mb={4}>
-//             <FormLabel>Due Date</FormLabel>
-//             <Input type="date" defaultValue={task.dueDate?.toISOString().split('T')[0]} />
-//           </FormControl>
-
-//           <FormControl mb={4}>
-//             <FormLabel>Assigned To</FormLabel>
-//             <Input defaultValue={task.assignedTo} />
-//           </FormControl>
-//         </>
-//       ) : (
-//         <>
-//           <Stack direction="row" align="center" mb={4}>
-//             <Badge colorScheme="blue">{task.status}</Badge>
-//             <Badge colorScheme="red">{task.priority}</Badge>
-//           </Stack>
-
-//           <Text mb={4}>
-//             <strong>Assigned To:</strong> {task.assignedTo || 'Unassigned'}
-//           </Text>
-
-//           <Text mb={4}>
-//             <strong>Created By:</strong> {task.createdBy}
-//           </Text>
-
-//           {task.dueDate && (
-//             <Text mb={4}>
-//               <strong>Due Date:</strong> {new Date(task.dueDate).toLocaleDateString()}
-//             </Text>
-//           )}
-
-//           {task.reminder && (
-//             <Text mb={4}>
-//               <strong>Reminder:</strong> {new Date(task.reminder.date).toLocaleDateString()} -{' '}
-//               {task.reminder.message}
-//             </Text>
-//           )}
-
-//           {task.completedAt && (
-//             <Text mb={4} color="green.500">
-//               <strong>Completed At:</strong> {new Date(task.completedAt).toLocaleDateString()}
-//             </Text>
-//           )}
-//         </>
-//       )}
-
-//       <Divider my={6} />
-
-//       <Text fontSize="lg" fontWeight="bold" mb={4}>
-//         Activity Log
-//       </Text>
-//       <List spacing={3} mb={6}>
-//         {task.activityLog?.map((log, index) => (
-//           <ListItem key={index}>
-//             <ListIcon as={CalendarIcon} color="gray.500" />
-//             {log.user} {log.action} on {new Date(log.timestamp).toLocaleString()}
-//             {log.comment && <Text ml={8}>{log.comment}</Text>}
-//           </ListItem>
-//         ))}
-//       </List>
-
-//       <Text fontSize="lg" fontWeight="bold" mb={4}>
-//         Attachments
-//       </Text>
-//       <List spacing={3}>
-//         {task.attachments?.map((attachment, index) => (
-//           <ListItem key={index}>
-//             <ListIcon as={AttachmentIcon} color="gray.500" />
-//             <a href={attachment.url} target="_blank" rel="noopener noreferrer">
-//               {attachment.filename}
-//             </a>
-//           </ListItem>
-//         ))}
-//       </List>
-//     </Box>
-//   );
-// }
