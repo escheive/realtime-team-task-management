@@ -9,9 +9,26 @@
 //   );
 // };
 
+import React, { useEffect, useState } from 'react';
+import axios from "~utils/axiosConfig";
 import { Box, Grid, Flex, Text } from '@chakra-ui/react';
 
 export const Dashboard = () => {
+  const [incompleteCount, setIncompleteCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    const fetchIncompleteCount = async () => {
+      try {
+        const response = await axios.get('/api/tasks/incomplete/count');
+        setIncompleteCount(response.data.count);
+      } catch (error) {
+        console.error('Error fetching incomplete tasks count:', error);
+      }
+    };
+
+    fetchIncompleteCount();
+  }, []);
+
   return (
     <Box p={4}>
       {/* Top Sections */}
@@ -19,13 +36,16 @@ export const Dashboard = () => {
         {/* Data Breakdown */}
         <Box bg="gray.100" p={4} borderRadius="md">
           <Text fontSize="lg" mb={2}>Data Breakdown</Text>
-          {/* Your data breakdown content here */}
+          <Box padding="4" borderWidth="1px" borderRadius="lg">
+            <Text fontSize="lg" fontWeight="bold">Incomplete Tasks</Text>
+            <Text fontSize="xl">{incompleteCount !== null ? incompleteCount : 'Loading...'}</Text>
+          </Box>
         </Box>
 
         {/* Current Tasks */}
         <Box bg="gray.100" p={4} borderRadius="md">
           <Text fontSize="lg" mb={2}>Current Tasks</Text>
-          {/* Your current tasks content here */}
+          {/* tasks content here */}
         </Box>
       </Grid>
 
@@ -34,19 +54,19 @@ export const Dashboard = () => {
         {/* Section 1 */}
         <Box flex="1" bg="gray.100" p={4} borderRadius="md">
           <Text fontSize="lg" mb={2}>Section 1</Text>
-          {/* Your section 1 content here */}
+          {/* section 1 content here */}
         </Box>
 
         {/* Section 2 */}
         <Box flex="1" bg="gray.100" p={4} borderRadius="md">
           <Text fontSize="lg" mb={2}>Section 2</Text>
-          {/* Your section 2 content here */}
+          {/* section 2 content here */}
         </Box>
 
         {/* Section 3 */}
         <Box flex="1" bg="gray.100" p={4} borderRadius="md">
           <Text fontSize="lg" mb={2}>Section 3</Text>
-          {/* Your section 3 content here */}
+          {/* section 3 content here */}
         </Box>
       </Flex>
     </Box>

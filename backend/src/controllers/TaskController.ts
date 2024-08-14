@@ -13,7 +13,7 @@ export const getTasks = async (req: Request, res: Response) => {
 };
 
 // Get incomplete task count
-export const getIncompleteTasks = async (req: Request, res: Response) => {
+export const getIncompleteTaskCount = async (req: Request, res: Response) => {
   try {
     const count = await Task.countDocuments({ status: "Incomplete" });
     res.status(200).json(count);

@@ -1,12 +1,18 @@
 import express from 'express';
-import { getTasks, createTask, updateTask, deleteTask } from '../controllers/taskController';
+import { 
+  getTasks, 
+  getIncompleteTaskCount, 
+  createTask, 
+  updateTask, 
+  deleteTask 
+} from '../controllers/taskController';
 import { authMiddleware } from '../middleware/authMiddleware';
 
 const router = express.Router();
 
 // Get
 router.get('/', authMiddleware, getTasks); // All tasks
-router.get('/incomplete/count', authMiddleware) // All incomplete tasks
+router.get('/incomplete/count', authMiddleware, getIncompleteTaskCount) // All incomplete tasks
 
 // Post
 router.post('/', authMiddleware, createTask); // Create a task
