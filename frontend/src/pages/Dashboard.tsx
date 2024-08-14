@@ -1,22 +1,28 @@
-// import React from 'react';
 // import TaskBoard from '../components/tasks/TaskBoard';
-
-// export const Dashboard: React.FC = () => {
-//   return (
-//     <div className="dashboard">
-//       <TaskBoard />
-//     </div>
-//   );
-// };
-
 import React, { useEffect, useState } from 'react';
 import axios from "~utils/axiosConfig";
 import { Box, Grid, Flex, Text } from '@chakra-ui/react';
+import TaskForm from '~components/tasks/TaskForm';
+import { onTaskCreated, onTaskUpdated, onTaskDeleted, emitTaskCreated, cleanupTaskSockets } from "~services/sockets/index";
+import { ITask } from '~types/taskTypes';
 
 export const Dashboard = () => {
   const [incompleteCount, setIncompleteCount] = useState<number | null>(null);
+  const [tasks, setTasks] = useState<ITask[]>([]);
 
   useEffect(() => {
+    onTaskCreated((task: ITask) => {
+      setTasks((prevTasks) => [...prevTasks, task]);
+    });
+
+    onTaskUpdated((task: ITask) => {
+      setTasks((prevTasks) => prevTasks.map((t) => (t._id === task._id ? task : t)));
+    });
+
+    onTaskDeleted((taskId: string) => {
+      setTasks((prevTasks) => prevTasks.filter((t) => t._id !== taskId));
+    });
+
     const fetchIncompleteCount = async () => {
       try {
         const response = await axios.get('/api/tasks/incomplete/count');
@@ -27,10 +33,16 @@ export const Dashboard = () => {
     };
 
     fetchIncompleteCount();
+
+    // Cleanup
+    return () => {
+      cleanupTaskSockets();
+    };
   }, []);
 
   return (
     <Box p={4}>
+      <TaskForm />
       {/* Top Sections */}
       <Grid templateColumns={{ base: "1fr", md: "1fr 2fr" }} gap={4}>
         {/* Data Breakdown */}
