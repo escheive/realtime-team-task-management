@@ -1,7 +1,9 @@
 import io from 'socket.io-client';
 import { ITask } from '~types/taskTypes';
 
-const taskSocket = io('http://localhost:5000/tasks');
+const taskSocket = io('http://localhost:5000/tasks', {
+  transports: ['websocket'],
+});
 
 const onTaskCreated = (callback: (task: ITask) => void) => {
   taskSocket.on('taskCreated', callback);
@@ -28,7 +30,9 @@ const emitTaskDeleted = (taskId: string) => {
 };
 
 const cleanupTaskSockets = () => {
-  taskSocket.disconnect();
+  taskSocket.off('taskCreated');
+  taskSocket.off('taskUpdated');
+  taskSocket.off('taskDeleted');
 }
 
 export {

@@ -68,6 +68,7 @@ export const updateTask = async (req: Request, res: Response) => {
 // Delete task by id
 export const deleteTask = async (req: Request, res: Response) => {
   try {
+    console.log('Deleting task from db:', req.params.id);
     const task = await Task.findByIdAndDelete(req.params.id);
     if (!task) {
       return res.status(404).json({ message: 'Task not found' });

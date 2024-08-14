@@ -21,6 +21,7 @@ export const setupTaskSockets = (taskNamespace: Namespace) => {
 
     socket.on('taskDeleted', async (taskId) => {
       await Task.findByIdAndDelete(taskId);
+      console.log('Emitting taskDeleted:', taskId);
       taskNamespace.emit('taskDeleted', taskId);
     });
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { ProtectedRoute } from '~components/auth/ProtectedRoute';
+import { WebSocketProvider } from '~context/WebSocketContext';
 import { AppRoot } from '~pages/Root';
 
 const router = createBrowserRouter([
@@ -22,7 +23,9 @@ const router = createBrowserRouter([
     path: '/',
     element: (
       <ProtectedRoute>
-        <AppRoot />
+        <WebSocketProvider>
+          <AppRoot />
+        </WebSocketProvider>
       </ProtectedRoute>
     ),
     children: [
