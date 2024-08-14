@@ -27,6 +27,7 @@ export default defineConfig({
       '~utils': path.resolve(__dirname, './src/utils'),
       '~features': path.resolve(__dirname, 'src/features'),
       '~tasks': path.resolve(__dirname, 'src/features/tasks'),
+      '~dashboard': path.resolve(__dirname, 'src/features/dashboard'),
     },
   },
 })

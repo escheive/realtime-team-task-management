@@ -35,6 +35,7 @@
       "~/*": ["./src/*"],
       "~features/*": ["./src/features/*"],
       "~tasks/*": ["./src/features/tasks/*"],
+      "~dashboard/*": ["./src/features/dashboard/*"],
     },
 
     /* Emit and Build Settings */
