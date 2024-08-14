@@ -4,10 +4,10 @@ import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import axios from '~utils/axiosConfig';
 import { TaskStatus } from '~tasks/types';
 import { updateTask, deleteTask } from '~tasks/api';
-import { useWebSockets } from '~context/WebSocketContext';
+import { useTaskContext } from '~/features/tasks/context';
 
 export const TaskListPage: React.FC = () => {
-  const { tasks, setTasks } = useWebSockets();
+  const { tasks, setTasks } = useTaskContext();
 
   const getStatusColor = (status: TaskStatus) => {
     switch (status) {

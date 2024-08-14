@@ -1,5 +1,4 @@
 import { createBrowserRouter } from 'react-router-dom';
-import { WebSocketProvider } from '~context/WebSocketContext';
 import { AppRoot } from '~pages/Root';
 import { authRoutes } from './authRoutes';
 import { taskRoutes } from './taskRoutes';
@@ -11,9 +10,7 @@ const router = createBrowserRouter([
     path: '/',
     element: (
       <ProtectedRoute>
-        <WebSocketProvider>
-          <AppRoot />
-        </WebSocketProvider>
+        <AppRoot />
       </ProtectedRoute>
     ),
     children: [

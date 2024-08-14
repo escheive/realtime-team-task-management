@@ -3,6 +3,7 @@ import { Spinner } from '@chakra-ui/react';
 
 import { ChakraProvider } from '@chakra-ui/react';
 import { AuthProvider } from '~auth/context/AuthContext';
+import { TaskProvider } from '~/features/tasks/context';
 
 type AppProviderProps = {
   children: React.ReactNode;
@@ -18,11 +19,13 @@ export const AppProvider = ({ children }: AppProviderProps) => {
         </div>
       }
     >
-      <AuthProvider>
-        <ChakraProvider>
-          {children}
-        </ChakraProvider>
-      </AuthProvider>
+      <ChakraProvider>
+        <AuthProvider>
+          <TaskProvider>
+            {children}
+          </TaskProvider>
+        </AuthProvider>
+      </ChakraProvider>
     </React.Suspense>
   );
 };
