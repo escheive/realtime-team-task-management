@@ -34,8 +34,9 @@
       "~utils/*": ["./src/utils/*"],
       "~/*": ["./src/*"],
       "~features/*": ["./src/features/*"],
-      "~tasks/*": ["./src/features/tasks/*"],
+      "~auth/*": ["./src/features/auth/*"],
       "~dashboard/*": ["./src/features/dashboard/*"],
+      "~tasks/*": ["./src/features/tasks/*"],
     },
 
     /* Emit and Build Settings */
