@@ -5,11 +5,11 @@ import { taskNamespace } from '../sockets';
 // Get all tasks with optional filtering
 export const getTasks = async (req: Request, res: Response) => {
   try {
-    const { status } = req.query;
+    const { assignedTo } = req.query;
 
     const query: any = {};
-    if (status) {
-      query.status = status;
+    if (assignedTo) {
+      query.assignedTo = assignedTo;
     }
 
     const tasks = await Task.find(query);

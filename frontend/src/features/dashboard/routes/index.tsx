@@ -26,7 +26,7 @@ export const Dashboard = () => {
     };
 
     const fetchUserTasks = async () => {
-      if (user) {
+      if (user && user._id) {
         try {
           const response = await axios.get(`/api/tasks?assignedTo=${user._id}`);
           setUserTasks(response.data);
@@ -37,8 +37,11 @@ export const Dashboard = () => {
     };
 
     fetchTaskStatusCounts();
-    fetchUserTasks();
-  }, []);
+
+    if (user) {
+      fetchUserTasks();
+    }
+  }, [user]);
 
   return (
     <Box p={4}>
