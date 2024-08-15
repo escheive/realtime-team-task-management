@@ -8,6 +8,13 @@ export const taskRoutes = [
     }
   },
   {
+    path: '/tasks/new',
+    lazy: async () => {
+      const { CreateTaskPage } = await import('~tasks/routes/CreateTaskPage');
+      return { Component: CreateTaskPage };
+    }
+  },
+  {
     path: '/tasks/:id',
     lazy: async () => {
       const { TaskDetailPage } = await import('~tasks/routes/TaskDetailPage');

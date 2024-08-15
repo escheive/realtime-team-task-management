@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import axios from "~utils/axiosConfig";
 import { Link } from 'react-router-dom';
 import { Box, Grid, Flex, Text } from '@chakra-ui/react';
-import TaskForm from '~tasks/components/TaskForm';
 
 export const Dashboard = () => {
   const [taskStatusCounts, setTaskStatusCounts] = useState({
@@ -28,7 +27,7 @@ export const Dashboard = () => {
 
   return (
     <Box p={4}>
-      <TaskForm />
+      <Link to="/tasks/new">Create New Task</Link>
       {/* Top Sections */}
       <Grid templateColumns={{ base: "1fr", md: "1fr 2fr" }} gap={4}>
         {/* Data Breakdown */}
