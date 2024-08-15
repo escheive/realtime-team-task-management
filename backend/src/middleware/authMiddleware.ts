@@ -8,10 +8,11 @@ interface AuthenticatedRequest extends Request {
 
 
 export const authMiddleware = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-  const token = req.headers.authorization?.split(' ')[1];
+  const authHeader = req.headers.authorization;
+  const token = authHeader?.split(' ')[1];
 
   if (!token) {
-    return res.status(401).json({ message: 'No token provided' });
+    return res.status(401).json({ message: 'No token provided' }); // Unauthorized
   }
 
   try {

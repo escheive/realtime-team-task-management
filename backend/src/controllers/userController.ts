@@ -2,6 +2,10 @@ import { Request, Response } from 'express';
 import { User } from '../models/User';
 import jwt from 'jsonwebtoken'; 
 
+interface AuthenticatedRequest extends Request {
+  userId?: string;
+}
+
 // Get all users
 export const getUsers = async (req: Request, res: Response) => {
   try {
@@ -10,6 +14,28 @@ export const getUsers = async (req: Request, res: Response) => {
   } catch (error) {
     console.error('Error retrieving users:', error);
     res.status(500).json({ message: 'Error retrieving users' });
+  }
+};
+
+export const getUserById = async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    // Extract the userId from the request parameter
+    const userId = req.params.id || req.userId;
+
+    if (!userId) {
+      return res.sendStatus(401); // Unauthorized
+    }
+    
+    const user = await User.findById(userId).select('-password'); // Exclude sensitive fields
+
+    if (!user) {
+      return res.sendStatus(404) // User not found
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error('Error retrieving me user:', error);
+    res.status(500).json({ message: 'Error retrieving me user' });
   }
 };
 

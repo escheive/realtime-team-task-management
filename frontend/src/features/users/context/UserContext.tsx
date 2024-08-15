@@ -22,11 +22,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     const fetchUserData = async () => {
       if (authToken) {
         try {
-          const response = await axios.get('/api/users/me', {
-            headers: {
-              Authorization: `Bearer ${authToken}`
-            }
-          });
+          const response = await axios.get('/api/users/me');
           setUser(response.data);
           setLoading(false);
         } catch (err) {
@@ -37,6 +33,16 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       } else {
         setUser(null);
         setLoading(false);
+      }
+    };
+
+    const fetchAllUsers = async () => {
+      try {
+        const response = await axios.get('/api/users');
+        console.log('Users:', response.data)
+      } catch (err) {
+        console.error('Error fetching all user data:', err);
+        setError('Error fetching all user data');
       }
     };
 

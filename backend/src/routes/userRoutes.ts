@@ -1,19 +1,22 @@
 import express from 'express';
-import { getUsers, updateUser, createUser, deleteUser } from '../controllers/userController';
+import { getUsers, getUserById, updateUser, createUser, deleteUser } from '../controllers/userController';
+import { authMiddleware } from '../middleware/authMiddleware';
 
 const router = express.Router();
 
 // GET
-router.get('/', getUsers); // Route for querying users
+router.get('/', authMiddleware, getUsers); // Route for querying users
+router.get('/me', authMiddleware, getUserById); // Get signed in user info
+router.get('/:id', authMiddleware, getUserById); // Get specificed users info
 
 // POST
-router.post('/', createUser); // Route for creating user
+router.post('/', authMiddleware, createUser); // Route for creating user
 
 // PUT
-router.put('/:id', updateUser); // Route for updating users
+router.put('/:id', authMiddleware, updateUser); // Route for updating users
 
 // DELETE
-router.delete('/:id', deleteUser); // Route for deleting users
+router.delete('/:id', authMiddleware, deleteUser); // Route for deleting users
 
 
 export default router;

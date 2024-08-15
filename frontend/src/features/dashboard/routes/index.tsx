@@ -3,6 +3,7 @@ import axios from "~utils/axiosConfig";
 import { Link as RouterLink } from 'react-router-dom';
 import { Box, Grid, Flex, Text, Button, List, ListItem } from '@chakra-ui/react';
 import { ITask } from '~/features/tasks/types';
+import { useUser } from '~/features/users/context/UserContext';
 
 export const Dashboard = () => {
   const [taskStatusCounts, setTaskStatusCounts] = useState({
@@ -11,6 +12,7 @@ export const Dashboard = () => {
     inProgress: 0,
   });
   const [userTasks, setUserTasks] = useState<ITask[]>([])
+  const { user } = useUser();
 
   useEffect(() => {
 
@@ -24,11 +26,13 @@ export const Dashboard = () => {
     };
 
     const fetchUserTasks = async () => {
-      try {
-        const response = await axios.get(`/api/tasks?assignedTo=${user._id}`);
-        setUserTasks(response.data);
-      } catch (error) {
-        console.error('Error fetching user tasks:', error);
+      if (user) {
+        try {
+          const response = await axios.get(`/api/tasks?assignedTo=${user._id}`);
+          setUserTasks(response.data);
+        } catch (error) {
+          console.error('Error fetching user tasks:', error);
+        }
       }
     };
 
