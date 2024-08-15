@@ -5,16 +5,27 @@ import { taskNamespace } from '../sockets';
 // Query all tasks
 export const getTasks = async (req: Request, res: Response) => {
   try {
-    const { assignedTo } = req.query;
+    // Extract page and limit from query params, with default values
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 20;
 
-    const query: any = {};
-    if (assignedTo) {
-      query.assignedTo = assignedTo;
-    }
+    // Calculate start index of the tasks
+    const startIndex = (page - 1) * limit;
 
-    const tasks = await Task.find(query);
+    // Fetch tasks with pagination
+    const tasks = await Task.find()
+      .skip(startIndex)
+      .limit(limit);
 
-    res.status(200).json(tasks);
+    // Return total number of tasks for client side pagination
+    const totalTasks = await Task.countDocuments();
+
+    res.status(200).json({
+      totalTasks,
+      currentPage: page,
+      totalPages: Math.ceil(totalTasks / limit),
+      tasks
+    });
   } catch (error) {
     console.error('Error retrieving tasks:', error);
     res.status(500).json({ message: 'Error retrieving tasks' });

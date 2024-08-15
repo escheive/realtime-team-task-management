@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import axios from '~utils/axiosConfig';
-import { Box, Heading, Stack, Text, VStack } from '@chakra-ui/react';
+import { Box, Heading, Stack, Text, VStack, Button } from '@chakra-ui/react';
 import { useTaskContext } from '~/features/tasks/context';
 
 export const TasksPage: React.FC = () => {
-  const { tasks, setTasks } = useTaskContext();
+  const { paginatedTasks, fetchTasks } = useTaskContext();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const limit = 10; // Number of tasks per page
 
   useEffect(() => {
-    const fetchTasks = async () => {
+    const loadTasks = async () => {
       try {
-        const response = await axios.get('/api/tasks');
-        setTasks(response.data);
+        setLoading(true);
+        fetchTasks(currentPage, limit);
       } catch (error) {
         setError('Error fetching tasks.');
         console.error(error);
@@ -21,8 +22,28 @@ export const TasksPage: React.FC = () => {
       }
     };
 
-    fetchTasks();
-  }, []);
+    loadTasks();
+  }, [currentPage, fetchTasks]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  // useEffect(() => {
+  //   const fetchTasks = async () => {
+  //     try {
+  //       const response = await axios.get('/api/tasks');
+  //       setTasks(response.data);
+  //     } catch (error) {
+  //       setError('Error fetching tasks.');
+  //       console.error(error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchTasks();
+  // }, []);
 
   if (loading) return <Text>Loading...</Text>;
   if (error) return <Text color="red.500">{error}</Text>;
@@ -31,10 +52,10 @@ export const TasksPage: React.FC = () => {
     <Box p={4}>
       <Heading mb={4}>All Tasks</Heading>
       <Stack spacing={4}>
-        {tasks.length === 0 ? (
+        {paginatedTasks.tasks.length === 0 ? (
           <Text>No tasks available.</Text>
         ) : (
-          tasks.map((task) => (
+          paginatedTasks.tasks.map((task) => (
             <Box
               key={task._id}
               p={4}
@@ -55,6 +76,23 @@ export const TasksPage: React.FC = () => {
           ))
         )}
       </Stack>
+
+      {/* Pagination Controls */}
+      <Box mt={4}>
+        <Button
+          onClick={() => handlePageChange(currentPage - 1)}
+          isDisabled={currentPage <= 1}
+        >
+          Previous
+        </Button>
+        <Text mx={4} display="inline">Page {currentPage} of {paginatedTasks.totalPages}</Text>
+        <Button
+          onClick={() => handlePageChange(currentPage + 1)}
+          isDisabled={currentPage >= paginatedTasks.totalPages}
+        >
+          Next
+        </Button>
+      </Box>
     </Box>
   );
 };

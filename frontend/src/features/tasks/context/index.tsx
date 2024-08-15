@@ -1,5 +1,6 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
 import { io, Socket } from 'socket.io-client';
+import axios from '~utils/axiosConfig';
 import { ITask } from '~tasks/types';
 import {
   onTaskCreated,
@@ -8,32 +9,53 @@ import {
   cleanupTaskSockets
 } from '~tasks/sockets';
 
+interface PaginatedTasks {
+  tasks: ITask[];
+  totalPages: number;
+  currentPage: number;
+  totalTasks: number;
+}
+
 interface TaskContextProps {
   taskSocket: Socket | null;
-  tasks: ITask[];
-  setTasks: React.Dispatch<React.SetStateAction<ITask[]>>;
+  paginatedTasks: PaginatedTasks;
+  fetchTasks: (page: number, limit: number) => Promise<void>;
 }
 
 const TaskContext = createContext<TaskContextProps | undefined>(undefined);
 
 export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [taskSocket, setTaskSocket] = useState<Socket | null>(null);
-  const [tasks, setTasks] = useState<ITask[]>([]);
+  const [paginatedTasks, setPaginatedTasks] = useState<PaginatedTasks>({
+    tasks: [],
+    totalPages: 0,
+    currentPage: 1,
+    totalTasks: 0
+  });
 
   useEffect(() => {
     const newTaskSocket = io('http://localhost:5000/tasks');
     setTaskSocket(newTaskSocket);
 
     onTaskCreated((task: ITask) => {
-      setTasks((prevTasks) => [...prevTasks, task]);
+      setPaginatedTasks((prev) => ({
+        ...prev,
+        tasks: [...prev.tasks, task]
+      }));
     });
 
     onTaskUpdated((updatedTask: ITask) => {
-      setTasks((prevTasks) => prevTasks.map((task) => (task._id === updatedTask._id ? updatedTask : task)));
+      setPaginatedTasks((prev) => ({
+        ...prev,
+        tasks: prev.tasks.map((task) => (task._id === updatedTask._id ? updatedTask : task))
+      }));
     });
 
     onTaskDeleted((taskId: string) => {
-      setTasks((prevTasks) => prevTasks.filter((task) => task._id !== taskId));
+      setPaginatedTasks((prev) => ({
+        ...prev,
+        tasks: prev.tasks.filter((task) => task._id !== taskId)
+      }));
     });
 
     return () => {
@@ -42,8 +64,23 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
   }, []);
 
+  const fetchTasks = useCallback(async (page: number, limit: number) => {
+    try {
+      const response = await axios(`/api/tasks?page=${page}&limit=${limit}`);
+      const data = await response.data;
+      setPaginatedTasks({
+        tasks: data.tasks,
+        totalPages: data.totalPages,
+        currentPage: data.currentPage,
+        totalTasks: data.totalTasks
+      });
+    } catch (error) {
+      console.error('Error fetching tasks:', error);
+    }
+  }, []);
+
   return (
-    <TaskContext.Provider value={{ taskSocket, tasks, setTasks }}>
+    <TaskContext.Provider value={{ taskSocket, paginatedTasks, fetchTasks }}>
       {children}
     </TaskContext.Provider>
   );
