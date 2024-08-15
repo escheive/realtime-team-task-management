@@ -28,7 +28,11 @@ export const Dashboard = () => {
     const fetchUserTasks = async () => {
       if (user && user._id) {
         try {
-          const response = await axios.get(`/api/tasks?assignedTo=${user._id}`);
+          const response = await axios.get(`/api/tasks/query`, {
+            params: {
+              assignedTo: user._id
+            },
+          });
           setUserTasks(response.data);
         } catch (error) {
           console.error('Error fetching user tasks:', error);

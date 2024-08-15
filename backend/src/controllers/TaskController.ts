@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { Task, TaskStatus } from '../models/Task';
 import { taskNamespace } from '../sockets';
 
-// Get all tasks with optional filtering
+// Query all tasks
 export const getTasks = async (req: Request, res: Response) => {
   try {
     const { assignedTo } = req.query;
@@ -20,6 +20,38 @@ export const getTasks = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Error retrieving tasks' });
   }
 };
+
+// Query tasks with multiple parameters
+export const queryTasks = async (req: Request, res: Response) => {
+  try {
+    const { assignedTo, createdBy, status, createdAfter, tag } = req.query;
+
+    const query: any = {};
+
+    if (assignedTo) {
+      query.assignedTo = assignedTo;
+    }
+    if (createdBy) {
+      query.createdBy = createdBy;
+    }
+    if (status) {
+      query.status = status;
+    }
+    if (createdAfter) {
+      query.createdAt = { $gte: new Date(createdAfter as string) };
+    }
+    if (tag) {
+      query.tags = { $in: [tag] };
+    }
+
+    const tasks = await Task.find(query);
+    res.status(200).json(tasks);
+  } catch (error) {
+    console.error('Error querying tasks:', error);
+    res.status(500).json({ message: 'Error querying tasks' });
+  }
+};
+
 
 // Get incomplete task count
 export const getTaskStatusCounts = async (req: Request, res: Response) => {
