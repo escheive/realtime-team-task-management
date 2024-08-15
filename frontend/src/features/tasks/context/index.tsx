@@ -19,7 +19,7 @@ interface PaginatedTasks {
 interface TaskContextProps {
   taskSocket: Socket | null;
   paginatedTasks: PaginatedTasks;
-  fetchTasks: (page: number, limit: number) => Promise<void>;
+  fetchTasks: (page: number, limit: number, filters?: any) => Promise<void>;
 }
 
 const TaskContext = createContext<TaskContextProps | undefined>(undefined);
@@ -64,9 +64,16 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
   }, []);
 
-  const fetchTasks = useCallback(async (page: number, limit: number) => {
+  const fetchTasks = useCallback(async (page: number, limit: number, filters: any) => {
     try {
-      const response = await axios(`/api/tasks?page=${page}&limit=${limit}`);
+      const response = await axios('/api/tasks',
+        {
+          params: {
+            ...filters,
+            page,
+            limit
+          }
+        });
       const data = await response.data;
       setPaginatedTasks({
         tasks: data.tasks,

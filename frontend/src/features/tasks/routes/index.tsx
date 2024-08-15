@@ -11,9 +11,9 @@ export const TasksPage: React.FC = () => {
 
   useEffect(() => {
     const loadTasks = async () => {
+      setLoading(true);
       try {
-        setLoading(true);
-        fetchTasks(currentPage, limit);
+        await fetchTasks(currentPage, limit);
       } catch (error) {
         setError('Error fetching tasks.');
         console.error(error);
@@ -23,10 +23,12 @@ export const TasksPage: React.FC = () => {
     };
 
     loadTasks();
-  }, [currentPage, fetchTasks]);
+  }, [currentPage, fetchTasks, limit]);
 
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+    if (page > 0 && page <= paginatedTasks.totalPages) {
+      setCurrentPage(page);
+    }
   };
 
   // useEffect(() => {
