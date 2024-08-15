@@ -33,7 +33,7 @@ export const AppRoot = () => {
       <Sidebar isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
       <Box flex="1" ml={isOpen ? '250px' : '0'} transition="margin-left 0.2s">
         <Header isScrollingDown={isScrollingDown} />
-        <Box as="main" p="4">
+        <Box as="main" mt="60px" p="4">
           <Suspense
             fallback={
               <div className="flex size-full items-center justify-center">
