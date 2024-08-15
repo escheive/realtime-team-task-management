@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from "~utils/axiosConfig";
-import { Link } from 'react-router-dom';
-import { Box, Grid, Flex, Text } from '@chakra-ui/react';
+import { Link as RouterLink } from 'react-router-dom';
+import { Box, Grid, Flex, Text, Button } from '@chakra-ui/react';
 
 export const Dashboard = () => {
   const [taskStatusCounts, setTaskStatusCounts] = useState({
@@ -27,20 +27,29 @@ export const Dashboard = () => {
 
   return (
     <Box p={4}>
-      <Link to="/tasks/new">Create New Task</Link>
+      <Button
+        as={RouterLink}
+        to="/tasks/new"
+        colorScheme="blue"
+        variant="solid"
+        size="lg"
+        mb={4}
+      >
+        Create New Task
+      </Button>
       {/* Top Sections */}
       <Grid templateColumns={{ base: "1fr", md: "1fr 2fr" }} gap={4}>
         {/* Data Breakdown */}
         <Box bg="gray.100" p={4} borderRadius="md">
           <Text fontSize="lg" mb={2}>Data Breakdown</Text>
           <Text>
-            <Link to="/tasks/status/unassigned">Unassigned: {taskStatusCounts.unassigned}</Link>
+            <RouterLink to="/tasks/status/unassigned">Unassigned: {taskStatusCounts.unassigned}</RouterLink>
           </Text>
           <Text>
-            <Link to="/tasks/status/incomplete">Incomplete: {taskStatusCounts.incomplete}</Link>
+            <RouterLink to="/tasks/status/incomplete">Incomplete: {taskStatusCounts.incomplete}</RouterLink>
           </Text>
           <Text>
-            <Link to="/tasks/status/in-progress">In Progress: {taskStatusCounts.inProgress}</Link>
+            <RouterLink to="/tasks/status/in-progress">In Progress: {taskStatusCounts.inProgress}</RouterLink>
           </Text>
         </Box>
 
