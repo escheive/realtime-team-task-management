@@ -15,6 +15,7 @@ import {
   TagLabel,
 } from '@chakra-ui/react';
 import { createTask } from '~tasks/api';
+import { useNavigate } from 'react-router-dom';
 
 const TaskForm = () => {
   const [title, setTitle] = useState('');
@@ -29,6 +30,7 @@ const TaskForm = () => {
   const [reminderDate, setReminderDate] = useState('');
   const [reminderMessage, setReminderMessage] = useState('');
   const toast = useToast();
+  const navigate = useNavigate();
 
   const handleAddTag = () => {
     if (tagInput && !tags.includes(tagInput)) {
@@ -66,8 +68,9 @@ const TaskForm = () => {
     };
 
     try {
-      // await axios.post(`/api/tasks`, newTask);
-      createTask(newTask)
+      const createdTask = await createTask(newTask);
+
+      navigate(`/tasks/${createdTask._id}`);
 
       // Reset form fields
       setTitle('');
@@ -85,6 +88,7 @@ const TaskForm = () => {
         title: 'Task Created',
         description: 'Your task has been created successfully.',
         status: 'success',
+        position: 'top',
         duration: 5000,
         isClosable: true,
       });

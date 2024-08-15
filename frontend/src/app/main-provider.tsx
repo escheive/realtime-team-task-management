@@ -4,6 +4,7 @@ import { Spinner } from '@chakra-ui/react';
 import { ChakraProvider } from '@chakra-ui/react';
 import { AuthProvider } from '~auth/context/AuthContext';
 import { TaskProvider } from '~/features/tasks/context';
+import { UserProvider } from '~/features/users/context/UserContext';
 
 type AppProviderProps = {
   children: React.ReactNode;
@@ -21,9 +22,11 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     >
       <ChakraProvider>
         <AuthProvider>
-          <TaskProvider>
-            {children}
-          </TaskProvider>
+          <UserProvider>
+            <TaskProvider>
+              {children}
+            </TaskProvider>
+          </UserProvider>
         </AuthProvider>
       </ChakraProvider>
     </React.Suspense>

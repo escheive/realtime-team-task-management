@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import axios from "~utils/axiosConfig";
 import { Link as RouterLink } from 'react-router-dom';
-import { Box, Grid, Flex, Text, Button } from '@chakra-ui/react';
+import { Box, Grid, Flex, Text, Button, List, ListItem } from '@chakra-ui/react';
+import { ITask } from '~/features/tasks/types';
 
 export const Dashboard = () => {
   const [taskStatusCounts, setTaskStatusCounts] = useState({
@@ -9,6 +10,7 @@ export const Dashboard = () => {
     incomplete: 0,
     inProgress: 0,
   });
+  const [userTasks, setUserTasks] = useState<ITask[]>([])
 
   useEffect(() => {
 
@@ -21,8 +23,17 @@ export const Dashboard = () => {
       }
     };
 
-    fetchTaskStatusCounts();
+    const fetchUserTasks = async () => {
+      try {
+        const response = await axios.get(`/api/tasks?assignedTo=${user._id}`);
+        setUserTasks(response.data);
+      } catch (error) {
+        console.error('Error fetching user tasks:', error);
+      }
+    };
 
+    fetchTaskStatusCounts();
+    fetchUserTasks();
   }, []);
 
   return (
@@ -53,10 +64,20 @@ export const Dashboard = () => {
           </Text>
         </Box>
 
-        {/* Current Tasks */}
+        {/* Current Tasks Assigned to User */}
         <Box bg="gray.100" p={4} borderRadius="md">
-          <Text fontSize="lg" mb={2}>Current Tasks</Text>
-          {/* tasks content here */}
+          <Text fontSize="lg" mb={2}>Current Tasks Assigned to You</Text>
+          {userTasks.length > 0 ? (
+            <List spacing={3}>
+              {userTasks.map(task => (
+                <ListItem key={task._id}>
+                  <RouterLink to={`/tasks/${task._id}`}>{task.title}</RouterLink>
+                </ListItem>
+              ))}
+            </List>
+          ) : (
+            <Text>No tasks assigned to you.</Text>
+          )}
         </Box>
       </Grid>
 
