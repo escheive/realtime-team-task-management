@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import axios from "~utils/axiosConfig";
 import { Link as RouterLink } from 'react-router-dom';
 import { Box, Grid, Flex, Text, Button, List, ListItem, Spinner } from '@chakra-ui/react';
-import { ITask } from '~/features/tasks/types';
 import { useUser } from '~/features/users/context/UserContext';
+import { useTaskContext } from '~/features/tasks/context';
 
 export const Dashboard = () => {
   const [taskStatusCounts, setTaskStatusCounts] = useState({
@@ -12,9 +12,8 @@ export const Dashboard = () => {
     inProgress: 0,
   });
   const [statusCountsLoading, setStatusCountsLoading] = useState(true);
-  const [userTasks, setUserTasks] = useState<ITask[]>([]);
-  const [userTasksLoading, setUserTasksLoading] = useState(true);
   const { user } = useUser();
+  const { userTasks, userTasksLoading } = useTaskContext();
 
   useEffect(() => {
 
@@ -30,29 +29,29 @@ export const Dashboard = () => {
       }
     };
 
-    const fetchUserTasks = async () => {
-      if (user && user._id) {
-        setUserTasksLoading(true);
-        try {
-          const response = await axios.get('/api/tasks', {
-            params: {
-              assignedTo: user._id
-            },
-          });
-          setUserTasks(response.data.tasks);
-        } catch (error) {
-          console.error('Error fetching user tasks:', error);
-        } finally {
-          setUserTasksLoading(false);
-        }
-      }
-    };
+    // const fetchUserTasks = async () => {
+    //   if (user && user._id) {
+    //     setUserTasksLoading(true);
+    //     try {
+    //       const response = await axios.get('/api/tasks', {
+    //         params: {
+    //           assignedTo: user._id
+    //         },
+    //       });
+    //       setUserTasks(response.data.tasks);
+    //     } catch (error) {
+    //       console.error('Error fetching user tasks:', error);
+    //     } finally {
+    //       setUserTasksLoading(false);
+    //     }
+    //   }
+    // };
 
     fetchTaskStatusCounts();
 
-    if (user) {
-      fetchUserTasks();
-    }
+    // if (user) {
+    //   fetchUserTasks();
+    // }
   }, [user]);
 
   return (
@@ -98,7 +97,7 @@ export const Dashboard = () => {
             <Flex justify="center" align="center" height="100%">
               <Spinner size="lg" m={4} />
             </Flex>
-          ) : userTasks.length > 0 ? (
+          ) : userTasks && userTasks.length > 0 ? (
             <List spacing={3}>
               {userTasks.map(task => (
                 <ListItem key={task._id}>

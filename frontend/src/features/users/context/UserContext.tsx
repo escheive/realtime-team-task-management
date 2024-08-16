@@ -34,16 +34,6 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       }
     };
 
-    const fetchAllUsers = async () => {
-      try {
-        const response = await axios.get('/api/users');
-        console.log('Users:', response.data)
-      } catch (err) {
-        console.error('Error fetching all user data:', err);
-        setError('Error fetching all user data');
-      }
-    };
-
     fetchUserData();
   }, [authToken]);
 

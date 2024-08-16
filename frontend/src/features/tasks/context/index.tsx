@@ -21,6 +21,9 @@ interface PaginatedTasks {
 interface TaskContextProps {
   taskSocket: Socket | null;
   paginatedTasks: PaginatedTasks;
+  userTasks: ITask[];
+  userTasksLoading: boolean;
+  fetchUserTasks: () => void;
   fetchTasks: (page: number, limit: number, filters?: any) => Promise<void>;
 }
 
@@ -34,8 +37,34 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
     currentPage: 1,
     totalTasks: 0
   });
+  const [userTasks, setUserTasks] = useState<ITask[]>([]);
+  const [userTasksLoading, setUserTasksLoading] = useState(true);
   const { user } = useUser();
   const toast = useToast();
+
+  // Fetch user tasks
+  const fetchUserTasks = async () => {
+
+    if (user && user._id) {
+      setUserTasksLoading(true);
+      try {
+        const response = await axios.get('/api/tasks', {
+          params: {
+            assignedTo: user._id
+          },
+        });
+        setUserTasks(response.data.tasks);
+      } catch (error) {
+        console.error('Error fetching user tasks:', error);
+      } finally {
+        setUserTasksLoading(false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchUserTasks();
+  }, [user]);
 
   useEffect(() => {
     const newTaskSocket = io('http://localhost:5000/tasks');
@@ -49,20 +78,30 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
 
     onTaskUpdated(({ oldTask, updatedTask }: { oldTask: ITask; updatedTask: ITask }) => {
-      // // Identify what was updated
-      // const updatedFields: string[] = [];
-      // if (oldTask.title !== updatedTask.title) updatedFields.push(`Title has been updated to: ${updatedTask.title}`);
-      // if (oldTask.description !== updatedTask.description) updatedFields.push('Description');
-      // if (oldTask.status !== updatedTask.status) updatedFields.push('Status');
-
       if (user && updatedTask.assignedTo === user._id) {
+        // Identify what was updated 
+        const updatedFields: string[] = [];
+        if (oldTask.title !== updatedTask.title) updatedFields.push(`Title is now ${updatedTask.title}`);
+
         toast({
           title: `Task: "${oldTask.title}" Updated`,
-          // description: `${updatedFields.join(', ')} has been updated.`,
+          description: `${updatedFields.join('.\n')}`,
           status: 'info',
           position: 'top',
           duration: 5000,
           isClosable: true,
+        });
+
+        setUserTasks(prevUserTasks => {
+          // Find index of the updated task
+          const index = prevUserTasks.findIndex(task => task._id === updatedTask._id);
+          if (index !== -1) {
+            // Update the task in the array
+            const updatedTasks = [...prevUserTasks];
+            updatedTasks[index] = updatedTask;
+            return updatedTasks;
+          }
+          return prevUserTasks;
         });
       }
 
@@ -109,7 +148,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   return (
-    <TaskContext.Provider value={{ taskSocket, paginatedTasks, fetchTasks }}>
+    <TaskContext.Provider value={{ taskSocket, paginatedTasks, fetchTasks, userTasks, userTasksLoading, fetchUserTasks }}>
       {children}
     </TaskContext.Provider>
   );

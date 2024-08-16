@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Box, Heading, Stack, Text, VStack, Button } from '@chakra-ui/react';
 import { useTaskContext } from '~/features/tasks/context';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { TaskStatus } from '~tasks/types';
 
 export const TasksPage: React.FC = () => {
   const navigate = useNavigate();
