@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Heading, Stack, Text, VStack, Button } from '@chakra-ui/react';
 import { useTaskContext } from '~/features/tasks/context';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { TaskStatus } from '~tasks/types';
 
 export const TasksPage: React.FC = () => {
+  const navigate = useNavigate();
   const { paginatedTasks, fetchTasks } = useTaskContext();
   const [searchParams] = useSearchParams();
 
@@ -72,6 +73,7 @@ export const TasksPage: React.FC = () => {
               borderRadius="md"
               boxShadow="md"
               bg="white"
+              onClick={() => navigate(`/tasks/${task._id}`)}
             >
               <VStack align="start">
                 <Heading size="md">{task.title}</Heading>

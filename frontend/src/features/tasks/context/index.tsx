@@ -2,6 +2,7 @@ import React, { createContext, useState, useContext, useEffect, useCallback } fr
 import { io, Socket } from 'socket.io-client';
 import axios from '~utils/axiosConfig';
 import { ITask } from '~tasks/types';
+import { useToast } from '@chakra-ui/react';
 import {
   onTaskCreated,
   onTaskUpdated,
@@ -32,6 +33,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
     currentPage: 1,
     totalTasks: 0
   });
+  const toast = useToast();
 
   useEffect(() => {
     const newTaskSocket = io('http://localhost:5000/tasks');
@@ -45,6 +47,15 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
 
     onTaskUpdated((updatedTask: ITask) => {
+      toast({
+        title: 'Task Updated',
+        description: `Task "${updatedTask.title}" has been updated.`,
+        position: 'top',
+        status: 'info',
+        duration: 5000,
+        isClosable: true,
+      });
+
       setPaginatedTasks((prev) => ({
         ...prev,
         tasks: prev.tasks.map((task) => (task._id === updatedTask._id ? updatedTask : task))
