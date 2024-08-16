@@ -8,12 +8,47 @@ export const getTasks = async (req: Request, res: Response) => {
     // Extract page and limit from query params, with default values
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 20;
+    const { assignedTo, createdBy, status, createdAfter, tag } = req.query;
+    console.log(status && status.toString().toUpperCase());
+    console.log(Object.keys(TaskStatus))
 
     // Calculate start index of the tasks
     const startIndex = (page - 1) * limit;
 
+    // Build the query object for filtering tasks
+    const query: any = {};
+
+    if (assignedTo) {
+      query.assignedTo = assignedTo;
+    }
+    if (createdBy) {
+      query.createdBy = createdBy;
+    }
+
+    if (status) {
+      // Convert query parameter to match the enum value
+      const statusValue = status.toString().toUpperCase(); // Convert to uppercase
+      const validStatus = Object.values(TaskStatus).find(
+        (enumStatus) => enumStatus.toUpperCase() === statusValue
+      );
+
+      if (validStatus) {
+        query.status = validStatus;
+      } else {
+        // Invalid query param for status
+        return res.status(400).json({ message: 'Invalid status value' });
+      }
+    }
+
+    if (createdAfter) {
+      query.createdAt = { $gte: new Date(createdAfter as string) };
+    }
+    if (tag) {
+      query.tags = { $in: [tag] };
+    }
+
     // Fetch tasks with pagination
-    const tasks = await Task.find()
+    const tasks = await Task.find(query)
       .skip(startIndex)
       .limit(limit);
 
@@ -29,37 +64,6 @@ export const getTasks = async (req: Request, res: Response) => {
   } catch (error) {
     console.error('Error retrieving tasks:', error);
     res.status(500).json({ message: 'Error retrieving tasks' });
-  }
-};
-
-// Query tasks with multiple parameters
-export const queryTasks = async (req: Request, res: Response) => {
-  try {
-    const { assignedTo, createdBy, status, createdAfter, tag } = req.query;
-
-    const query: any = {};
-
-    if (assignedTo) {
-      query.assignedTo = assignedTo;
-    }
-    if (createdBy) {
-      query.createdBy = createdBy;
-    }
-    if (status) {
-      query.status = status;
-    }
-    if (createdAfter) {
-      query.createdAt = { $gte: new Date(createdAfter as string) };
-    }
-    if (tag) {
-      query.tags = { $in: [tag] };
-    }
-
-    const tasks = await Task.find(query);
-    res.status(200).json(tasks);
-  } catch (error) {
-    console.error('Error querying tasks:', error);
-    res.status(500).json({ message: 'Error querying tasks' });
   }
 };
 

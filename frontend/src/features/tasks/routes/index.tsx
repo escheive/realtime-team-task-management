@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Heading, Stack, Text, VStack, Button } from '@chakra-ui/react';
 import { useTaskContext } from '~/features/tasks/context';
+import { useSearchParams } from 'react-router-dom';
+import { TaskStatus } from '~tasks/types';
 
 export const TasksPage: React.FC = () => {
   const { paginatedTasks, fetchTasks } = useTaskContext();
+  const [searchParams] = useSearchParams();
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -13,7 +17,10 @@ export const TasksPage: React.FC = () => {
     const loadTasks = async () => {
       setLoading(true);
       try {
-        await fetchTasks(currentPage, limit);
+        // Build query string from all search params
+        const filters = Object.fromEntries(searchParams.entries());
+
+        await fetchTasks(currentPage, limit, filters);
       } catch (error) {
         setError('Error fetching tasks.');
         console.error(error);

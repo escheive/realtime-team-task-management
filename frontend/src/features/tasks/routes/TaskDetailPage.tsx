@@ -32,7 +32,7 @@ import { useTaskContext } from '~/features/tasks/context';
 
 export const TaskDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { tasks } = useTaskContext();
+  const { paginatedTasks } = useTaskContext();
   const [task, setTask] = useState<ITask | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [newAttachmentUrl, setNewAttachmentUrl] = useState('');
@@ -41,13 +41,13 @@ export const TaskDetailPage: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const foundTask = tasks.find((task) => task._id === id);
+    const foundTask = paginatedTasks.tasks.find((task) => task._id === id);
     if (foundTask) {
       setTask(foundTask);
     } else {
       navigate(-1);
     }
-  }, [id, tasks]);
+  }, [id, paginatedTasks]);
 
   if (!task) return <Text>Task not found</Text>;
 

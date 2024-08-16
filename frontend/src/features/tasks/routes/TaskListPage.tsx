@@ -37,7 +37,8 @@ export const TaskListPage: React.FC = () => {
     const loadTasks = async () => {
       setLoading(true);
       try {
-        await fetchTasks(currentPage, limit, status);
+        const filters = { status };
+        await fetchTasks(currentPage, limit, filters);
       } catch (error) {
         setError('Error fetching tasks.');
         console.error(error);

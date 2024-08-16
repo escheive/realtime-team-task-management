@@ -64,8 +64,9 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
   }, []);
 
-  const fetchTasks = useCallback(async (page: number, limit: number, filters: any) => {
+  const fetchTasks = useCallback(async (page: number, limit: number, filters: Record<string, string>) => {
     try {
+      // Fetch tasks with filter query params
       const response = await axios('/api/tasks',
         {
           params: {

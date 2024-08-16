@@ -28,7 +28,7 @@ export const Dashboard = () => {
     const fetchUserTasks = async () => {
       if (user && user._id) {
         try {
-          const response = await axios.get(`/api/tasks/query`, {
+          const response = await axios.get('/api/tasks', {
             params: {
               assignedTo: user._id
             },
@@ -65,13 +65,13 @@ export const Dashboard = () => {
         <Box bg="gray.100" p={4} borderRadius="md">
           <Text fontSize="lg" mb={2}>Data Breakdown</Text>
           <Text>
-            <RouterLink to="/tasks/status/unassigned">Unassigned: {taskStatusCounts.unassigned}</RouterLink>
+            <RouterLink to="/tasks?status=unassigned">Unassigned: {taskStatusCounts.unassigned}</RouterLink>
           </Text>
           <Text>
-            <RouterLink to="/tasks/status/incomplete">Incomplete: {taskStatusCounts.incomplete}</RouterLink>
+            <RouterLink to="/tasks?status=incomplete">Incomplete: {taskStatusCounts.incomplete}</RouterLink>
           </Text>
           <Text>
-            <RouterLink to="/tasks/status/in-progress">In Progress: {taskStatusCounts.inProgress}</RouterLink>
+            <RouterLink to="/tasks?status=in-progress">In Progress: {taskStatusCounts.inProgress}</RouterLink>
           </Text>
         </Box>
 
