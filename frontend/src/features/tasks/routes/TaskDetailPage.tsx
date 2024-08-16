@@ -34,15 +34,14 @@ export const TaskDetailPage: React.FC = () => {
     }
   }, [id, paginatedTasks.tasks, navigate]);
 
-  useEffect(() => {
-    // Compare original task to edited task for changes
-    setIsEditing(!isEqual(task, editedTask));
-  }, [task, editedTask]);
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     if (editedTask) {
-      setEditedTask({ ...editedTask, [name]: value });
+      const updatedTask = { ...editedTask, [name]: value };
+      setEditedTask(updatedTask);
+
+      // Compare original task to edited task for changes
+      setIsEditing(!isEqual(task, updatedTask));
     }
   };
 
@@ -62,13 +61,6 @@ export const TaskDetailPage: React.FC = () => {
 
     return changes;
   };
-
-  const handleEditToggle = () => {
-    setIsEditing(!isEditing);
-    if (isEditing && editedTask) {
-      handleSaveChanges();
-    }
-  }
 
   const handleSaveChanges = async () => {
     setIsSaving(true);
@@ -136,11 +128,13 @@ export const TaskDetailPage: React.FC = () => {
           <TaskHeader
             task={editedTask!}
             onInputChange={handleInputChange}
+            isDisabled={isSaving}
           />
 
           <TaskDetailsForm 
             task={editedTask!} 
             onInputChange={handleInputChange} 
+            isDisabled={isSaving}
           />
 
           <Attachments
@@ -154,6 +148,7 @@ export const TaskDetailPage: React.FC = () => {
             setNewAttachmentName={setNewAttachmentName}
             handleAddAttachment={handleAddAttachment}
             handleRemoveAttachment={handleRemoveAttachment}
+            isDisabled={isSaving}
           />
 
           <ActivityLog activityLog={task.activityLog} />
@@ -162,7 +157,7 @@ export const TaskDetailPage: React.FC = () => {
             <Button 
               colorScheme="blue" 
               onClick={handleSaveChanges} 
-              isDisabled={!isEditing}
+              isDisabled={!isEditing || isSaving}
               mr={2}
             >
               Save Changes
@@ -170,7 +165,7 @@ export const TaskDetailPage: React.FC = () => {
             <Button 
               colorScheme="red" 
               onClick={handleCancel}
-              isDisabled={!isEditing}
+              isDisabled={!isEditing || isSaving}
             >
               Cancel
             </Button>

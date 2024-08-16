@@ -13,6 +13,7 @@ interface AttachmentsProps {
   setNewAttachmentName: (name: string) => void;
   handleAddAttachment: () => void;
   handleRemoveAttachment: (index: number) => void;
+  isDisabled: boolean;
 }
 
 export const Attachments: React.FC<AttachmentsProps> = ({
@@ -26,6 +27,7 @@ export const Attachments: React.FC<AttachmentsProps> = ({
   setNewAttachmentName,
   handleAddAttachment,
   handleRemoveAttachment,
+  isDisabled
 }) => (
   <>
     <Text fontSize="lg" fontWeight="bold" mb={4}>Attachments</Text>
@@ -34,7 +36,7 @@ export const Attachments: React.FC<AttachmentsProps> = ({
         <ListItem key={index}>
           <ListIcon as={AttachmentIcon} color="gray.500" />
           <a href={attachment.url} target="_blank" rel="noopener noreferrer">{attachment.filename}</a>
-          <Button size="sm" ml={2} onClick={() => handleRemoveAttachment(index)} icon={<DeleteIcon />} />
+          <Button size="sm" ml={2} onClick={() => handleRemoveAttachment(index)} rightIcon={<DeleteIcon />} isDisabled={isDisabled} />
         </ListItem>
       ))}
     </List>
@@ -49,17 +51,17 @@ export const Attachments: React.FC<AttachmentsProps> = ({
           <Stack spacing={4}>
             <FormControl>
               <FormLabel>Attachment URL</FormLabel>
-              <Input value={newAttachmentUrl} onChange={(e) => setNewAttachmentUrl(e.target.value)} placeholder="Enter URL" />
+              <Input value={newAttachmentUrl} onChange={(e) => setNewAttachmentUrl(e.target.value)} placeholder="Enter URL" isDisabled={isDisabled} />
             </FormControl>
             <FormControl>
               <FormLabel>Attachment Name</FormLabel>
-              <Input value={newAttachmentName} onChange={(e) => setNewAttachmentName(e.target.value)} placeholder="Enter filename" />
+              <Input value={newAttachmentName} onChange={(e) => setNewAttachmentName(e.target.value)} placeholder="Enter filename" isDisabled={isDisabled} />
             </FormControl>
           </Stack>
         </ModalBody>
         <ModalFooter>
-          <Button variant="ghost" onClick={onClose}>Cancel</Button>
-          <Button colorScheme="teal" ml={3} onClick={handleAddAttachment}>Add</Button>
+          <Button variant="ghost" onClick={onClose} isDisabled={isDisabled}>Cancel</Button>
+          <Button colorScheme="teal" ml={3} onClick={handleAddAttachment} isDisabled={isDisabled}>Add</Button>
         </ModalFooter>
       </ModalContent>
     </Modal>
