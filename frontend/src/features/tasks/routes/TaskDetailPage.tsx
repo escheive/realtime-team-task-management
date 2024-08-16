@@ -54,6 +54,12 @@ export const TaskDetailPage: React.FC = () => {
     if (original.description !== updated.description) changes.push(`Description changed from "${original.description}" to "${updated.description}"`);
 
     if (original.status !== updated.status) changes.push(`Status changed from "${original.status}" to "${updated.status}"`);
+
+    if (original.priority !== updated.priority) changes.push(`Priority changed from "${original.priority}" to "${updated.priority}"`);
+
+    if (original.dueDate !== updated.dueDate) changes.push(`Due date changed from "${original.dueDate}" to "${updated.dueDate}"`);
+
+    if (original.assignedTo !== updated.assignedTo) changes.push(`Task reassigned from "${original.assignedTo}" to "${updated.assignedTo}"`);
     
     if (changes.length == 0) {
       return false
@@ -66,6 +72,7 @@ export const TaskDetailPage: React.FC = () => {
     setIsSaving(true);
 
     if (!task || !editedTask) {
+      console.log('no task!')
       setIsSaving(false);
       return;
     }
@@ -73,6 +80,7 @@ export const TaskDetailPage: React.FC = () => {
     const changes = detectChanges(task, editedTask);
 
     if (!changes) {
+      console.log('no changes')
       setIsSaving(false);
       return;
     }
