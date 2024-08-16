@@ -16,6 +16,13 @@ export enum TaskPriority {
   URGENT = 'Urgent',
 }
 
+export interface IActivityLog {
+  user: string;       // User who performed the action
+  action: string;     // Description of the action
+  comment: string;    // Optional comment left by user
+  timestamp: Date;    // When the action was performed
+}
+
 // Interface for TS
 export interface ITask extends Document {
   title: string;
@@ -26,12 +33,7 @@ export interface ITask extends Document {
   dueDate?: Date;
   priority?: TaskPriority;
   tags?: string[];
-  activityLog?: {
-    timestamp: Date;
-    user: string;
-    action: string;
-    comment?: string;
-  }[];
+  activityLog?: IActivityLog[];
   attachments?: {
     filename: string;
     url: string;
@@ -62,12 +64,14 @@ const TaskSchema: Schema = new Schema({
     enum: Object.values(TaskPriority) 
   },
   tags: [{ type: String }],
-  activityLog: [{
-    timestamp: { type: Date, default: Date.now },
-    user: { type: String },
-    action: { type: String },
-    comment: { type: String }
-  }],
+  activityLog: [
+    {
+      user: { type: String, required: true },
+      action: { type: String, required: true },
+      comment: { type: String },
+      timestamp: { type: Date, default: Date.now }
+    }
+  ],
   attachments: [{
     filename: { type: String },
     url: { type: String }
