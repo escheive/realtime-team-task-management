@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, ListItem, ListIcon, Text } from '@chakra-ui/react';
+import { Box, List, ListItem, ListIcon, Text } from '@chakra-ui/react';
 import { CalendarIcon } from '@chakra-ui/icons';
 
 interface ActivityLogProps {
@@ -7,9 +7,9 @@ interface ActivityLogProps {
 }
 
 export const ActivityLog: React.FC<ActivityLogProps> = ({ activityLog }) => (
-  <>
+  <Box>
     <Text fontSize="lg" fontWeight="bold" mb={4}>Activity Log</Text>
-    <List spacing={3} mb={6}>
+    <List maxH="400px" overflowY="auto" spacing={3} mb={6}>
       {activityLog.map((log, index) => (
         <ListItem key={index}>
           <ListIcon as={CalendarIcon} color="gray.500" />
@@ -18,5 +18,5 @@ export const ActivityLog: React.FC<ActivityLogProps> = ({ activityLog }) => (
         </ListItem>
       ))}
     </List>
-  </>
+  </Box>
 );
