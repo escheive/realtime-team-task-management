@@ -70,7 +70,7 @@ const TaskForm = () => {
       activityLog: [
         {
           user: user.email,
-          action: `Created task ${title}`,
+          action: `Created the task and assigned it to ${assignedTo}`,
           timestamp: new Date(),
         }
       ]

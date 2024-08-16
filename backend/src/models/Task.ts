@@ -33,7 +33,7 @@ export interface ITask extends Document {
   dueDate?: Date;
   priority?: TaskPriority;
   tags?: string[];
-  activityLog?: IActivityLog[];
+  activityLog: IActivityLog[];
   attachments?: {
     filename: string;
     url: string;

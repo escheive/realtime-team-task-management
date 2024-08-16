@@ -30,26 +30,31 @@ import { ITask, TaskStatus, TaskPriority } from '~tasks/types';
 import { updateTask } from '~tasks/api';
 import { useTaskContext } from '~/features/tasks/context';
 import axios from '~utils/axiosConfig';
+import { useUser } from '~/features/users/context/UserContext';
 
 export const TaskDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { paginatedTasks } = useTaskContext();
+  const [editedTask, setEditedTask] = useState<ITask | null>(null);
   const [task, setTask] = useState<ITask | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [newAttachmentUrl, setNewAttachmentUrl] = useState('');
   const [newAttachmentName, setNewAttachmentName] = useState('');
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
+  const { user } = useUser();
 
   useEffect(() => {
     const foundTask = paginatedTasks.tasks.find((task) => task._id === id);
     if (foundTask) {
-      setTask(foundTask);
+      setEditedTask(foundTask);
+      setTask({ ...foundTask });
     } else {
       const fetchTaskDetails = async () => {
         try {
           const response = await axios.get(`/api/tasks/${id}`);
-          setTask(response.data);
+          setEditedTask(response.data);
+          setTask({ ...response.data });
         } catch (error) {
           console.error('Error fetching task details:', error);
           navigate(-1); // Navigate back if the task is not found
@@ -60,20 +65,47 @@ export const TaskDetailPage: React.FC = () => {
     }
   }, [id, paginatedTasks]);
 
-  if (!task) return <Text>Task not found</Text>;
+  if (!task || !editedTask) return <Text>Task not found</Text>;
 
   const handleEditToggle = () => setIsEditing(!isEditing);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setTask((prevTask) => (prevTask ? { ...prevTask, [name]: value } : null));
+    setEditedTask((prevTask) => (prevTask ? { ...prevTask, [name]: value } : null));
+  };
+
+  // Detect what was updated on task for activity log tracking
+  const detectChanges = (original: ITask, updated: ITask) => {
+    const changes: string[] = [];
+
+    if (original.title !== updated.title) changes.push(`Title changed from "${original.title}" to "${updated.title}"`);
+
+    if (original.description !== updated.description) changes.push(`Description changed from "${original.description}" to "${updated.description}"`);
+
+    if (original.status !== updated.status) changes.push(`Status changed from "${original.status}" to "${updated.status}"`);
+    
+    return changes;
   };
 
   const handleSaveChanges = async () => {
-    if (!task) return;
+    if (!editedTask) return;
+
+    const changes = detectChanges(task, editedTask);
 
     try {
-      await updateTask(task);
+
+      await updateTask({
+        ...editedTask,
+        activityLog: [
+          {
+            user: user.email,
+            action: `Updated task: ${changes.join(', ')}`,
+            timestamp: new Date(),
+          },
+          ...editedTask.activityLog
+        ]
+      });
+
       setIsEditing(false);
     } catch (error) {
       console.error('Error updating task:', error);
@@ -102,14 +134,14 @@ export const TaskDetailPage: React.FC = () => {
       <Flex justify="space-between" align="center" mb={6}>
         <Box>
           {isEditing ? (
-            <Input name="title" value={task.title} onChange={handleInputChange} fontSize="2xl" fontWeight="bold" />
+            <Input name="title" value={editedTask.title} onChange={handleInputChange} fontSize="2xl" fontWeight="bold" />
           ) : (
             <Text fontSize="2xl" fontWeight="bold">
               {task.title}
             </Text>
           )}
           {isEditing ? (
-            <Textarea name="description" value={task.description} onChange={handleInputChange} fontSize="md" color="gray.500" />
+            <Textarea name="description" value={editedTask.description} onChange={handleInputChange} fontSize="md" color="gray.500" />
           ) : (
             <Text fontSize="md" color="gray.500">
               {task.description || 'No description provided'}
@@ -127,7 +159,7 @@ export const TaskDetailPage: React.FC = () => {
         <>
           <FormControl mb={4}>
             <FormLabel>Status</FormLabel>
-            <Select name="status" value={task.status} onChange={handleInputChange}>
+            <Select name="status" value={editedTask.status} onChange={handleInputChange}>
               {Object.values(TaskStatus).map((status) => (
                 <option key={status} value={status}>
                   {status}
@@ -138,7 +170,7 @@ export const TaskDetailPage: React.FC = () => {
 
           <FormControl mb={4}>
             <FormLabel>Priority</FormLabel>
-            <Select name="priority" value={task.priority} onChange={handleInputChange}>
+            <Select name="priority" value={editedTask.priority} onChange={handleInputChange}>
               {Object.values(TaskPriority).map((priority) => (
                 <option key={priority} value={priority}>
                   {priority}
@@ -152,14 +184,14 @@ export const TaskDetailPage: React.FC = () => {
             <Input
               name="dueDate"
               type="date"
-              value={task.dueDate ? new Date(task.dueDate).toISOString().split('T')[0] : ''}
+              value={task.dueDate ? new Date(editedTask.dueDate).toISOString().split('T')[0] : ''}
               onChange={handleInputChange}
             />
           </FormControl>
 
           <FormControl mb={4}>
             <FormLabel>Assigned To</FormLabel>
-            <Input name="assignedTo" value={task.assignedTo || ''} onChange={handleInputChange} />
+            <Input name="assignedTo" value={editedTask.assignedTo || ''} onChange={handleInputChange} />
           </FormControl>
 
           <Divider my={6} />
@@ -168,7 +200,7 @@ export const TaskDetailPage: React.FC = () => {
             Attachments
           </Text>
           <List spacing={3}>
-            {task.attachments?.map((attachment, index) => (
+            {editedTask.attachments?.map((attachment, index) => (
               <ListItem key={index}>
                 <ListIcon as={AttachmentIcon} color="gray.500" />
                 <a href={attachment.url} target="_blank" rel="noopener noreferrer">

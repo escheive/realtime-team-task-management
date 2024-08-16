@@ -8,7 +8,7 @@ export interface ITask {
   dueDate?: Date;          // Optional due date
   priority?: TaskPriority; // Priority of the task
   tags?: string[];         // Optional tags
-  activityLog?: {          // Optional activity log
+  activityLog: {          // Optional activity log
     timestamp: Date;
     user: string;
     action: string;
