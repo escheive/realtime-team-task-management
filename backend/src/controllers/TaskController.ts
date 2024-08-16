@@ -9,8 +9,6 @@ export const getTasks = async (req: Request, res: Response) => {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 20;
     const { assignedTo, createdBy, status, createdAfter, tag } = req.query;
-    console.log(status && status.toString().toUpperCase());
-    console.log(Object.keys(TaskStatus))
 
     // Calculate start index of the tasks
     const startIndex = (page - 1) * limit;
