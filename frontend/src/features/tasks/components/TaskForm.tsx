@@ -16,6 +16,7 @@ import {
 } from '@chakra-ui/react';
 import { createTask } from '~tasks/api';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '~/features/users/context/UserContext';
 
 const TaskForm = () => {
   const [title, setTitle] = useState('');
@@ -31,6 +32,7 @@ const TaskForm = () => {
   const [reminderMessage, setReminderMessage] = useState('');
   const toast = useToast();
   const navigate = useNavigate();
+  const { user } = useUser();
 
   const handleAddTag = () => {
     if (tagInput && !tags.includes(tagInput)) {
@@ -65,6 +67,13 @@ const TaskForm = () => {
       tags,
       reminder: reminderDate ? { date: new Date(reminderDate), message: reminderMessage } : undefined,
       attachments,
+      activityLog: [
+        {
+          user: user.email,
+          action: `Created task ${title}`,
+          timestamp: new Date(),
+        }
+      ]
     };
 
     try {
