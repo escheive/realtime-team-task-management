@@ -41,8 +41,6 @@ export const TaskDetailPage: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
 
-  console.log('task details page')
-
   useEffect(() => {
     const foundTask = paginatedTasks.tasks.find((task) => task._id === id);
     if (foundTask) {

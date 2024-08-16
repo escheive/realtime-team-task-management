@@ -34,7 +34,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
     currentPage: 1,
     totalTasks: 0
   });
-  const user = useUser();
+  const { user } = useUser();
   const toast = useToast();
 
   useEffect(() => {
