@@ -65,6 +65,20 @@ export const getTasks = async (req: Request, res: Response) => {
   }
 };
 
+// Find task by ID
+export const getTaskById = async (req: Request, res: Response) => {
+  try {
+    const taskId = req.params.id;
+    const task = await Task.findById(taskId);
+    if (!task) {
+      return res.status(404).json({ message: 'Task not found' });
+    }
+    res.status(200).json(task);
+  } catch (error) {
+    console.error('Error retrieving task by ID:', error);
+    res.status(500).json({ message: 'Error retrieving task by ID' });
+  }
+};
 
 // Get incomplete task count
 export const getTaskStatusCounts = async (req: Request, res: Response) => {
@@ -104,14 +118,19 @@ export const createTask = async (req: Request, res: Response) => {
 // Update a task
 export const updateTask = async (req: Request, res: Response) => {
   try {
-    const task = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!task) {
+    const taskId = req.params.id;
+    const oldTask = await Task.findById(taskId); // Get old task
+
+    // Update the task with the new data
+    const updatedTask = await Task.findByIdAndUpdate(taskId, req.body, { new: true });
+    if (!updatedTask) {
       return res.status(404).json({ message: 'Task not found' });
     }
 
-    taskNamespace.emit('taskUpdated', task);
+    // Emit event with old and updated task data to task web sockets
+    taskNamespace.emit('taskUpdated', { oldTask, updatedTask });
 
-    res.status(200).json(task);
+    res.status(200).json(updatedTask);
   } catch (error) {
     console.error('Error updating task:', error);
     res.status(500).json({ message: 'Error updating task' });

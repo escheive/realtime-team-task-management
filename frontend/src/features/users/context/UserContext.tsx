@@ -16,8 +16,6 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  console.log(user)
-
   useEffect(() => {
     const fetchUserData = async () => {
       if (authToken) {

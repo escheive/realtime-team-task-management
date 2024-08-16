@@ -11,7 +11,7 @@ const onTaskCreated = (callback: (task: ITask) => void) => {
   taskSocket.on('taskCreated', callback);
 };
 
-const onTaskUpdated = (callback: (task: ITask) => void) => {
+const onTaskUpdated = (callback: (data: {oldTask: ITask; updatedTask: ITask }) => void) => {
   taskSocket.on('taskUpdated', callback);
 };
 

@@ -29,6 +29,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ITask, TaskStatus, TaskPriority } from '~tasks/types';
 import { updateTask } from '~tasks/api';
 import { useTaskContext } from '~/features/tasks/context';
+import axios from '~utils/axiosConfig';
 
 export const TaskDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -40,12 +41,24 @@ export const TaskDetailPage: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
 
+  console.log('task details page')
+
   useEffect(() => {
     const foundTask = paginatedTasks.tasks.find((task) => task._id === id);
     if (foundTask) {
       setTask(foundTask);
     } else {
-      navigate(-1);
+      const fetchTaskDetails = async () => {
+        try {
+          const response = await axios.get(`/api/tasks/${id}`);
+          setTask(response.data);
+        } catch (error) {
+          console.error('Error fetching task details:', error);
+          navigate(-1); // Navigate back if the task is not found
+        }
+      };
+  
+      fetchTaskDetails();
     }
   }, [id, paginatedTasks]);
 

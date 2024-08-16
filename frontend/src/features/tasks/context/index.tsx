@@ -2,6 +2,7 @@ import React, { createContext, useState, useContext, useEffect, useCallback } fr
 import { io, Socket } from 'socket.io-client';
 import axios from '~utils/axiosConfig';
 import { ITask } from '~tasks/types';
+import { useUser } from '~features/users/context/UserContext';
 import { useToast } from '@chakra-ui/react';
 import {
   onTaskCreated,
@@ -33,6 +34,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
     currentPage: 1,
     totalTasks: 0
   });
+  const user = useUser();
   const toast = useToast();
 
   useEffect(() => {
@@ -46,15 +48,23 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }));
     });
 
-    onTaskUpdated((updatedTask: ITask) => {
-      toast({
-        title: 'Task Updated',
-        description: `Task "${updatedTask.title}" has been updated.`,
-        position: 'top',
-        status: 'info',
-        duration: 5000,
-        isClosable: true,
-      });
+    onTaskUpdated(({ oldTask, updatedTask }: { oldTask: ITask; updatedTask: ITask }) => {
+      // // Identify what was updated
+      // const updatedFields: string[] = [];
+      // if (oldTask.title !== updatedTask.title) updatedFields.push(`Title has been updated to: ${updatedTask.title}`);
+      // if (oldTask.description !== updatedTask.description) updatedFields.push('Description');
+      // if (oldTask.status !== updatedTask.status) updatedFields.push('Status');
+
+      if (user && updatedTask.assignedTo === user._id) {
+        toast({
+          title: `Task: "${oldTask.title}" Updated`,
+          // description: `${updatedFields.join(', ')} has been updated.`,
+          status: 'info',
+          position: 'top',
+          duration: 5000,
+          isClosable: true,
+        });
+      }
 
       setPaginatedTasks((prev) => ({
         ...prev,

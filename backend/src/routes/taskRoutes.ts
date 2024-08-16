@@ -7,6 +7,7 @@ const router = express.Router();
 // Get
 router.get('/', authMiddleware, taskController.getTasks); // All tasks
 router.get('/status-counts', authMiddleware, taskController.getTaskStatusCounts) // Count for incomplete, in-progress, and unassigned tasks
+router.get('/:id', authMiddleware, taskController.getTaskById);
 
 // Post
 router.post('/', authMiddleware, taskController.createTask); // Create a task
