@@ -1,7 +1,7 @@
 import React from 'react';
 import { Spinner } from '@chakra-ui/react';
 
-import { ChakraProvider } from '@chakra-ui/react';
+import { extendTheme, ChakraProvider } from '@chakra-ui/react';
 import { AuthProvider } from '~auth/context/AuthContext';
 import { TaskProvider } from '~/features/tasks/context';
 import { UserProvider } from '~/features/users/context/UserContext';
@@ -9,6 +9,19 @@ import { UserProvider } from '~/features/users/context/UserContext';
 type AppProviderProps = {
   children: React.ReactNode;
 };
+
+const theme = extendTheme({
+  components: {
+    Button: {
+      baseStyle: {
+        _disabled: {
+          bg: "gray.400",
+          cursor: "not-allowed",
+        },
+      },
+    },
+  },
+});
 
 export const AppProvider = ({ children }: AppProviderProps) => {
 
@@ -20,7 +33,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
         </div>
       }
     >
-      <ChakraProvider>
+      <ChakraProvider theme={theme}>
         <AuthProvider>
           <UserProvider>
             <TaskProvider>

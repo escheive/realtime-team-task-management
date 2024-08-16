@@ -14,7 +14,7 @@ export interface ITask {
     action: string;
     comment?: string;
   }[];
-  attachments?: {          // Option for attachments
+  attachments: {          // Option for attachments
     filename: string;
     url: string;
   }[];

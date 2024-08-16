@@ -34,7 +34,7 @@ export interface ITask extends Document {
   priority?: TaskPriority;
   tags?: string[];
   activityLog: IActivityLog[];
-  attachments?: {
+  attachments: {
     filename: string;
     url: string;
   }[];
