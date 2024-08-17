@@ -9,8 +9,8 @@ interface IUser extends Document {
   profilePicture: string;
   dateOfBirth?: Date;
   phoneNumber?: string;
-  roles: string[];
-  status: 'active' | 'suspended' | 'deactivated';
+  roles: 'Admin' | 'User' | 'Moderator';
+  status: 'Active' | 'Suspended' | 'Deactivated';
   lastLogin?: Date;
   address: {
     street?: string;
@@ -39,8 +39,8 @@ const userSchema: Schema<IUser> = new Schema({
   profilePicture: { type: String, default: '' },
   dateOfBirth: { type: Date },
   phoneNumber: { type: String, default: '' },
-  roles: [{ type: String, enum: ['admin', 'user', 'moderator'], default: 'user' }],
-  status: { type: String, enum: ['active', 'suspended', 'deactivated'], default: 'active' },
+  roles: [{ type: String, enum: ['Admin', 'User', 'Moderator'], default: 'User' }],
+  status: { type: String, enum: ['Active', 'Suspended', 'Deactivated'], default: 'Active' },
   lastLogin: { type: Date },
   address: {
     street: { type: String },

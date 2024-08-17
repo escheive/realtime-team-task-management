@@ -66,16 +66,51 @@ export const getUserById = async (req: AuthenticatedRequest, res: Response) => {
 // Create a new user
 export const createUser = async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body;
+    const { 
+      email, 
+      password,
+      username,
+      fullName,
+      profilePicture,
+      dateOfBirth,
+      phoneNumber,
+      roles,
+      status,
+      address,
+    } = req.body;
 
-    if (!email || !password) {
-      return res.status(400).json({ message: 'Email and password are required' });
+    if (!email || !password || !username || !fullName) {
+      return res.status(400).json({ message: 'Email, password, username, and full name are required' });
     }
 
-    const user = new User({ email, password });
+    // Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: 'User with this email already exists' });
+    }
+
+    // Create a new user instance
+    const user = new User({
+      email, 
+      password,
+      username,
+      fullName,
+      profilePicture,
+      dateOfBirth,
+      phoneNumber,
+      roles,
+      status,
+      address,
+      activityLog: [],
+      isOnline: false,
+      twoFactorEnabled: false,
+      notifications: true
+    });
+
+    // Save the user
     await user.save();
 
-    res.status(201).json({ message: 'User created successfully' });
+    res.status(201).json({ message: 'User created successfully', userId: user._id });
   } catch (error) {
     console.error('Error creating user:', error);
     res.status(500).json({ message: 'Error creating user' });

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Heading, Stack, Text, VStack, Button } from '@chakra-ui/react';
 import { useUser } from '~users/context';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, Link as RouterLink } from 'react-router-dom';
 
 export const UsersPage: React.FC = () => {
   const navigate = useNavigate();
@@ -44,6 +44,16 @@ export const UsersPage: React.FC = () => {
   return (
     <Box p={4}>
       <Heading mb={4}>All Users</Heading>
+      <Button
+        as={RouterLink}
+        to="/users/new"
+        colorScheme="blue"
+        variant="solid"
+        size="lg"
+        mb={4}
+      >
+        Create New User
+      </Button>
       <Stack spacing={4}>
         {paginatedUsers.users.length === 0 ? (
           <Text>No users available.</Text>

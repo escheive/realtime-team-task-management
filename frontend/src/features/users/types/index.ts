@@ -2,11 +2,28 @@
 export interface IUser {
   _id: string;
   email: string;
+  password: string;
+  username: string;
   fullName: string;
+  profilePicture?: string;
+  dateOfBirth?: string;
   phoneNumber?: string;
-  status?: string;
+  roles: string[];
+  status: 'Active' | 'Suspended' | 'Deactivated';
   lastLogin?: Date;
-  isOnline: boolean;
+  address: {
+    street?: string;
+    city?: string;
+    state?: string;
+    postalCode?: string;
+    country?: string;
+  };
+  activityLog: {
+    action: string;
+    timestamp: Date;
+  }[];
+  isOnline?: boolean;
+  notifications?: boolean;
 }
 
 export interface PaginatedUsers {
