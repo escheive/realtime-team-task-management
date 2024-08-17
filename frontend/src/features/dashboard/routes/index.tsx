@@ -83,10 +83,18 @@ export const Dashboard = () => {
                 const isUrgent = task.priority === TaskPriority.URGENT;
                 const isHighPriority = task.priority === TaskPriority.HIGH;
 
+                let isDueToday = false;
                 const today = new Date();
-                const dueDate = new Date(task.dueDate)
-                // const isDueToday = true;
-                const isDueToday = task.dueDate && dueDate.toDateString() === today.toDateString();
+                let dueDate: string | Date = '';
+
+                if (task.dueDate) {
+                  // Convert dueDate to date type
+                  dueDate = new Date(task.dueDate)
+                  // Check if date due matched today
+                  isDueToday = dueDate.toDateString() === today.toDateString();
+                  // Convert dueDate to localString type for rendering
+                  dueDate = dueDate.toLocaleString();
+                }
 
                 // Set the appropriate color based on the task's status
                 let color = 'black';
@@ -104,7 +112,7 @@ export const Dashboard = () => {
                           {task.title}
                         </Text>
                         <Text color={color} fontSize="sm">
-                          {dueDate.toLocaleString()}
+                          {dueDate}
                         </Text>
                       </Box>
                     </RouterLink>
@@ -112,16 +120,6 @@ export const Dashboard = () => {
                 );
               })}
             </List>
-            // <List spacing={3}>
-            //   {userTasks.map(task => (
-            //     <ListItem key={task._id}>
-            //       <RouterLink to={`/tasks/${task._id}`}>
-            //         <Text>{task.title}</Text>
-            //         <Text>{task.dueDate?.toLocaleString()}</Text>
-            //       </RouterLink>
-            //     </ListItem>
-            //   ))}
-            // </List>
           ) : (
             <Text>No tasks assigned to you.</Text>
           )}
