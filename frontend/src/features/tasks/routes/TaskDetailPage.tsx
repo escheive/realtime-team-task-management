@@ -6,10 +6,7 @@ import { deleteTask, updateTask } from '~tasks/api';
 import { isEqual } from 'lodash';
 import { useTaskContext } from '~/features/tasks/context';
 import { useUser } from '~/features/users/context/UserContext';
-import { TaskHeader } from '~tasks/components/taskDetails/TaskHeader';
-import { TaskDetailsForm } from '~tasks/components/taskDetails/TaskDetailsForm';
-import { ActivityLog } from '~tasks/components/taskDetails/ActivityLog';
-import { Attachments } from '~tasks/components/taskDetails/Attachments';
+import { TaskHeader, TaskDetailsForm, ActivityLog, Attachments } from '~tasks/components';
 
 export const TaskDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();

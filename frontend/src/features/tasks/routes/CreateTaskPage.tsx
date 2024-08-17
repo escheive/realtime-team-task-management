@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Text } from '@chakra-ui/react';
-import TaskForm from '~tasks/components/TaskForm';
+import { TaskForm } from '~tasks/components';
 
 export const CreateTaskPage: React.FC = () => {
   return (

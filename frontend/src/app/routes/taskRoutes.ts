@@ -10,21 +10,21 @@ export const taskRoutes = [
   {
     path: '/tasks/new',
     lazy: async () => {
-      const { CreateTaskPage } = await import('~tasks/routes/CreateTaskPage');
+      const { CreateTaskPage } = await import('~tasks/routes');
       return { Component: CreateTaskPage };
     }
   },
   {
     path: '/tasks/:id',
     lazy: async () => {
-      const { TaskDetailPage } = await import('~tasks/routes/TaskDetailPage');
+      const { TaskDetailPage } = await import('~tasks/routes');
       return { Component: TaskDetailPage };
     }
   },
   {
     path: '/tasks/status/:status',
     lazy: async () => {
-      const { TaskListPage } = await import('~tasks/routes/TaskListPage');
+      const { TaskListPage } = await import('~tasks/routes');
       return { Component: TaskListPage };
     }
   }

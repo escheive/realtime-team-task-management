@@ -18,7 +18,7 @@ import { createTask } from '~tasks/api';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '~/features/users/context/UserContext';
 
-const TaskForm = () => {
+export const TaskForm = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [status, setStatus] = useState(TaskStatus.INCOMPLETE);
@@ -233,5 +233,3 @@ const TaskForm = () => {
     </Box>
   );
 };
-
-export default TaskForm;
