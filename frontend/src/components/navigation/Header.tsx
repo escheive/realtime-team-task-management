@@ -12,8 +12,8 @@ import UserMenu from './UserMenu';
 
 const Links = [
   { to: '/', label: 'Dashboard' },
-  { to: '/about', label: 'About' },
-  { to: '/contact', label: 'Contact' },
+  { to: '/tasks', label: 'Tasks' },
+  { to: '/users', label: 'Users' },
 ];
 
 const Header = ({ isScrollingDown }: { isScrollingDown: boolean }) => {

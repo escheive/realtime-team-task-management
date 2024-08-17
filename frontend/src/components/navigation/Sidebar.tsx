@@ -20,8 +20,8 @@ const Sidebar = ({ isOpen, onOpen, onClose }: { isOpen: boolean, onOpen: () => v
         <Box display={isOpen ? "block" : "none"}>
           <Stack spacing={4} mt={4}>
             <NavLink to="/">Dashboard</NavLink>
-            <NavLink to="/about">About</NavLink>
-            <NavLink to="/contact">Contact</NavLink>
+            <NavLink to="/tasks">Tasks</NavLink>
+            <NavLink to="/users">Users</NavLink>
           </Stack>
         </Box>
       </Box>
