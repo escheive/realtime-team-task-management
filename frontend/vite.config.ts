@@ -30,6 +30,7 @@ export default defineConfig({
       '~auth': path.resolve(__dirname, 'src/features/auth'),
       '~dashboard': path.resolve(__dirname, 'src/features/dashboard'),
       '~tasks': path.resolve(__dirname, 'src/features/tasks'),
+      '~users': path.resolve(__dirname, 'src/features/users'),
     },
   },
 })

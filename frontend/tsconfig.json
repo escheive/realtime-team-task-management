@@ -38,6 +38,7 @@
       "~auth/*": ["./src/features/auth/*"],
       "~dashboard/*": ["./src/features/dashboard/*"],
       "~tasks/*": ["./src/features/tasks/*"],
+      "~users/*": ["./src/features/users/*"],
     },
 
     /* Emit and Build Settings */

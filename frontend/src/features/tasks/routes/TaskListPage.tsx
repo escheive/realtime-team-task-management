@@ -18,8 +18,6 @@ export const TaskListPage: React.FC = () => {
 
   const getStatusColor = (status: TaskStatus) => {
     switch (status) {
-      case TaskStatus.UNASSIGNED:
-        return 'gray';
       case TaskStatus.INCOMPLETE:
         return 'yellow';
       case TaskStatus.IN_PROGRESS:

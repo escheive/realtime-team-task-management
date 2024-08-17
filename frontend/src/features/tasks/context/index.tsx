@@ -1,6 +1,5 @@
 import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
 import { io, Socket } from 'socket.io-client';
-import axios from '~utils/axiosConfig';
 import { ITask } from '~tasks/types';
 import { useUser } from '~features/users/context/UserContext';
 import { useToast } from '@chakra-ui/react';
@@ -10,6 +9,7 @@ import {
   onTaskDeleted,
   cleanupTaskSockets
 } from '~tasks/sockets';
+import { getTasks } from '~tasks/api';
 
 interface PaginatedTasks {
   tasks: ITask[];
@@ -48,12 +48,12 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (user && user._id) {
       setUserTasksLoading(true);
       try {
-        const response = await axios.get('/api/tasks', {
-          params: {
-            assignedTo: user._id
-          },
+        const response = await getTasks({
+          assignedTo: user._id,
+          page: 1,
+          limit: 20
         });
-        setUserTasks(response.data.tasks);
+        setUserTasks(response.tasks);
       } catch (error) {
         console.error('Error fetching user tasks:', error);
       } finally {
@@ -127,20 +127,16 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const fetchTasks = useCallback(async (page: number, limit: number, filters: Record<string, string>) => {
     try {
       // Fetch tasks with filter query params
-      const response = await axios('/api/tasks',
-        {
-          params: {
-            ...filters,
-            page,
-            limit
-          }
-        });
-      const data = await response.data;
+      const response = await getTasks({
+        ...filters,
+        page,
+        limit
+      });
       setPaginatedTasks({
-        tasks: data.tasks,
-        totalPages: data.totalPages,
-        currentPage: data.currentPage,
-        totalTasks: data.totalTasks
+        tasks: response.tasks,
+        totalPages: response.totalPages,
+        currentPage: response.currentPage,
+        totalTasks: response.totalTasks
       });
     } catch (error) {
       console.error('Error fetching tasks:', error);

@@ -21,7 +21,7 @@ import { useUser } from '~/features/users/context/UserContext';
 const TaskForm = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [status, setStatus] = useState(TaskStatus.UNASSIGNED);
+  const [status, setStatus] = useState(TaskStatus.INCOMPLETE);
   const [assignedTo, setAssignedTo] = useState('');
   const [dueDate, setDueDate] = useState('');
   const [priority, setPriority] = useState(TaskPriority.LOW);
@@ -84,7 +84,7 @@ const TaskForm = () => {
       // Reset form fields
       setTitle('');
       setDescription('');
-      setStatus(TaskStatus.UNASSIGNED);
+      setStatus(TaskStatus.INCOMPLETE);
       setAssignedTo('');
       setDueDate('');
       setPriority(TaskPriority.LOW);

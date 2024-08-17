@@ -29,7 +29,6 @@ export interface ITask {
 
 // Enum for task statuses
 export enum TaskStatus {
-  UNASSIGNED = 'Unassigned',
   INCOMPLETE = 'Incomplete',
   IN_PROGRESS = 'In Progress',
   CANCELLED = 'Cancelled',
@@ -41,4 +40,21 @@ export enum TaskPriority {
   MEDIUM = 'Medium',
   HIGH = 'High',
   URGENT = 'Urgent',
+}
+
+export interface GetTasksResponse {
+  totalTasks: number;
+  currentPage: number;
+  totalPages: number;
+  tasks: ITask[];
+};
+
+export interface GetTasksParams {
+  page?: number;
+  limit?: number;
+  assignedTo?: string;
+  createdBy?: string;
+  status?: string;
+  createdAfter?: string;
+  tag?: string;
 }

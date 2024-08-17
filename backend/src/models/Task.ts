@@ -2,7 +2,6 @@ import mongoose, { Schema, Document } from 'mongoose';
 
 // Enum for task statuses
 export enum TaskStatus {
-  UNASSIGNED = 'Unassigned',
   INCOMPLETE = 'Incomplete',
   IN_PROGRESS = 'In Progress',
   CANCELLED = 'Cancelled',
@@ -51,7 +50,7 @@ const TaskSchema: Schema = new Schema({
   status: { 
     type: String, 
     enum: Object.values(TaskStatus),
-    default: TaskStatus.UNASSIGNED
+    default: TaskStatus.INCOMPLETE
   },
   createdBy: { 
     type: String, 
