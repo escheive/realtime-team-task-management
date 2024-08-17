@@ -1,7 +1,7 @@
 import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { ITask } from '~tasks/types';
-import { useUser } from '~features/users/context/UserContext';
+import { useUser } from '~users/context';
 import { useToast } from '@chakra-ui/react';
 import {
   onTaskCreated,

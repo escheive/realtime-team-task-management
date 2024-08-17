@@ -2,9 +2,18 @@
 export interface IUser {
   _id: string;
   email: string;
-  password: string;
+  fullName: string;
+  phoneNumber?: string;
+  status?: string;
+  lastLogin?: Date;
   isOnline: boolean;
-  validatePassword(password: string): Promise<boolean>;
+}
+
+export interface PaginatedUsers {
+  users: IUser[];
+  totalPages: number;
+  currentPage: number;
+  totalUsers: number;
 }
 
 export interface GetUsersResponse {

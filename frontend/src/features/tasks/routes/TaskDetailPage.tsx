@@ -5,7 +5,7 @@ import { ITask } from '~tasks/types';
 import { deleteTask, updateTask } from '~tasks/api';
 import { isEqual } from 'lodash';
 import { useTaskContext } from '~/features/tasks/context';
-import { useUser } from '~/features/users/context/UserContext';
+import { useUser } from '~users/context';
 import { TaskHeader, TaskDetailsForm, ActivityLog, Attachments } from '~tasks/components';
 
 export const TaskDetailPage: React.FC = () => {

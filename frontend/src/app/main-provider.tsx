@@ -4,7 +4,7 @@ import { Spinner } from '@chakra-ui/react';
 import { extendTheme, ChakraProvider } from '@chakra-ui/react';
 import { AuthProvider } from '~auth/context/AuthContext';
 import { TaskProvider } from '~/features/tasks/context';
-import { UserProvider } from '~/features/users/context/UserContext';
+import { UserProvider } from '~users/context';
 
 type AppProviderProps = {
   children: React.ReactNode;

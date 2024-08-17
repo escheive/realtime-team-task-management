@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from "~utils/axiosConfig";
 import { Link as RouterLink } from 'react-router-dom';
 import { Box, Grid, Flex, Text, Button, List, ListItem, Spinner } from '@chakra-ui/react';
-import { useUser } from '~/features/users/context/UserContext';
+import { useUser } from '~users/context';
 import { useTaskContext } from '~/features/tasks/context';
 import { TaskPriority } from '~tasks/types';
 

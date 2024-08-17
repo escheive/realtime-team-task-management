@@ -16,7 +16,7 @@ import {
 } from '@chakra-ui/react';
 import { createTask } from '~tasks/api';
 import { useNavigate } from 'react-router-dom';
-import { useUser } from '~/features/users/context/UserContext';
+import { useUser } from '~users/context';
 
 export const TaskForm = () => {
   const [title, setTitle] = useState('');
