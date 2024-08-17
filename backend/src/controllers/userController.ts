@@ -9,8 +9,33 @@ interface AuthenticatedRequest extends Request {
 // Get all users
 export const getUsers = async (req: Request, res: Response) => {
   try {
-    const users = await User.find();
-    res.status(200).json(users);
+    // Extract page and limit from query params, with defaults
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 30;
+    const { role, status } = req.query;
+
+    // Calculate start index of the users query
+    const startIndex = (page - 1) * limit;
+
+    // Build query object for filtering
+    const query: any = {};
+
+    if (role) query.role = role;
+    if (status) query.status = status;
+
+    const users = await User.find(query)
+      .skip(startIndex)
+      .limit(limit)
+
+    // Return total number of users for client-side pagination
+    const totalUsers = await User.countDocuments(query);
+
+    res.status(200).json({
+      totalUsers,
+      currentPage: page,
+      totalPages: Math.ceil(totalUsers / limit),
+      users
+    });
   } catch (error) {
     console.error('Error retrieving users:', error);
     res.status(500).json({ message: 'Error retrieving users' });
