@@ -14,11 +14,11 @@ export const userRoutes = [
       return { Component: CreateUserPage };
     }
   },
-  // {
-  //   path: '/users/:id',
-  //   lazy: async () => {
-  //     const { UserDetailPage } = await import('~users/routes');
-  //     return { Component: UserDetailPage };
-  //   }
-  // }
+  {
+    path: '/users/:id',
+    lazy: async () => {
+      const { UserDetailsPage } = await import('~users/routes');
+      return { Component: UserDetailsPage };
+    }
+  }
 ];

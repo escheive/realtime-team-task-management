@@ -10,3 +10,12 @@ export const createUser = async (user: Omit<IUser, '_id'>): Promise<IUser> => {
   const response = await axios.post<IUser>(`/api/users`, user);
   return response.data;
 };
+
+export const updateUser = async (user: IUser): Promise<IUser> => {
+  const response = await axios.put<IUser>(`/api/users/${user._id}`, user);
+  return response.data;
+};
+
+export const deleteUser = async (userId: string): Promise<void> => {
+  await axios.delete(`/api/users/${userId}`);
+};
