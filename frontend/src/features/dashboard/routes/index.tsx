@@ -4,6 +4,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Box, Grid, Flex, Text, Button, List, ListItem, Spinner } from '@chakra-ui/react';
 import { useUser } from '~/features/users/context/UserContext';
 import { useTaskContext } from '~/features/tasks/context';
+import { TaskPriority } from '~tasks/types';
 
 export const Dashboard = () => {
   const [taskStatusCounts, setTaskStatusCounts] = useState({
@@ -29,29 +30,7 @@ export const Dashboard = () => {
       }
     };
 
-    // const fetchUserTasks = async () => {
-    //   if (user && user._id) {
-    //     setUserTasksLoading(true);
-    //     try {
-    //       const response = await axios.get('/api/tasks', {
-    //         params: {
-    //           assignedTo: user._id
-    //         },
-    //       });
-    //       setUserTasks(response.data.tasks);
-    //     } catch (error) {
-    //       console.error('Error fetching user tasks:', error);
-    //     } finally {
-    //       setUserTasksLoading(false);
-    //     }
-    //   }
-    // };
-
     fetchTaskStatusCounts();
-
-    // if (user) {
-    //   fetchUserTasks();
-    // }
   }, [user]);
 
   return (
@@ -99,12 +78,50 @@ export const Dashboard = () => {
             </Flex>
           ) : userTasks && userTasks.length > 0 ? (
             <List spacing={3}>
-              {userTasks.map(task => (
-                <ListItem key={task._id}>
-                  <RouterLink to={`/tasks/${task._id}`}>{task.title}</RouterLink>
-                </ListItem>
-              ))}
+              {userTasks.map(task => {
+                // Determine the task's status based on due date and priority
+                const isUrgent = task.priority === TaskPriority.URGENT;
+                const isHighPriority = task.priority === TaskPriority.HIGH;
+
+                const today = new Date();
+                const dueDate = new Date(task.dueDate)
+                // const isDueToday = true;
+                const isDueToday = task.dueDate && dueDate.toDateString() === today.toDateString();
+
+                // Set the appropriate color based on the task's status
+                let color = 'black';
+                if (isUrgent || isDueToday) {
+                  color = 'red.500';
+                } else if (isHighPriority) {
+                  color = 'yellow.500';
+                }
+
+                return (
+                  <ListItem key={task._id}>
+                    <RouterLink to={`/tasks/${task._id}`}>
+                      <Box display="flex" justifyContent="space-between" alignItems="center">
+                        <Text fontWeight="bold" color={color}>
+                          {task.title}
+                        </Text>
+                        <Text color={color} fontSize="sm">
+                          {dueDate.toLocaleString()}
+                        </Text>
+                      </Box>
+                    </RouterLink>
+                  </ListItem>
+                );
+              })}
             </List>
+            // <List spacing={3}>
+            //   {userTasks.map(task => (
+            //     <ListItem key={task._id}>
+            //       <RouterLink to={`/tasks/${task._id}`}>
+            //         <Text>{task.title}</Text>
+            //         <Text>{task.dueDate?.toLocaleString()}</Text>
+            //       </RouterLink>
+            //     </ListItem>
+            //   ))}
+            // </List>
           ) : (
             <Text>No tasks assigned to you.</Text>
           )}

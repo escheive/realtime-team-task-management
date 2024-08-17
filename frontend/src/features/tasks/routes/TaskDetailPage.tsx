@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Box, useDisclosure, Button } from '@chakra-ui/react';
+import { Box, useDisclosure, Button, useToast } from '@chakra-ui/react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ITask } from '~tasks/types';
-import { updateTask } from '~tasks/api';
+import { deleteTask, updateTask } from '~tasks/api';
 import { isEqual } from 'lodash';
 import { useTaskContext } from '~/features/tasks/context';
 import { useUser } from '~/features/users/context/UserContext';
@@ -22,6 +22,7 @@ export const TaskDetailPage: React.FC = () => {
   const [newAttachmentName, setNewAttachmentName] = useState('');
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
+  const toast = useToast();
   const { user } = useUser();
 
   useEffect(() => {
@@ -129,6 +130,32 @@ export const TaskDetailPage: React.FC = () => {
     setEditedTask({ ...editedTask!, attachments: updatedAttachments });
   };
 
+  const handleDeleteTask = async () => {
+    if (!task) return;
+
+    try {
+      await deleteTask(task._id);
+
+      toast({
+        title: "Task deleted.",
+        description: "The task has been successfully deleted.",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+      navigate('/tasks');
+    } catch (error) {
+      console.error('Error deleting task:', error);
+      toast({
+        title: "Failed to delete task.",
+        description: "There was an error deleting the task. Please try again.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  }
+
   return (
     <Box p={6} maxW="800px" mx="auto">
       {task && editedTask && (
@@ -176,6 +203,14 @@ export const TaskDetailPage: React.FC = () => {
               isDisabled={!isEditing || isSaving}
             >
               Cancel
+            </Button>
+            <Button 
+              colorScheme="red" 
+              onClick={handleDeleteTask} 
+              isDisabled={isSaving}
+              mt={2}
+            >
+              Delete Task
             </Button>
           </Box>
         </Box>

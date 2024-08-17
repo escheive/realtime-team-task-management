@@ -170,7 +170,7 @@ const TaskForm = () => {
           <FormControl id="dueDate">
             <FormLabel>Due Date</FormLabel>
             <Input
-              type="date"
+              type="datetime-local"
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
             />
