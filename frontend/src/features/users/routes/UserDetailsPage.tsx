@@ -26,13 +26,25 @@ export const UserDetailsPage: React.FC = () => {
     }
   }, [id, paginatedUsers, navigate]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value, type } = e.target;
+
     if (editedUser) {
-      const updatedUser = { ...editedUser, [name]: value };
-      setEditedUser(updatedUser);
-      setIsEditing(true);
+      if (type === 'file' && e.target instanceof HTMLInputElement) {
+        const { files } = e.target;
+        if (!files) return;
+        const file = files[0];
+        setEditedUser({ ...editedUser, profilePicture: URL.createObjectURL(file) });
+      } else if (type === 'date') {
+        setEditedUser({ ...editedUser, dateOfBirth: value ? new Date(value) : undefined });
+      } else if (name in editedUser.address) {
+        const updatedAddress = { ...editedUser.address, [name]: value };
+        setEditedUser({ ...editedUser, address: updatedAddress });
+      } else {
+        setEditedUser({ ...editedUser, [name]: value });
+      }
     }
+      setIsEditing(true);
   };
 
   const handleSaveChanges = async () => {

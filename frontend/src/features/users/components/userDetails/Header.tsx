@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Text, Editable, EditableInput, EditablePreview, IconButton, useEditableControls } from '@chakra-ui/react';
+import { Box, Text, Flex, Input, IconButton, useEditableControls } from '@chakra-ui/react';
 import { CheckIcon, CloseIcon } from '@chakra-ui/icons';
 import { IUser } from '~users/types';
 
@@ -21,14 +21,28 @@ const EditableControls: React.FC = () => {
 
 export const Header: React.FC<UserHeaderProps> = ({ user, onInputChange, isDisabled }) => {
   return (
-    <Box mb={4}>
-      <Text fontSize="2xl" fontWeight="bold">{user.fullName}</Text>
-      <Editable defaultValue={user.email} isDisabled={isDisabled}>
-        <EditablePreview />
-        <EditableInput name="email" onChange={onInputChange} />
-        <EditableControls />
-      </Editable>
-      <Text fontSize="md">{user.username}</Text>
+    <Flex direction="column" mb={6}>
+    <Text fontSize="2xl" fontWeight="bold">User Details</Text>
+    <Box mt={2}>
+      <Input 
+        name="fullName" 
+        value={user.fullName} 
+        onChange={onInputChange} 
+        fontSize="xl" 
+        fontWeight="bold" 
+        isDisabled={isDisabled} 
+        placeholder="Full Name"
+      />
+      <Input 
+        name="email" 
+        value={user.email} 
+        onChange={onInputChange} 
+        fontSize="xl" 
+        mt={4} 
+        isDisabled={isDisabled} 
+        placeholder="Email"
+      />
     </Box>
+  </Flex>
   );
 };

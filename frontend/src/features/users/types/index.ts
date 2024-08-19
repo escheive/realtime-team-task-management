@@ -6,9 +6,9 @@ export interface IUser {
   username: string;
   fullName: string;
   profilePicture?: string;
-  dateOfBirth?: string;
+  dateOfBirth?: Date;
   phoneNumber?: string;
-  roles: string[];
+  role: string;
   status: 'Active' | 'Suspended' | 'Deactivated';
   lastLogin?: Date;
   address: {

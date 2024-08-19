@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import { User } from '../models/User';
 import jwt from 'jsonwebtoken';
+import argon2, { argon2id } from 'argon2';
+
 
 // Generate accessToken and refreshToken with jwt
 const generateTokens = (user: any) => {
@@ -60,4 +62,58 @@ export const refreshToken = async (req: Request, res: Response) => {
 
     res.json({ accessToken });
   });
+};
+
+// Register a new user
+export const registerUser = async (req: Request, res: Response) => {
+  try {
+    const { 
+      email, 
+      password,
+      username,
+      fullName,
+      profilePicture,
+      dateOfBirth,
+      phoneNumber,
+      roles,
+      status,
+      address,
+    } = req.body;
+
+    if (!email || !password || !username || !fullName) {
+      return res.status(400).json({ message: 'Email, password, username, and full name are required' });
+    }
+
+    // Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: 'User with this email already exists' });
+    }
+
+    // Create a new user instance
+    const user = new User({
+      email, 
+      password,
+      username,
+      fullName,
+      profilePicture,
+      dateOfBirth,
+      phoneNumber,
+      roles,
+      status,
+      address,
+      activityLog: [],
+      isOnline: false,
+      twoFactorEnabled: false,
+      notifications: true
+    });
+
+    // Save the user
+    await user.save();
+
+    res.status(201).json({ message: 'User created successfully', userId: user._id });
+  } catch (error) {
+    console.error('Error creating user:', error);
+    res.status(500).json({ message: 'Error creating user' });
+  }
 };

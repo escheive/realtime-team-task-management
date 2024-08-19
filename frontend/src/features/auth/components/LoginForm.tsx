@@ -16,12 +16,14 @@ export const LoginForm: React.FC = () => {
     e.preventDefault();
     try {
       const response = await axios.post("/api/auth/login", { email, password });
+
       const token = response.data.accessToken;
 
       // Store token in localStorage
       login(token);
 
       navigate("/");
+      
     } catch (error) {
       console.error("Error logging in user:", error);
       alert("Error logging in user");

@@ -9,21 +9,26 @@ import {
   Select,
   useToast,
 } from '@chakra-ui/react';
-import { createUser } from '~users/api';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '~users/context';
 import { IUser } from '../types';
 
-export const UserForm = () => {
+// Props to configure form behavior
+interface UserFormProps {
+  mode: 'register' | 'create'; // Determines the form mode
+  onSubmit: (user: Omit<IUser, '_id'>) => Promise<void>; // Function to handle form submission
+}
+
+export const UserForm: React.FC<UserFormProps> = ({ mode, onSubmit }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [username, setUsername] = useState('');
   const [fullName, setFullName] = useState('');
-  const [profilePicture, setProfilePicture] = useState(null);
-  const [dateOfBirth, setDateOfBirth] = useState(null);
+  const [profilePicture, setProfilePicture] = useState<File | null>(null);
+  const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null);
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [roles, setRoles] = useState<IUser['roles']>(['User']);
+  const [role, setRole] = useState<IUser['role']>('User');
   const [status, setStatus] = useState<IUser['status']>('Active');
   const [address, setAddress] = useState<IUser['address']>({
     street: '',
@@ -41,10 +46,20 @@ export const UserForm = () => {
     setAddress((prevAddress) => ({ ...prevAddress, [name]: value }));
   };
 
+  const handleDateOfBirthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDateOfBirth(e.target.value ? new Date(e.target.value) : null);
+  };
+
+  const handleProfilePictureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setProfilePicture(e.target.files[0]);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (password !== confirmPassword) {
+    if (mode === 'register' && password !== confirmPassword) {
       toast({
         title: 'Error',
         description: 'Passwords do not match.',
@@ -63,19 +78,41 @@ export const UserForm = () => {
       phoneNumber,
       status,
       address,
-      roles,
-      activityLog: [
+      role,
+      dateOfBirth: dateOfBirth || undefined,
+      profilePicture: profilePicture ? URL.createObjectURL(profilePicture) : '',
+      activityLog: mode === 'create' ? [
         {
           action: `User created by ${user?.username}`,
-          timestamp: new Date()
+          timestamp: new Date(),
+        },
+      ] : [
+        {
+          action: `User registered account`,
+          timestamp: new Date(),
         }
-      ]
+      ],
     };
 
     try {
-      const createdUser = await createUser(newUser);
+      await onSubmit(newUser);
 
-      navigate(`/users/${createdUser._id}`);
+      if (mode === 'create') {
+        navigate(`/users`);
+      } else {
+        navigate('/'); // Navigate to dashboard after registration
+      }
+
+      toast({
+        title: mode === 'create' ? 'User Created' : 'Registration Successful',
+        description: mode === 'create'
+          ? 'The user has been created successfully.'
+          : 'Your account has been created successfully.',
+        status: 'success',
+        position: 'top',
+        duration: 5000,
+        isClosable: true,
+      });
 
       // Reset form fields
       setEmail('');
@@ -86,7 +123,7 @@ export const UserForm = () => {
       setProfilePicture(null);
       setDateOfBirth(null);
       setPhoneNumber('');
-      setRoles(['User']);
+      setRole('User');
       setStatus('Active');
       setAddress({
         street: '',
@@ -95,20 +132,13 @@ export const UserForm = () => {
         postalCode: '',
         country: '',
       });
-
-      toast({
-        title: 'User Created',
-        description: 'The user has been created successfully.',
-        status: 'success',
-        position: 'top',
-        duration: 5000,
-        isClosable: true,
-      });
     } catch (error) {
-      console.error('Error creating user:', error);
+      console.error('Error:', error);
       toast({
         title: 'Error',
-        description: 'There was an error creating the user.',
+        description: `There was an error during ${
+          mode === 'create' ? 'user creation' : 'registration'
+        }.`,
         status: 'error',
         position: 'top',
         duration: 5000,
@@ -130,6 +160,28 @@ export const UserForm = () => {
             />
           </FormControl>
 
+          {mode === 'register' && (
+            <>
+              <FormControl id="password" isRequired>
+                <FormLabel>Password</FormLabel>
+                <Input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </FormControl>
+
+              <FormControl id="confirmPassword" isRequired>
+                <FormLabel>Confirm Password</FormLabel>
+                <Input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                />
+              </FormControl>
+            </>
+          )}
+
           <FormControl id="username" isRequired>
             <FormLabel>Username</FormLabel>
             <Input
@@ -148,6 +200,24 @@ export const UserForm = () => {
             />
           </FormControl>
 
+          <FormControl id="dateOfBirth">
+            <FormLabel>Date of Birth</FormLabel>
+            <Input
+              type="date"
+              value={dateOfBirth ? dateOfBirth.toISOString().split('T')[0] : ''}
+              onChange={handleDateOfBirthChange}
+            />
+          </FormControl>
+
+          <FormControl id="profilePicture">
+            <FormLabel>Profile Picture</FormLabel>
+            <Input
+              type="file"
+              accept="image/*"
+              onChange={handleProfilePictureChange}
+            />
+          </FormControl>
+
           <FormControl id="phoneNumber">
             <FormLabel>Phone Number</FormLabel>
             <Input
@@ -157,19 +227,36 @@ export const UserForm = () => {
             />
           </FormControl>
 
-          <FormControl id="status">
-            <FormLabel>Status</FormLabel>
-            <Select
-              value={status}
-              onChange={(e) => setStatus(e.target.value as IUser['status'])}
-            >
-              <option value="active">Active</option>
-              <option value="suspended">Suspended</option>
-              <option value="deactivated">Deactivated</option>
-            </Select>
-          </FormControl>
+          {mode === 'create' && (
+            <>
+              <FormControl id="status">
+                <FormLabel>Status</FormLabel>
+                <Select
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value as IUser['status'])}
+                >
+                  <option value="Active">Active</option>
+                  <option value="Suspended">Suspended</option>
+                  <option value="Deactivated">Deactivated</option>
+                </Select>
+              </FormControl>
 
-          <FormControl id="street">
+              <FormControl id="roles" isRequired>
+                <FormLabel>Roles</FormLabel>
+                <Select
+                  multiple
+                  value={role}
+                  onChange={(e) => setRole(e.target.value as IUser['role'])}
+                >
+                  <option value="Admin">Admin</option>
+                  <option value="User">User</option>
+                  <option value="Moderator">Moderator</option>
+                </Select>
+              </FormControl>
+            </>
+          )}
+
+          <FormControl id="street" isRequired>
             <FormLabel>Street</FormLabel>
             <Input
               name="street"
@@ -178,7 +265,7 @@ export const UserForm = () => {
             />
           </FormControl>
 
-          <FormControl id="city">
+          <FormControl id="city" isRequired>
             <FormLabel>City</FormLabel>
             <Input
               name="city"
@@ -187,7 +274,7 @@ export const UserForm = () => {
             />
           </FormControl>
 
-          <FormControl id="state">
+          <FormControl id="state" isRequired>
             <FormLabel>State</FormLabel>
             <Input
               name="state"
@@ -196,7 +283,7 @@ export const UserForm = () => {
             />
           </FormControl>
 
-          <FormControl id="postalCode">
+          <FormControl id="postalCode" isRequired>
             <FormLabel>Postal Code</FormLabel>
             <Input
               name="postalCode"
@@ -205,7 +292,7 @@ export const UserForm = () => {
             />
           </FormControl>
 
-          <FormControl id="country">
+          <FormControl id="country" isRequired>
             <FormLabel>Country</FormLabel>
             <Input
               name="country"
@@ -214,39 +301,8 @@ export const UserForm = () => {
             />
           </FormControl>
 
-          <FormControl id="roles">
-            <FormLabel>Roles</FormLabel>
-            <Select
-              multiple
-              value={roles}
-              onChange={(e) => setRoles(Array.from(e.target.selectedOptions, option => option.value))}
-            >
-              <option value="admin">Admin</option>
-              <option value="user">User</option>
-              <option value="moderator">Moderator</option>
-            </Select>
-          </FormControl>
-
-          <FormControl id="password" isRequired>
-            <FormLabel>Password</FormLabel>
-            <Input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </FormControl>
-
-          <FormControl id="confirmPassword" isRequired>
-            <FormLabel>Confirm Password</FormLabel>
-            <Input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
-          </FormControl>
-
           <Button colorScheme="teal" type="submit">
-            Create User
+            {mode === 'register' ? 'Register' : 'Create User'}
           </Button>
         </Stack>
       </form>

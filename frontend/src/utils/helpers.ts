@@ -9,3 +9,11 @@ export const formatDateTimeLocal = (date: Date) => {
 
   return `${year}-${month}-${day}T${hours}:${minutes}`;
 }
+
+export const formatDate = (date: Date | string): string => {
+  const dateObject = typeof date === 'string' ? new Date(date) : date;
+  const year = dateObject.getFullYear();
+  const month = String(dateObject.getMonth() + 1).padStart(2, '0');
+  const day = String(dateObject.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
