@@ -8,6 +8,7 @@ import cors from 'cors';
 import authRoutes from './routes/authRoutes';
 import taskRoutes from './routes/taskRoutes';
 import userRoutes from './routes/userRoutes';
+import fileRoutes from './routes/fileRoutes';
 import { setupSockets } from './sockets';
 
 dotenv.config();
@@ -32,6 +33,7 @@ app.use(cookieParser());
 app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/files', fileRoutes);
 
 // Setup socket namespaces and handlers
 setupSockets(io);

@@ -1,5 +1,4 @@
-import AWS from 'aws-sdk';
-import dotenv from 'dotenv';
+import { S3Client } from '@aws-sdk/client-s3';
 
 const AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
 const AWS_ACCESS_SECRET = process.env.AWS_ACCESS_SECRET;
@@ -10,10 +9,12 @@ if (!AWS_ACCESS_KEY || !AWS_ACCESS_SECRET) {
 }
 
 // Configure AWS SDK
-AWS.config.update({
+const s3 = new S3Client({
   region: AWS_REGION,
-  credentials: new AWS.Credentials(AWS_ACCESS_KEY, AWS_ACCESS_SECRET)
+  credentials: {
+    accessKeyId: AWS_ACCESS_KEY || '',
+    secretAccessKey: AWS_ACCESS_SECRET || '',
+  },
 });
 
-// Create S3 instance
-const s3 = new AWS.S3();
+export default s3;
