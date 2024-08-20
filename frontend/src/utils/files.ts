@@ -9,7 +9,10 @@ export const compressUploadFile = async (file: File): Promise<File> => {
 
   try {
     // Compress the image
-    const compressedFile = await imageCompression(file, options);
+    const compressedBlob = await imageCompression(file, options);
+    
+    // Create a new File object with the original name
+    const compressedFile = new File([compressedBlob], file.name, { type: file.type });
     return compressedFile;
   } catch (error) {
     throw new Error('Failed to compress or upload file');
