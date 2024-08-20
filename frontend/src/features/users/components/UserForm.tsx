@@ -12,6 +12,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '~users/context';
 import { IUser } from '../types';
+import axios from '~utils/axiosConfig';
 
 // Props to configure form behavior
 interface UserFormProps {
@@ -70,6 +71,30 @@ export const UserForm: React.FC<UserFormProps> = ({ mode, onSubmit }) => {
       return;
     }
 
+    let profilePictureUrl = '';
+    if (profilePicture) {
+      const formData = new FormData();
+      formData.append('file', profilePicture);
+
+      try {
+        const response = await axios.post('/api/upload', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+
+        profilePictureUrl = response.data.fileUrl;
+      } catch (error) {
+        toast({
+          title: 'Error',
+          description: `Profile picture upload failed: ${error.message}`,
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+        });
+      }
+    }
+
     const newUser: Omit<IUser, '_id'> = {
       email,
       password,
@@ -80,7 +105,7 @@ export const UserForm: React.FC<UserFormProps> = ({ mode, onSubmit }) => {
       address,
       role,
       dateOfBirth: dateOfBirth || undefined,
-      profilePicture: profilePicture ? URL.createObjectURL(profilePicture) : '',
+      profilePicture: profilePictureUrl,
       activityLog: mode === 'create' ? [
         {
           action: `User created by ${user?.username}`,

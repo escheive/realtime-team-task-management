@@ -1,4 +1,7 @@
 import { S3Client } from '@aws-sdk/client-s3';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
 const AWS_ACCESS_SECRET = process.env.AWS_ACCESS_SECRET;

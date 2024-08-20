@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { uploadFile } from '../services/s3Service';
+import fs from 'fs';
 
 
 export const fileUpload = async (req: Request, res: Response) => {
@@ -8,8 +9,10 @@ export const fileUpload = async (req: Request, res: Response) => {
       return res.status(400).send('No file uploaded');
     }
 
+    const file = req.file;
+
     // Upload file to S3 and get URL
-    const fileUrl = await uploadFile(req.file);
+    const fileUrl = await uploadFile(file);
 
     // Respond with file URL
     res.status(200).json({ fileUrl });

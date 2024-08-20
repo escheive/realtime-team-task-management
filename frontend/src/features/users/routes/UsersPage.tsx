@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Heading, Stack, Text, VStack, Button } from '@chakra-ui/react';
+import { Box, Heading, Stack, Text, VStack, Button, Image, Avatar, Icon } from '@chakra-ui/react';
+import { MdPerson } from 'react-icons/md'
 import { useUser } from '~users/context';
 import { useNavigate, useSearchParams, Link as RouterLink } from 'react-router-dom';
 
@@ -69,6 +70,11 @@ export const UsersPage: React.FC = () => {
               onClick={() => navigate(`/users/${user._id}`)}
             >
               <VStack align="start">
+                <Avatar
+                  name={user.fullName}
+                  src={user.profilePicture}
+                  boxSize="100px"
+                />
                 <Heading size="md">{user.fullName}</Heading>
                 <Text>Email: {user.email}</Text>
                 <Text>Phone: {user.phoneNumber || 'N/A'}</Text>

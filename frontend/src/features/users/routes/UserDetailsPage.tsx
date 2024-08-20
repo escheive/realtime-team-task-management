@@ -11,6 +11,7 @@ export const UserDetailsPage: React.FC = () => {
   const { paginatedUsers } = useUser();
   const [editedUser, setEditedUser] = useState<IUser | null>(null);
   const [user, setUser] = useState<IUser | null>(null);
+  const [newProfileImage, setNewProfileImage] = useState<File | undefined>(undefined);
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const navigate = useNavigate();
@@ -34,7 +35,8 @@ export const UserDetailsPage: React.FC = () => {
         const { files } = e.target;
         if (!files) return;
         const file = files[0];
-        setEditedUser({ ...editedUser, profilePicture: URL.createObjectURL(file) });
+        setNewProfileImage(file)
+        // setEditedUser({ ...editedUser, profilePicture: URL.createObjectURL(file) });
       } else if (type === 'date') {
         setEditedUser({ ...editedUser, dateOfBirth: value ? new Date(value) : undefined });
       } else if (name in editedUser.address) {
@@ -56,7 +58,7 @@ export const UserDetailsPage: React.FC = () => {
     }
 
     try {
-      await updateUser(editedUser);
+      await updateUser(editedUser, newProfileImage);
       setUser({ ...editedUser });
       setIsSaving(false);
       setIsEditing(false);

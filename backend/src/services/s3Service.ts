@@ -1,5 +1,6 @@
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import s3 from '../config/awsConfig';
+import fs from 'fs';
 
 // Define s3 bucket name from AWS
 const BUCKET_NAME = process.env.AWS_BUCKET_NAME!;
@@ -8,15 +9,15 @@ const BUCKET_NAME = process.env.AWS_BUCKET_NAME!;
 export const uploadFile = async (file: Express.Multer.File) => {
   const params = {
     Bucket: BUCKET_NAME || '',
-    Key: file.originalname,
+    Key: `profile-pictures/${file.originalname}`,
     Body: file.buffer,
-    ContentType: file.mimetype
+    ContentType: file.mimetype,
   };
 
   try {
     const command = new PutObjectCommand(params);
-    const data = await s3.send(command);
-    return `https://${BUCKET_NAME}.s3.amazonaws.com/${file.originalname}`;
+    await s3.send(command);
+    return `https://${BUCKET_NAME}.s3.us-west-2.amazonaws.com/profile-pictures/${file.originalname}`;
   } catch (error) {
     if (error instanceof Error) {
       console.error(`Error uploading file: ${error.message}`);

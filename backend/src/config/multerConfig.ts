@@ -11,13 +11,20 @@ const upload = multer({
     s3,
     bucket: AWS_BUCKET || '',
     acl: 'public-read',
-    metadata: (request, file, callback): void => {
+    metadata: (req, file, callback): void => {
       callback(null, { fieldName: file.fieldname });
     },
-    key: (request, file, callback) => {
+    key: (req, file, callback) => {
       callback(null, `uploads/${Date.now().toString()}-${file.originalname}`);
     },
   }),
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB limit
+  fileFilter: (req, file, callback) => {
+    if (!file.mimetype.startsWith('image/')) {
+      return callback(new Error('Please upload an image file.')); // Image only
+    }
+    callback(null, true);
+  }
 });
 
 export default upload;
