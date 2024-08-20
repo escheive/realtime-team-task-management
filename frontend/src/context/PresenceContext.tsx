@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { useUserPresence } from '~hooks/useUserPresence';
 import { useUser } from '~users/context';
+import { io } from 'socket.io-client';
 
 interface PresenceContextType {
   onlineUsers: any[];
@@ -16,11 +17,20 @@ export const PresenceProvider = ({ children }: { children: React.ReactNode }) =>
   const userId = user?._id;
 
   // Pass userId to presence hook for tracking online status
-  const socket = useUserPresence();
+  useUserPresence();
 
   useEffect(() => {
     // Ensure userId is available before proceeding
     if (!userId) return;
+
+    const socket = io('http://localhost:5000/users', {
+      transports: ['websocket'],
+      query: {
+        userId,
+        username: user?.username,
+        profilePicture: user?.profilePicture
+      }
+    });
 
     // Add user to online users
     socket.on('user-presence-updated', (users: any) => {
@@ -28,14 +38,15 @@ export const PresenceProvider = ({ children }: { children: React.ReactNode }) =>
     });
 
     // Remove user from online users
-    socket.on('user-disconnected', (userId: string) => {
-      setOnlineUsers(prev => prev.filter(user => user._id !== userId));
+    socket.on('user-disconnected', (users: any) => {
+      setOnlineUsers(users);
     });
 
     // Cleanup sockets
     return () => {
       socket.off('user-presence-updated');
       socket.off('user-disconnected');
+      socket.disconnect();
     };
   }, [userId]);
 
@@ -46,7 +57,7 @@ export const PresenceProvider = ({ children }: { children: React.ReactNode }) =>
   );
 };
 
-export const usePresence = (): PresenceContextType => {
+export const usePresence = () => {
   const context = useContext(PresenceContext);
   if (!context) {
     throw new Error('usePresence must be used within a PresenceProvider');

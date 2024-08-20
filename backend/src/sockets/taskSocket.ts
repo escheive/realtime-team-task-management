@@ -3,7 +3,6 @@ import { Namespace, Socket } from 'socket.io';
 
 export const setupTaskSockets = (taskNamespace: Namespace) => {
   taskNamespace.on('connection', (socket: Socket) => {
-    console.log(`${taskNamespace} A user connected`);
 
     // socket.on('taskCreated', async (taskData) => {
     //   const task = new Task({

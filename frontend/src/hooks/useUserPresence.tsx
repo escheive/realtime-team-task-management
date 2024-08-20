@@ -1,32 +1,46 @@
 import { useEffect } from 'react';
-import { io } from 'socket.io-client';
+import { io, Socket } from 'socket.io-client';
 import { useUser } from '~/features/users/context';
 
-export const useUserPresence = () => {
-  // Initialize the socket connection
-  const socket = io('http://localhost:5000/users', {
-    transports: ['websocket'],
-  });
+let socket: Socket | null = null;
 
+export const useUserPresence = () => {
   const { user } = useUser();
 
   useEffect(() => {
     // Ensure user is valid
     if (!user) return;
 
-    // Emit presence when user online
-    socket.emit('user-connected', {
-      _id: user._id,
-      username: user.username,
-      profilePicture: user.profilePicture
-    });
+
+    if (!socket) {
+      // Initialize the socket connection
+      const socket = io('http://localhost:5000/users', {
+        transports: ['websocket'],
+        query: {
+          userId: user?._id,
+          username: user?.username,
+          profilePicture: user?.profilePicture
+        }
+      });
+
+      socket.on('connect', () => {
+        console.log(`Socket connected: ${socket?.id}`);
+      });
+
+      socket.on('disconnect', () => {
+        console.log(`Socket disconnected: ${socket?.id}`);
+      });
+    }
 
     return () => {
-      // Emit presence when user offline
-      socket.emit('user-disconnected', user._id);
-      socket.off();
+      if (socket) {
+        // Emit presence when user offline
+        socket.emit('user-disconnected', user._id);
+        socket.disconnect();
+        socket = null;
+      }
     };
   }, [user]);
 
-  return socket;
+  return null;
 }

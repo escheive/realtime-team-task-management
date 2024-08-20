@@ -10,7 +10,7 @@ export const UserPresenceList = () => {
   return (
     <HStack spacing={4} alignItems="center">
       {onlineUsers.length > 0 && onlineUsers.map((user) => (
-        <Avatar key={user._id} name={user.username} src={user.profilePicture} size="sm">
+        <Avatar key={user.username} name={user.username} src={user.profilePicture} size="sm">
           <Box position="absolute" top="0" right="0">
             <Box h="10px" w="10px" bg="green.500" borderRadius="full" />
           </Box>
