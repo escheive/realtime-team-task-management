@@ -3,33 +3,33 @@ import { useUserPresence } from '~hooks/useUserPresence';
 import { useUser } from '~users/context';
 
 interface PresenceContextType {
-  onlineUsers: string[];
+  onlineUsers: any[];
 }
 
 const PresenceContext = createContext<PresenceContextType | undefined>(undefined);
 
 export const PresenceProvider = ({ children }: { children: React.ReactNode }) => {
-  const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
+  const [onlineUsers, setOnlineUsers] = useState<any[]>([]);
 
   // Access user from context and extract userId
   const { user } = useUser();
   const userId = user?._id;
 
   // Pass userId to presence hook for tracking online status
-  const socket = useUserPresence(userId);
+  const socket = useUserPresence();
 
   useEffect(() => {
     // Ensure userId is available before proceeding
     if (!userId) return;
 
     // Add user to online users
-    socket.on('user-presence-updated', (userId: string) => {
-      setOnlineUsers(prev => [...prev, userId]);
+    socket.on('user-presence-updated', (users: any) => {
+      setOnlineUsers(users);
     });
 
     // Remove user from online users
     socket.on('user-disconnected', (userId: string) => {
-      setOnlineUsers(prev => prev.filter(id => id !== userId));
+      setOnlineUsers(prev => prev.filter(user => user._id !== userId));
     });
 
     // Cleanup sockets
@@ -37,7 +37,7 @@ export const PresenceProvider = ({ children }: { children: React.ReactNode }) =>
       socket.off('user-presence-updated');
       socket.off('user-disconnected');
     };
-  }, [socket, userId]);
+  }, [userId]);
 
   return (
     <PresenceContext.Provider value={{ onlineUsers }}>

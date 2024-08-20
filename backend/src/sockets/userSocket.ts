@@ -1,20 +1,23 @@
 import { Namespace, Socket } from 'socket.io';
 import { updateUserPresence, trackUserActivity, removeUserPresence } from '../controllers/userController';
 
+let onlineUsers: any = {};
+
 export const setupUserSockets = (userNamespace: Namespace) => {
   userNamespace.on('connection', async (socket: Socket) => {
 
     // When a user logs in or opens the app, update presence
-    socket.on('user-connected', async (userId: string) => {
-      console.log(`A user connected ${userId}`)
-      await updateUserPresence(userId, socket.id);
-      socket.emit('user-presence-updated', userId);
+    socket.on('user-connected', async (user: any) => {
+      console.log(`A user connected ${user.username}`)
+      onlineUsers[user._id] = user;
+      await updateUserPresence(user, socket.id);
+      socket.emit('user-presence-updated', Object.values(onlineUsers));
     });
 
     // Track activity like viewing a task
-    socket.on('viewing-task', async (userId: string, taskId: string) => {
-      await trackUserActivity(userId, taskId);
-      socket.emit('task-activity-updated', userId, taskId);
+    socket.on('viewing-task', async (user: any, taskId: string) => {
+      await trackUserActivity(user, taskId);
+      socket.emit('task-activity-updated', user, taskId);
     });
 
     // When a user disconnects, remove their presence
@@ -25,6 +28,7 @@ export const setupUserSockets = (userNamespace: Namespace) => {
     })
 
     socket.on('disconnect', () => {
+      delete onlineUsers[socket.id];
       console.log('A user disconnected');
     });
   });

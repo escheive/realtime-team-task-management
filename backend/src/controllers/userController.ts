@@ -147,8 +147,8 @@ export const deleteUser = async (req: Request, res: Response) => {
 };
 
 // Websocket function to add a users presence when they connect
-export const updateUserPresence = async (userId: string, socketId: string) => {
-  await User.findByIdAndUpdate(userId, { socketId, isOnline: true });
+export const updateUserPresence = async (user: any, socketId: string) => {
+  await User.findByIdAndUpdate(user._id, { socketId, isOnline: true });
 };
 
 // Websocket function to remove a users online presence when they disconnect
@@ -157,7 +157,7 @@ export const removeUserPresence = async (socketId: string) => {
 };
 
 // Websocket function to track and update a users activity TODO MAYBE
-export const trackUserActivity = async (userId: string, taskId: string) => {
-  console.log(`User ${userId} viewed task ${taskId}`);
+export const trackUserActivity = async (user: any, taskId: string) => {
+  console.log(`User ${user.username} viewed task ${taskId}`);
   // await Task.findByIdAndUpdate(taskId, { socketId, isOnline: true });
 };

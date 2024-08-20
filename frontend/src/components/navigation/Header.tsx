@@ -9,6 +9,7 @@ import {
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import NavLink from './NavLink';
 import UserMenu from './UserMenu';
+import { UserPresenceList } from '~components/users/UserPresenceList';
 
 const Links = [
   { to: '/', label: 'Dashboard' },
@@ -48,6 +49,8 @@ const Header = ({ isScrollingDown }: { isScrollingDown: boolean }) => {
             ))}
           </HStack>
         </HStack>
+
+        <UserPresenceList />
         <UserMenu />
       </Flex>
 
