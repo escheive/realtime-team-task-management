@@ -1,62 +1,31 @@
 import { Namespace, Socket } from 'socket.io';
-import { User } from '../models/User';
+import { updateUserPresence, trackUserActivity, removeUserPresence } from '../controllers/userController';
 
 export const setupUserSockets = (userNamespace: Namespace) => {
   userNamespace.on('connection', async (socket: Socket) => {
-    console.log(`${userNamespace} A user connected`);
 
-    const username = socket.handshake.query.username as string;
+    // When a user logs in or opens the app, update presence
+    socket.on('user-connected', async (userId: string) => {
+      console.log(`A user connected ${userId}`)
+      await updateUserPresence(userId, socket.id);
+      socket.emit('user-presence-updated', userId);
+    });
 
-    // Create or update the user in the database
-    let user = await User.findOne({ username });
-    if (user) {
-      user.socketId = socket.id;
-      user.isOnline = true;
-    } else {
-      user = new User({ username, socketId: socket.id, isOnline: true });
-    }
-    await user.save();
+    // Track activity like viewing a task
+    socket.on('viewing-task', async (userId: string, taskId: string) => {
+      await trackUserActivity(userId, taskId);
+      socket.emit('task-activity-updated', userId, taskId);
+    });
 
-    // Emit to all clients that a user connected
-    userNamespace.emit('userConnected', { username, isOnline: true });
+    // When a user disconnects, remove their presence
+    socket.on('user-disconnected', async () => {
+      await removeUserPresence(socket.id);
+      socket.emit('user-disconnected', socket.id);
+      console.log(`User disconnected: ${socket.id}`);
+    })
 
-    socket.on('disconnect', async () => {
+    socket.on('disconnect', () => {
       console.log('A user disconnected');
-      await User.findOneAndUpdate({ socketId: socket.id }, { isOnline: false });
-
-      // Emit to all clients that a user disconnected
-      userNamespace.emit('userDisconnected', { username, isOnline: false });
     });
   });
 };
-// import { Server as SocketIOServer, Socket } from 'socket.io';
-// import { User } from '../models/User';
-
-// export const setupUserSockets = (io: SocketIOServer) => {
-//   io.on('connection', async (socket: Socket) => {
-//     console.log('A user connected');
-
-//     const username = socket.handshake.query.username as string;
-
-//     // Create or update the user in the database
-//     let user = await User.findOne({ username });
-//     if (user) {
-//       user.socketId = socket.id;
-//       user.isOnline = true;
-//     } else {
-//       user = new User({ username, socketId: socket.id, isOnline: true });
-//     }
-//     await user.save();
-
-//     // Emit to all clients that a user connected
-//     io.emit('userConnected', { username, isOnline: true });
-
-//     socket.on('disconnect', async () => {
-//       console.log('A user disconnected');
-//       await User.findOneAndUpdate({ socketId: socket.id }, { isOnline: false });
-
-//       // Emit to all clients that a user disconnected
-//       io.emit('userDisconnected', { username, isOnline: false });
-//     });
-//   });
-// };

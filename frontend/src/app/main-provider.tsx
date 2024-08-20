@@ -5,6 +5,7 @@ import { extendTheme, ChakraProvider } from '@chakra-ui/react';
 import { AuthProvider } from '~auth/context/AuthContext';
 import { TaskProvider } from '~/features/tasks/context';
 import { UserProvider } from '~users/context';
+import { PresenceProvider } from '~context/PresenceContext';
 
 type AppProviderProps = {
   children: React.ReactNode;
@@ -37,7 +38,9 @@ export const AppProvider = ({ children }: AppProviderProps) => {
         <AuthProvider>
           <UserProvider>
             <TaskProvider>
-              {children}
+              <PresenceProvider>
+                {children}
+              </PresenceProvider>
             </TaskProvider>
           </UserProvider>
         </AuthProvider>

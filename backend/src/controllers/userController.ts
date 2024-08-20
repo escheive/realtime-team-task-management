@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { User } from '../models/User';
+import { Task } from '../models/Task';
 
 interface AuthenticatedRequest extends Request {
   userId?: string;
@@ -143,4 +144,20 @@ export const deleteUser = async (req: Request, res: Response) => {
     console.error('Error deleting user:', error);
     res.status(500).json({ message: 'Error deleting user' });
   }
+};
+
+// Websocket function to add a users presence when they connect
+export const updateUserPresence = async (userId: string, socketId: string) => {
+  await User.findByIdAndUpdate(userId, { socketId, isOnline: true });
+};
+
+// Websocket function to remove a users online presence when they disconnect
+export const removeUserPresence = async (socketId: string) => {
+  await User.findOneAndUpdate({ socketId }, { isOnline: false, socketId: null });
+};
+
+// Websocket function to track and update a users activity TODO MAYBE
+export const trackUserActivity = async (userId: string, taskId: string) => {
+  console.log(`User ${userId} viewed task ${taskId}`);
+  // await Task.findByIdAndUpdate(taskId, { socketId, isOnline: true });
 };

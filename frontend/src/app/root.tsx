@@ -3,6 +3,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { Outlet, useLocation } from 'react-router-dom';
 import Header from '~components/navigation/Header';
 import Sidebar from '~components/navigation/Sidebar';
+import { UserPresenceList } from '~components/users/UserPresenceList';
 
 import { Box, Spinner, useDisclosure } from '@chakra-ui/react';
 
@@ -33,6 +34,7 @@ export const AppRoot = () => {
       <Sidebar isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
       <Box flex="1" ml={isOpen ? '250px' : '0'} transition="margin-left 0.2s">
         <Header isScrollingDown={isScrollingDown} />
+        <UserPresenceList />
         <Box as="main" mt="60px" p="4">
           <Suspense
             fallback={
