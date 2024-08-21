@@ -63,18 +63,18 @@ export const UserDetailsPage: React.FC = () => {
       setIsSaving(false);
       setIsEditing(false);
       toast({
-        title: "User updated.",
-        description: "The user details have been successfully updated.",
-        status: "success",
+        title: 'User updated.',
+        description: 'The user details have been successfully updated.',
+        status: 'success',
         duration: 3000,
         isClosable: true,
       });
     } catch (error) {
       console.error('Error updating user:', error);
       toast({
-        title: "Failed to update user.",
-        description: "There was an error updating the user. Please try again.",
-        status: "error",
+        title: 'Failed to update user.',
+        description: 'There was an error updating the user. Please try again.',
+        status: 'error',
         duration: 3000,
         isClosable: true,
       });
@@ -92,9 +92,9 @@ export const UserDetailsPage: React.FC = () => {
     try {
       await deleteUser(user._id); // Make sure to implement this API method
       toast({
-        title: "User deleted.",
-        description: "The user has been successfully deleted.",
-        status: "success",
+        title: 'User deleted.',
+        description: 'The user has been successfully deleted.',
+        status: 'success',
         duration: 3000,
         isClosable: true,
       });
@@ -102,9 +102,9 @@ export const UserDetailsPage: React.FC = () => {
     } catch (error) {
       console.error('Error deleting user:', error);
       toast({
-        title: "Failed to delete user.",
-        description: "There was an error deleting the user. Please try again.",
-        status: "error",
+        title: 'Failed to delete user.',
+        description: 'There was an error deleting the user. Please try again.',
+        status: 'error',
         duration: 3000,
         isClosable: true,
       });
@@ -112,7 +112,7 @@ export const UserDetailsPage: React.FC = () => {
   };
 
   return (
-    <Box p={6} maxW="800px" mx="auto">
+    <Box p={6} maxW='800px' mx='auto'>
       {user && editedUser && (
         <Box>
           <Header
@@ -131,7 +131,7 @@ export const UserDetailsPage: React.FC = () => {
 
           <Box mt={4}>
             <Button 
-              colorScheme="blue" 
+              colorScheme='blue' 
               onClick={handleSaveChanges} 
               isDisabled={!isEditing || isSaving}
               mr={2}
@@ -139,14 +139,14 @@ export const UserDetailsPage: React.FC = () => {
               Save Changes
             </Button>
             <Button 
-              colorScheme="red" 
+              colorScheme='red' 
               onClick={handleCancel}
               isDisabled={!isEditing || isSaving}
             >
               Cancel
             </Button>
             <Button 
-              colorScheme="red" 
+              colorScheme='red' 
               onClick={handleDeleteUser} 
               isDisabled={isSaving}
               mt={2}

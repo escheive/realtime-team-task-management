@@ -20,113 +20,113 @@ export const DetailsForm: React.FC<UserDetailsFormProps> = ({ user, onInputChang
   return (
     <Box mb={4}>
       <FormControl mb={4}>
-        <FormLabel htmlFor="username">Username</FormLabel>
+        <FormLabel htmlFor='username'>Username</FormLabel>
         <Input
-          id="username"
-          name="username"
+          id='username'
+          name='username'
           value={user?.username || ''}
           onChange={onInputChange}
           isDisabled={isDisabled}
         />
       </FormControl>
       <FormControl mb={4}>
-        <FormLabel htmlFor="phoneNumber">Phone Number</FormLabel>
+        <FormLabel htmlFor='phoneNumber'>Phone Number</FormLabel>
         <Input
-          id="phoneNumber"
-          name="phoneNumber"
+          id='phoneNumber'
+          name='phoneNumber'
           value={user?.phoneNumber || ''}
           onChange={onInputChange}
           isDisabled={isDisabled}
         />
       </FormControl>
       
-      <FormControl id="dateOfBirth">
+      <FormControl id='dateOfBirth'>
         <FormLabel>Date of Birth</FormLabel>
         <Input
-          type="date"
+          type='date'
           value={user.dateOfBirth ? formatDate(user.dateOfBirth) : undefined}
           onChange={onInputChange}
         />
       </FormControl>
 
-      <FormControl id="profilePicture">
+      <FormControl id='profilePicture'>
         <FormLabel>Profile Picture</FormLabel>
         <Input
-          type="file"
-          name="profilePicture"
-          accept="image/*"
+          type='file'
+          name='profilePicture'
+          accept='image/*'
           onChange={onInputChange}
         />
       </FormControl>
 
-      <FormControl id="status">
+      <FormControl id='status'>
         <FormLabel>Status</FormLabel>
         <Select
-          name="status"
+          name='status'
           value={user?.status || ''}
           onChange={onInputChange}
         >
-          <option value="Active">Active</option>
-          <option value="Suspended">Suspended</option>
-          <option value="Deactivated">Deactivated</option>
+          <option value='Active'>Active</option>
+          <option value='Suspended'>Suspended</option>
+          <option value='Deactivated'>Deactivated</option>
         </Select>
       </FormControl>
 
-      <FormControl id="street" isRequired>
+      <FormControl id='street' isRequired>
         <FormLabel>Street</FormLabel>
         <Input
-          name="street"
+          name='street'
           value={user.address?.street || ''}
           onChange={onInputChange}
         />
       </FormControl>
 
-      <FormControl id="city" isRequired>
+      <FormControl id='city' isRequired>
         <FormLabel>City</FormLabel>
         <Input
-          name="city"
+          name='city'
           value={user.address?.city || ''}
           onChange={onInputChange}
         />
       </FormControl>
 
-      <FormControl id="state" isRequired>
+      <FormControl id='state' isRequired>
         <FormLabel>State</FormLabel>
         <Input
-          name="state"
+          name='state'
           value={user.address?.state || ''}
           onChange={onInputChange}
         />
       </FormControl>
 
-      <FormControl id="postalCode" isRequired>
+      <FormControl id='postalCode' isRequired>
         <FormLabel>Postal Code</FormLabel>
         <Input
-          name="postalCode"
+          name='postalCode'
           value={user.address?.postalCode || ''}
           onChange={onInputChange}
         />
       </FormControl>
 
-      <FormControl id="country" isRequired>
+      <FormControl id='country' isRequired>
         <FormLabel>Country</FormLabel>
         <Input
-          name="country"
+          name='country'
           value={user.address?.country || ''}
           onChange={onInputChange}
         />
       </FormControl>
 
-      <FormControl id="roles" isRequired>
+      <FormControl id='roles' isRequired>
         <FormLabel>Roles</FormLabel>
         <Select
-          name="role"
+          name='role'
           value={user?.role || ''}
           onChange={onInputChange}
         >
-          <option value="Admin">Admin</option>
-          <option value="User">User</option>
-          <option value="Moderator">Moderator</option>
+          <option value='Admin'>Admin</option>
+          <option value='User'>User</option>
+          <option value='Moderator'>Moderator</option>
         </Select>
       </FormControl>
     </Box>

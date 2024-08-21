@@ -1,6 +1,6 @@
-import { Namespace, Server as SocketIOServer } from "socket.io";
-import { setupTaskSockets } from "./taskSocket";
-import { setupUserSockets } from "./userSocket";
+import { Namespace, Server as SocketIOServer } from 'socket.io';
+import { setupTaskSockets } from './taskSocket';
+import { setupUserSockets } from './userSocket';
 
 // Initialize different websocket namespaces
 export let taskNamespace: Namespace;

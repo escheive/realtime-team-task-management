@@ -9,11 +9,11 @@ interface TaskHeaderProps {
 }
 
 export const TaskHeader: React.FC<TaskHeaderProps> = ({ task, onInputChange, isDisabled }) => (
-  <Flex justify="space-between" align="center" mb={6}>
+  <Flex justify='space-between' align='center' mb={6}>
     <Box>
       <>
-        <Input name="title" value={task.title} onChange={onInputChange} fontSize="2xl" fontWeight="bold" isDisabled={isDisabled} />
-        <Textarea name="description" value={task.description} onChange={onInputChange} fontSize="md" color="gray.500" isDisabled={isDisabled} />
+        <Input name='title' value={task.title} onChange={onInputChange} fontSize='2xl' fontWeight='bold' isDisabled={isDisabled} />
+        <Textarea name='description' value={task.description} onChange={onInputChange} fontSize='md' color='gray.500' isDisabled={isDisabled} />
       </>
     </Box>
   </Flex>

@@ -23,8 +23,8 @@ export const CreateUserPage: React.FC = () => {
 
   return (
     <Box p={4}>
-      <Text fontSize="2xl" mb={4}>Create or Edit User</Text>
-      <UserForm mode="create" onSubmit={handleCreateUser} />
+      <Text fontSize='2xl' mb={4}>Create or Edit User</Text>
+      <UserForm mode='create' onSubmit={handleCreateUser} />
     </Box>
   );
 };

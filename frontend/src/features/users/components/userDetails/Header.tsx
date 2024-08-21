@@ -1,6 +1,5 @@
 import React from 'react';
-import { Box, Text, Flex, Input, IconButton, useEditableControls } from '@chakra-ui/react';
-import { CheckIcon, CloseIcon } from '@chakra-ui/icons';
+import { Box, Text, Flex, Input, } from '@chakra-ui/react';
 import { IUser } from '~users/types';
 
 interface UserHeaderProps {
@@ -9,38 +8,28 @@ interface UserHeaderProps {
   isDisabled: boolean;
 }
 
-const EditableControls: React.FC = () => {
-  const { isEditing, getSubmitButtonProps, getCancelButtonProps } = useEditableControls();
-  return isEditing ? (
-    <Box>
-      <IconButton aria-label="Save" icon={<CheckIcon />} {...getSubmitButtonProps()} />
-      <IconButton aria-label="Cancel" icon={<CloseIcon />} {...getCancelButtonProps()} />
-    </Box>
-  ) : null;
-};
-
 export const Header: React.FC<UserHeaderProps> = ({ user, onInputChange, isDisabled }) => {
   return (
-    <Flex direction="column" mb={6}>
-    <Text fontSize="2xl" fontWeight="bold">User Details</Text>
+    <Flex direction='column' mb={6}>
+    <Text fontSize='2xl' fontWeight='bold'>User Details</Text>
     <Box mt={2}>
       <Input 
-        name="fullName" 
+        name='fullName' 
         value={user.fullName} 
         onChange={onInputChange} 
-        fontSize="xl" 
-        fontWeight="bold" 
+        fontSize='xl' 
+        fontWeight='bold' 
         isDisabled={isDisabled} 
-        placeholder="Full Name"
+        placeholder='Full Name'
       />
       <Input 
-        name="email" 
+        name='email' 
         value={user.email} 
         onChange={onInputChange} 
-        fontSize="xl" 
+        fontSize='xl' 
         mt={4} 
         isDisabled={isDisabled} 
-        placeholder="Email"
+        placeholder='Email'
       />
     </Box>
   </Flex>

@@ -5,10 +5,7 @@ import { useNavigate, Link as RouterLink } from 'react-router-dom';
 
 export const UsersPage: React.FC = () => {
   const navigate = useNavigate();
-  const { paginatedUsers } = useUser();
-
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { paginatedUsers, loading, error } = useUser();
   const [currentPage, setCurrentPage] = useState<number>(1);
 
   const handlePageChange = (page: number) => {
@@ -18,17 +15,17 @@ export const UsersPage: React.FC = () => {
   };
 
   if (loading) return <Text>Loading...</Text>;
-  if (error) return <Text color="red.500">{error}</Text>;
+  if (error) return <Text color='red.500'>{error}</Text>;
 
   return (
     <Box p={4}>
       <Heading mb={4}>All Users</Heading>
       <Button
         as={RouterLink}
-        to="/users/new"
-        colorScheme="blue"
-        variant="solid"
-        size="lg"
+        to='/users/new'
+        colorScheme='blue'
+        variant='solid'
+        size='lg'
         mb={4}
       >
         Create New User
@@ -42,18 +39,18 @@ export const UsersPage: React.FC = () => {
               key={user._id}
               p={4}
               borderWidth={1}
-              borderRadius="md"
-              boxShadow="md"
-              bg="white"
+              borderRadius='md'
+              boxShadow='md'
+              bg='white'
               onClick={() => navigate(`/users/${user._id}`)}
             >
-              <VStack align="start">
+              <VStack align='start'>
                 <Avatar
                   name={user.fullName}
                   src={user.profilePicture}
-                  boxSize="100px"
+                  boxSize='100px'
                 />
-                <Heading size="md">{user.fullName}</Heading>
+                <Heading size='md'>{user.fullName}</Heading>
                 <Text>Email: {user.email}</Text>
                 <Text>Phone: {user.phoneNumber || 'N/A'}</Text>
                 <Text>Status: {user.status}</Text>
@@ -73,7 +70,7 @@ export const UsersPage: React.FC = () => {
         >
           Previous
         </Button>
-        <Text mx={4} display="inline">Page {currentPage} of {paginatedUsers.totalPages}</Text>
+        <Text mx={4} display='inline'>Page {currentPage} of {paginatedUsers.totalPages}</Text>
         <Button
           onClick={() => handlePageChange(currentPage + 1)}
           isDisabled={currentPage >= paginatedUsers.totalPages}

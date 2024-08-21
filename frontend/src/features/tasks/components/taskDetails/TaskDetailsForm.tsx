@@ -17,7 +17,7 @@ export const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({ task, onInputC
     <>
       <FormControl mb={4}>
         <FormLabel>Status</FormLabel>
-        <Select name="status" value={task.status} onChange={onInputChange} isDisabled={isDisabled}>
+        <Select name='status' value={task.status} onChange={onInputChange} isDisabled={isDisabled}>
           {Object.values(TaskStatus).map((status) => (
             <option key={status} value={status}>{status}</option>
           ))}
@@ -26,7 +26,7 @@ export const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({ task, onInputC
 
       <FormControl mb={4}>
         <FormLabel>Priority</FormLabel>
-        <Select name="priority" value={task.priority} onChange={onInputChange} isDisabled={isDisabled}>
+        <Select name='priority' value={task.priority} onChange={onInputChange} isDisabled={isDisabled}>
           {Object.values(TaskPriority).map((priority) => (
             <option key={priority} value={priority}>{priority}</option>
           ))}
@@ -35,7 +35,7 @@ export const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({ task, onInputC
 
       <FormControl mb={4}>
         <FormLabel>Due Date</FormLabel>
-        <Input name="dueDate" type="datetime-local" value={task.dueDate ? formatDateTimeLocal(new Date(task.dueDate)) : ''} onChange={onInputChange} isDisabled={isDisabled} />
+        <Input name='dueDate' type='datetime-local' value={task.dueDate ? formatDateTimeLocal(new Date(task.dueDate)) : ''} onChange={onInputChange} isDisabled={isDisabled} />
       </FormControl>
 
       <FormControl mb={4}>

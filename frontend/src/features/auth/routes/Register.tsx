@@ -10,7 +10,7 @@ export const RegisterPage: React.FC = () => {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
-  useAuthRedirect(isAuthenticated, "/");
+  useAuthRedirect(isAuthenticated, '/');
 
   const handleRegister = async (newUser: Omit<IUser, '_id'>) => {
     try {
@@ -32,7 +32,7 @@ export const RegisterPage: React.FC = () => {
       <h1>Register</h1>
       {/* <RegisterForm /> */}
       <UserForm
-        mode="register"
+        mode='register'
         onSubmit={handleRegister}
       />
     </div>

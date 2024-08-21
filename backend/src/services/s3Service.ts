@@ -1,6 +1,5 @@
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { PutObjectCommand } from '@aws-sdk/client-s3';
 import s3 from '../config/awsConfig';
-import fs from 'fs';
 
 // Define s3 bucket name from AWS
 const BUCKET_NAME = process.env.AWS_BUCKET_NAME!;

@@ -17,7 +17,7 @@ import axios from '~utils/axiosConfig';
 // Props to configure form behavior
 interface UserFormProps {
   mode: 'register' | 'create'; // Determines the form mode
-  onSubmit: (user: Omit<IUser, '_id'>) => Promise<void>; // Function to handle form submission
+  onSubmit: (user: Omit<IUser, '_id'>) => Promise<void>;
 }
 
 export const UserForm: React.FC<UserFormProps> = ({ mode, onSubmit }) => {
@@ -85,13 +85,25 @@ export const UserForm: React.FC<UserFormProps> = ({ mode, onSubmit }) => {
 
         profilePictureUrl = response.data.fileUrl;
       } catch (error) {
-        toast({
-          title: 'Error',
-          description: `Profile picture upload failed: ${error.message}`,
-          status: 'error',
-          duration: 5000,
-          isClosable: true,
-        });
+        if (error instanceof Error) {
+          console.error(`Error uploading profile picture: ${error.message}`);
+          toast({
+            title: 'Error',
+            description: `Profile picture upload failed: ${error.message}`,
+            status: 'error',
+            duration: 5000,
+            isClosable: true,
+          });
+        } else {
+          console.error(`Unknown error while uploading profile picture: ${error}`);
+          toast({
+            title: 'Error',
+            description: `Profile picture upload failed`,
+            status: 'error',
+            duration: 5000,
+            isClosable: true,
+          });
+        }
       }
     }
 
@@ -173,13 +185,13 @@ export const UserForm: React.FC<UserFormProps> = ({ mode, onSubmit }) => {
   };
 
   return (
-    <Box p={4} borderWidth={1} borderRadius="md" boxShadow="md" bg="white">
+    <Box p={4} borderWidth={1} borderRadius='md' boxShadow='md' bg='white'>
       <form onSubmit={handleSubmit}>
         <Stack spacing={4}>
-          <FormControl id="email" isRequired>
+          <FormControl id='email' isRequired>
             <FormLabel>Email</FormLabel>
             <Input
-              type="email"
+              type='email'
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -187,19 +199,19 @@ export const UserForm: React.FC<UserFormProps> = ({ mode, onSubmit }) => {
 
           {mode === 'register' && (
             <>
-              <FormControl id="password" isRequired>
+              <FormControl id='password' isRequired>
                 <FormLabel>Password</FormLabel>
                 <Input
-                  type="password"
+                  type='password'
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </FormControl>
 
-              <FormControl id="confirmPassword" isRequired>
+              <FormControl id='confirmPassword' isRequired>
                 <FormLabel>Confirm Password</FormLabel>
                 <Input
-                  type="password"
+                  type='password'
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                 />
@@ -207,46 +219,46 @@ export const UserForm: React.FC<UserFormProps> = ({ mode, onSubmit }) => {
             </>
           )}
 
-          <FormControl id="username" isRequired>
+          <FormControl id='username' isRequired>
             <FormLabel>Username</FormLabel>
             <Input
-              type="text"
+              type='text'
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
           </FormControl>
 
-          <FormControl id="fullName" isRequired>
+          <FormControl id='fullName' isRequired>
             <FormLabel>Full Name</FormLabel>
             <Input
-              type="text"
+              type='text'
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
             />
           </FormControl>
 
-          <FormControl id="dateOfBirth">
+          <FormControl id='dateOfBirth'>
             <FormLabel>Date of Birth</FormLabel>
             <Input
-              type="date"
+              type='date'
               value={dateOfBirth ? dateOfBirth.toISOString().split('T')[0] : ''}
               onChange={handleDateOfBirthChange}
             />
           </FormControl>
 
-          <FormControl id="profilePicture">
+          <FormControl id='profilePicture'>
             <FormLabel>Profile Picture</FormLabel>
             <Input
-              type="file"
-              accept="image/*"
+              type='file'
+              accept='image/*'
               onChange={handleProfilePictureChange}
             />
           </FormControl>
 
-          <FormControl id="phoneNumber">
+          <FormControl id='phoneNumber'>
             <FormLabel>Phone Number</FormLabel>
             <Input
-              type="text"
+              type='text'
               value={phoneNumber}
               onChange={(e) => setPhoneNumber(e.target.value)}
             />
@@ -254,79 +266,79 @@ export const UserForm: React.FC<UserFormProps> = ({ mode, onSubmit }) => {
 
           {mode === 'create' && (
             <>
-              <FormControl id="status">
+              <FormControl id='status'>
                 <FormLabel>Status</FormLabel>
                 <Select
                   value={status}
                   onChange={(e) => setStatus(e.target.value as IUser['status'])}
                 >
-                  <option value="Active">Active</option>
-                  <option value="Suspended">Suspended</option>
-                  <option value="Deactivated">Deactivated</option>
+                  <option value='Active'>Active</option>
+                  <option value='Suspended'>Suspended</option>
+                  <option value='Deactivated'>Deactivated</option>
                 </Select>
               </FormControl>
 
-              <FormControl id="roles" isRequired>
+              <FormControl id='roles' isRequired>
                 <FormLabel>Roles</FormLabel>
                 <Select
                   multiple
                   value={role}
                   onChange={(e) => setRole(e.target.value as IUser['role'])}
                 >
-                  <option value="Admin">Admin</option>
-                  <option value="User">User</option>
-                  <option value="Moderator">Moderator</option>
+                  <option value='Admin'>Admin</option>
+                  <option value='User'>User</option>
+                  <option value='Moderator'>Moderator</option>
                 </Select>
               </FormControl>
             </>
           )}
 
-          <FormControl id="street" isRequired>
+          <FormControl id='street' isRequired>
             <FormLabel>Street</FormLabel>
             <Input
-              name="street"
+              name='street'
               value={address.street}
               onChange={handleAddressChange}
             />
           </FormControl>
 
-          <FormControl id="city" isRequired>
+          <FormControl id='city' isRequired>
             <FormLabel>City</FormLabel>
             <Input
-              name="city"
+              name='city'
               value={address.city}
               onChange={handleAddressChange}
             />
           </FormControl>
 
-          <FormControl id="state" isRequired>
+          <FormControl id='state' isRequired>
             <FormLabel>State</FormLabel>
             <Input
-              name="state"
+              name='state'
               value={address.state}
               onChange={handleAddressChange}
             />
           </FormControl>
 
-          <FormControl id="postalCode" isRequired>
+          <FormControl id='postalCode' isRequired>
             <FormLabel>Postal Code</FormLabel>
             <Input
-              name="postalCode"
+              name='postalCode'
               value={address.postalCode}
               onChange={handleAddressChange}
             />
           </FormControl>
 
-          <FormControl id="country" isRequired>
+          <FormControl id='country' isRequired>
             <FormLabel>Country</FormLabel>
             <Input
-              name="country"
+              name='country'
               value={address.country}
               onChange={handleAddressChange}
             />
           </FormControl>
 
-          <Button colorScheme="teal" type="submit">
+          <Button colorScheme='teal' type='submit'>
             {mode === 'register' ? 'Register' : 'Create User'}
           </Button>
         </Stack>

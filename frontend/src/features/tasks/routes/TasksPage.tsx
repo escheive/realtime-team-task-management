@@ -38,24 +38,8 @@ export const TasksPage: React.FC = () => {
     }
   };
 
-  // useEffect(() => {
-  //   const fetchTasks = async () => {
-  //     try {
-  //       const response = await axios.get('/api/tasks');
-  //       setTasks(response.data);
-  //     } catch (error) {
-  //       setError('Error fetching tasks.');
-  //       console.error(error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchTasks();
-  // }, []);
-
   if (loading) return <Text>Loading...</Text>;
-  if (error) return <Text color="red.500">{error}</Text>;
+  if (error) return <Text color='red.500'>{error}</Text>;
 
   return (
     <Box p={4}>
@@ -69,13 +53,13 @@ export const TasksPage: React.FC = () => {
               key={task._id}
               p={4}
               borderWidth={1}
-              borderRadius="md"
-              boxShadow="md"
-              bg="white"
+              borderRadius='md'
+              boxShadow='md'
+              bg='white'
               onClick={() => navigate(`/tasks/${task._id}`)}
             >
-              <VStack align="start">
-                <Heading size="md">{task.title}</Heading>
+              <VStack align='start'>
+                <Heading size='md'>{task.title}</Heading>
                 <Text>{task.description}</Text>
                 <Text>Status: {task.status}</Text>
                 <Text>Priority: {task.priority}</Text>
@@ -95,7 +79,7 @@ export const TasksPage: React.FC = () => {
         >
           Previous
         </Button>
-        <Text mx={4} display="inline">Page {currentPage} of {paginatedTasks.totalPages}</Text>
+        <Text mx={4} display='inline'>Page {currentPage} of {paginatedTasks.totalPages}</Text>
         <Button
           onClick={() => handlePageChange(currentPage + 1)}
           isDisabled={currentPage >= paginatedTasks.totalPages}

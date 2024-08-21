@@ -84,7 +84,7 @@ export const getTaskById = async (req: Request, res: Response) => {
 export const getTaskStatusCounts = async (req: Request, res: Response) => {
   try {
     // Count tasks for each status
-    const unassignedCount = await Task.countDocuments({ assignedTo: null });
+    const unassignedCount = await Task.countDocuments({ assignedTo: '' });
     const incompleteCount = await Task.countDocuments({ status: TaskStatus.INCOMPLETE });
     const inProgressCount = await Task.countDocuments({ status: TaskStatus.IN_PROGRESS });
 

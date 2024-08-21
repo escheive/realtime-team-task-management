@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from "~utils/axiosConfig";
+import axios from '~utils/axiosConfig';
 import { Link as RouterLink } from 'react-router-dom';
 import { Box, Grid, Flex, Text, Button, List, ListItem, Spinner } from '@chakra-ui/react';
 import { useUser } from '~users/context';
@@ -37,44 +37,44 @@ export const Dashboard = () => {
     <Box p={4}>
       <Button
         as={RouterLink}
-        to="/tasks/new"
-        colorScheme="blue"
-        variant="solid"
-        size="lg"
+        to='/tasks/new'
+        colorScheme='blue'
+        variant='solid'
+        size='lg'
         mb={4}
       >
         Create New Task
       </Button>
       {/* Top Sections */}
-      <Grid templateColumns={{ base: "1fr", md: "1fr 2fr" }} gap={4}>
+      <Grid templateColumns={{ base: '1fr', md: '1fr 2fr' }} gap={4}>
         {/* Data Breakdown */}
-        <Box bg="gray.100" p={4} borderRadius="md">
-          <Text fontSize="lg" mb={2}>Data Breakdown</Text>
+        <Box bg='gray.100' p={4} borderRadius='md'>
+          <Text fontSize='lg' mb={2}>Data Breakdown</Text>
           {statusCountsLoading ? (
-            <Flex justify="center" align="center" height="100%">
-              <Spinner size="lg" m={4} />
+            <Flex justify='center' align='center' height='100%'>
+              <Spinner size='lg' m={4} />
             </Flex>
           ) : (
             <>
               <Text>
-                <RouterLink to="/tasks?assignedTo=unassigned">Unassigned: {taskStatusCounts.unassigned}</RouterLink>
+                <RouterLink to='/tasks?assignedTo='>Unassigned: {taskStatusCounts.unassigned}</RouterLink>
               </Text>
               <Text>
-                <RouterLink to="/tasks?status=incomplete">Incomplete: {taskStatusCounts.incomplete}</RouterLink>
+                <RouterLink to='/tasks?status=incomplete'>Incomplete: {taskStatusCounts.incomplete}</RouterLink>
               </Text>
               <Text>
-                <RouterLink to="/tasks?status=in-progress">In Progress: {taskStatusCounts.inProgress}</RouterLink>
+                <RouterLink to='/tasks?status=in-progress'>In Progress: {taskStatusCounts.inProgress}</RouterLink>
               </Text>
             </>
           )}
         </Box>
 
         {/* Current Tasks Assigned to User */}
-        <Box bg="gray.100" p={4} borderRadius="md">
-          <Text fontSize="lg" mb={2}>Current Tasks Assigned to You</Text>
+        <Box bg='gray.100' p={4} borderRadius='md'>
+          <Text fontSize='lg' mb={2}>Current Tasks Assigned to You</Text>
           {userTasksLoading ? (
-            <Flex justify="center" align="center" height="100%">
-              <Spinner size="lg" m={4} />
+            <Flex justify='center' align='center' height='100%'>
+              <Spinner size='lg' m={4} />
             </Flex>
           ) : userTasks && userTasks.length > 0 ? (
             <List spacing={3}>
@@ -107,11 +107,11 @@ export const Dashboard = () => {
                 return (
                   <ListItem key={task._id}>
                     <RouterLink to={`/tasks/${task._id}`}>
-                      <Box display="flex" justifyContent="space-between" alignItems="center">
-                        <Text fontWeight="bold" color={color}>
+                      <Box display='flex' justifyContent='space-between' alignItems='center'>
+                        <Text fontWeight='bold' color={color}>
                           {task.title}
                         </Text>
-                        <Text color={color} fontSize="sm">
+                        <Text color={color} fontSize='sm'>
                           {dueDate}
                         </Text>
                       </Box>
@@ -127,22 +127,22 @@ export const Dashboard = () => {
       </Grid>
 
       {/* Bottom Sections */}
-      <Flex direction={{ base: "column", md: "row" }} mt={4} gap={4}>
+      <Flex direction={{ base: 'column', md: 'row' }} mt={4} gap={4}>
         {/* Section 1 */}
-        <Box flex="1" bg="gray.100" p={4} borderRadius="md">
-          <Text fontSize="lg" mb={2}>Section 1</Text>
+        <Box flex='1' bg='gray.100' p={4} borderRadius='md'>
+          <Text fontSize='lg' mb={2}>Section 1</Text>
           {/* section 1 content here */}
         </Box>
 
         {/* Section 2 */}
-        <Box flex="1" bg="gray.100" p={4} borderRadius="md">
-          <Text fontSize="lg" mb={2}>Section 2</Text>
+        <Box flex='1' bg='gray.100' p={4} borderRadius='md'>
+          <Text fontSize='lg' mb={2}>Section 2</Text>
           {/* section 2 content here */}
         </Box>
 
         {/* Section 3 */}
-        <Box flex="1" bg="gray.100" p={4} borderRadius="md">
-          <Text fontSize="lg" mb={2}>Section 3</Text>
+        <Box flex='1' bg='gray.100' p={4} borderRadius='md'>
+          <Text fontSize='lg' mb={2}>Section 3</Text>
           {/* section 3 content here */}
         </Box>
       </Flex>

@@ -74,8 +74,7 @@ export const TaskDetailPage: React.FC = () => {
   const handleSaveChanges = async () => {
     setIsSaving(true);
 
-    if (!task || !editedTask) {
-      console.log('no task!')
+    if (!task || !editedTask || !user) {
       setIsSaving(false);
       return;
     }
@@ -83,7 +82,6 @@ export const TaskDetailPage: React.FC = () => {
     const changes = detectChanges(task, editedTask);
 
     if (!changes) {
-      console.log('no changes')
       setIsSaving(false);
       return;
     }
@@ -139,9 +137,9 @@ export const TaskDetailPage: React.FC = () => {
       await deleteTask(task._id);
 
       toast({
-        title: "Task deleted.",
-        description: "The task has been successfully deleted.",
-        status: "success",
+        title: 'Task deleted.',
+        description: 'The task has been successfully deleted.',
+        status: 'success',
         duration: 3000,
         isClosable: true,
       });
@@ -149,9 +147,9 @@ export const TaskDetailPage: React.FC = () => {
     } catch (error) {
       console.error('Error deleting task:', error);
       toast({
-        title: "Failed to delete task.",
-        description: "There was an error deleting the task. Please try again.",
-        status: "error",
+        title: 'Failed to delete task.',
+        description: 'There was an error deleting the task. Please try again.',
+        status: 'error',
         duration: 3000,
         isClosable: true,
       });
@@ -159,7 +157,7 @@ export const TaskDetailPage: React.FC = () => {
   }
 
   return (
-    <Box p={6} maxW="800px" mx="auto">
+    <Box p={6} maxW='800px' mx='auto'>
       {task && editedTask && (
         <Box>
           <TaskHeader
@@ -192,7 +190,7 @@ export const TaskDetailPage: React.FC = () => {
 
           <Box mt={4}>
             <Button 
-              colorScheme="blue" 
+              colorScheme='blue' 
               onClick={handleSaveChanges} 
               isDisabled={!isEditing || isSaving}
               mr={2}
@@ -200,14 +198,14 @@ export const TaskDetailPage: React.FC = () => {
               Save Changes
             </Button>
             <Button 
-              colorScheme="red" 
+              colorScheme='red' 
               onClick={handleCancel}
               isDisabled={!isEditing || isSaving}
             >
               Cancel
             </Button>
             <Button 
-              colorScheme="red" 
+              colorScheme='red' 
               onClick={handleDeleteTask} 
               isDisabled={isSaving}
               mt={2}

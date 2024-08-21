@@ -1,6 +1,4 @@
-import { Request } from 'express';
-import multer, { FileFilterCallback } from 'multer';
-import path from 'path';
+import multer from 'multer';
 import s3 from './awsConfig';
 import multerS3 from 'multer-s3';
 

@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { uploadFile } from '../services/s3Service';
-import fs from 'fs';
 
 
 export const fileUpload = async (req: Request, res: Response) => {

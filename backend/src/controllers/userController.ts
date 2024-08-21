@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { User } from '../models/User';
-import { Task } from '../models/Task';
 
 interface AuthenticatedRequest extends Request {
   userId?: string;
@@ -156,8 +155,8 @@ export const removeUserPresence = async (socketId: string) => {
   await User.findOneAndUpdate({ socketId }, { isOnline: false, socketId: null });
 };
 
-// Websocket function to track and update a users activity TODO MAYBE
-export const trackUserActivity = async (user: any, taskId: string) => {
-  console.log(`User ${user.username} viewed task ${taskId}`);
-  // await Task.findByIdAndUpdate(taskId, { socketId, isOnline: true });
-};
+// // Websocket function to track and update a users activity TODO MAYBE
+// export const trackUserActivity = async (user: any, taskId: string) => {
+//   console.log(`User ${user.username} viewed task ${taskId}`);
+//   // await Task.findByIdAndUpdate(taskId, { socketId, isOnline: true });
+// };

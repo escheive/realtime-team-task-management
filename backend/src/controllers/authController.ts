@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { User } from '../models/User';
 import jwt from 'jsonwebtoken';
-import argon2, { argon2id } from 'argon2';
 
 
 // Generate accessToken and refreshToken with jwt

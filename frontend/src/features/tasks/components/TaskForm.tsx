@@ -56,6 +56,8 @@ export const TaskForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!user) return;
+
     const newTask: Omit<ITask, '_id'> = {
       title,
       description,
@@ -69,7 +71,7 @@ export const TaskForm = () => {
       attachments,
       activityLog: [
         {
-          user: user.email,
+          user: user.username,
           action: `Created the task and assigned it to ${assignedTo}`,
           timestamp: new Date(),
         }
@@ -114,19 +116,19 @@ export const TaskForm = () => {
   };
 
   return (
-    <Box p={4} borderWidth={1} borderRadius="md" boxShadow="md" bg="white">
+    <Box p={4} borderWidth={1} borderRadius='md' boxShadow='md' bg='white'>
       <form onSubmit={handleSubmit}>
         <Stack spacing={4}>
-          <FormControl id="title" isRequired>
+          <FormControl id='title' isRequired>
             <FormLabel>Title</FormLabel>
             <Input
-              type="text"
+              type='text'
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
           </FormControl>
 
-          <FormControl id="description">
+          <FormControl id='description'>
             <FormLabel>Description</FormLabel>
             <Textarea
               value={description}
@@ -134,7 +136,7 @@ export const TaskForm = () => {
             />
           </FormControl>
 
-          <FormControl id="status">
+          <FormControl id='status'>
             <FormLabel>Status</FormLabel>
             <Select
               value={status}
@@ -146,7 +148,7 @@ export const TaskForm = () => {
             </Select>
           </FormControl>
 
-          <FormControl id="priority">
+          <FormControl id='priority'>
             <FormLabel>Priority</FormLabel>
             <Select
               value={priority}
@@ -158,13 +160,13 @@ export const TaskForm = () => {
             </Select>
           </FormControl>
 
-          <FormControl id="assignedTo">
+          <FormControl id='assignedTo'>
             <FormLabel>Assigned To</FormLabel>
             <Select 
               value={assignedTo}
               onChange={(e) => setAssignedTo(e.target.value)}
             >
-              <option value="">Unassigned</option>
+              <option value=''>Unassigned</option>
               {paginatedUsers.users.map(user => (
                 <option key={user._id} value={user._id}>
                   {user.username}
@@ -173,29 +175,29 @@ export const TaskForm = () => {
             </Select>
           </FormControl>
 
-          <FormControl id="dueDate">
+          <FormControl id='dueDate'>
             <FormLabel>Due Date</FormLabel>
             <Input
-              type="datetime-local"
+              type='datetime-local'
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
             />
           </FormControl>
 
-          <FormControl id="tags">
+          <FormControl id='tags'>
             <FormLabel>Tags</FormLabel>
-            <Stack direction="row" spacing={2}>
+            <Stack direction='row' spacing={2}>
               <Input
-                type="text"
+                type='text'
                 value={tagInput}
                 onChange={(e) => setTagInput(e.target.value)}
-                placeholder="Add a tag"
+                placeholder='Add a tag'
               />
               <Button onClick={handleAddTag}>Add Tag</Button>
             </Stack>
-            <Stack direction="row" spacing={2} mt={2}>
+            <Stack direction='row' spacing={2} mt={2}>
               {tags.map(tag => (
-                <Tag key={tag} size="md" borderRadius="full">
+                <Tag key={tag} size='md' borderRadius='full'>
                   <TagLabel>{tag}</TagLabel>
                   <TagCloseButton onClick={() => handleRemoveTag(tag)} />
                 </Tag>
@@ -203,7 +205,7 @@ export const TaskForm = () => {
             </Stack>
           </FormControl>
 
-          <FormControl id="attachments">
+          <FormControl id='attachments'>
             <FormLabel>Attachments</FormLabel>
             <Button onClick={handleAddAttachment}>Add Attachment</Button>
             <Stack mt={2}>
@@ -215,23 +217,23 @@ export const TaskForm = () => {
             </Stack>
           </FormControl>
 
-          <FormControl id="reminder">
+          <FormControl id='reminder'>
             <FormLabel>Reminder</FormLabel>
             <Input
-              type="datetime-local"
+              type='datetime-local'
               value={reminderDate}
               onChange={(e) => setReminderDate(e.target.value)}
             />
             <Input
               mt={2}
-              type="text"
+              type='text'
               value={reminderMessage}
               onChange={(e) => setReminderMessage(e.target.value)}
-              placeholder="Reminder message"
+              placeholder='Reminder message'
             />
           </FormControl>
 
-          <Button colorScheme="teal" type="submit">
+          <Button colorScheme='teal' type='submit'>
             Create Task
           </Button>
         </Stack>
