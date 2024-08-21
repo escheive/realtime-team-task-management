@@ -11,7 +11,7 @@ export const getUsers = async (req: Request, res: Response) => {
   try {
     // Extract page and limit from query params, with defaults
     const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 30;
+    const limit = parseInt(req.query.limit as string) || 100;
     const { role, status } = req.query;
 
     // Calculate start index of the users query

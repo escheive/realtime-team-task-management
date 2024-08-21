@@ -32,7 +32,7 @@ export const TaskForm = () => {
   const [reminderMessage, setReminderMessage] = useState('');
   const toast = useToast();
   const navigate = useNavigate();
-  const { user } = useUser();
+  const { user, paginatedUsers } = useUser();
 
   const handleAddTag = () => {
     if (tagInput && !tags.includes(tagInput)) {
@@ -160,11 +160,17 @@ export const TaskForm = () => {
 
           <FormControl id="assignedTo">
             <FormLabel>Assigned To</FormLabel>
-            <Input
-              type="text"
+            <Select 
               value={assignedTo}
               onChange={(e) => setAssignedTo(e.target.value)}
-            />
+            >
+              <option value="">Unassigned</option>
+              {paginatedUsers.users.map(user => (
+                <option key={user._id} value={user._id}>
+                  {user.username}
+                </option>
+              ))}
+            </Select>
           </FormControl>
 
           <FormControl id="dueDate">

@@ -1,37 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { Box, Heading, Stack, Text, VStack, Button, Image, Avatar, Icon } from '@chakra-ui/react';
-import { MdPerson } from 'react-icons/md'
+import React, { useState } from 'react';
+import { Box, Heading, Stack, Text, VStack, Button, Avatar } from '@chakra-ui/react';
 import { useUser } from '~users/context';
-import { useNavigate, useSearchParams, Link as RouterLink } from 'react-router-dom';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
 
 export const UsersPage: React.FC = () => {
   const navigate = useNavigate();
-  const { paginatedUsers, fetchUsers } = useUser();
-  const [searchParams] = useSearchParams();
+  const { paginatedUsers } = useUser();
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const limit = 30; // Number of users per page
-
-  useEffect(() => {
-    const loadUsers = async () => {
-      setLoading(true);
-      try {
-        // Build query string from all search params
-        const filters = Object.fromEntries(searchParams.entries());
-
-        await fetchUsers(currentPage, limit, filters);
-      } catch (error) {
-        setError('Error fetching users.');
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadUsers();
-  }, [currentPage, fetchUsers, limit]);
 
   const handlePageChange = (page: number) => {
     if (page > 0 && page <= paginatedUsers.totalPages) {

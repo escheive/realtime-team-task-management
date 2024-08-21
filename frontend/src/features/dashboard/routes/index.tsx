@@ -57,7 +57,7 @@ export const Dashboard = () => {
           ) : (
             <>
               <Text>
-                <RouterLink to="/tasks?status=unassigned">Unassigned: {taskStatusCounts.unassigned}</RouterLink>
+                <RouterLink to="/tasks?assignedTo=unassigned">Unassigned: {taskStatusCounts.unassigned}</RouterLink>
               </Text>
               <Text>
                 <RouterLink to="/tasks?status=incomplete">Incomplete: {taskStatusCounts.incomplete}</RouterLink>
