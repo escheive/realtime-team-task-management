@@ -20,13 +20,18 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
+import { useUser } from '~users/context';
+import { deleteUser } from '~users/api';
 
 export const SettingsPage = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { user } = useUser();
   const [confirmationText, setConfirmationText] = useState('');
   const toast = useToast();
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
+    if (!user) return;
+    
     if (confirmationText !== 'delete') {
       toast({
         title: 'Error',
@@ -38,7 +43,7 @@ export const SettingsPage = () => {
       return;
     }
 
-    // TODO: Actual Delete logic
+    await deleteUser(user._id);
 
     toast({
       title: 'Account Deleted',
