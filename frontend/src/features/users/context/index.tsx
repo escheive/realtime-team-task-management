@@ -9,7 +9,7 @@ interface UserContextType {
   loading: boolean;
   error: string | null;
   paginatedUsers: PaginatedUsers;
-  fetchUsers: (page: number, limit: number, filters: Record<string, string>) => Promise<void>;
+  // fetchUsers: (page: number, limit: number, filters: Record<string, string>) => Promise<void>;
   fetchAllUsers: (page: number, limit: number, filters: Record<string, string>) => Promise<void>;
 }
 
@@ -67,30 +67,31 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, []);
 
-  const fetchUsers = useCallback(async (page: number, limit: number, filters: Record<string, string>) => {
-    setLoading(true);
-    try {
-      const response = await getUsers({
-        ...filters,
-        page,
-        limit
-      });
+  // const fetchUsers = useCallback(async (page: number, limit: number, filters: Record<string, string>) => {
+  //   setLoading(true);
+  //   try {
+  //     const response = await getUsers({
+  //       ...filters,
+  //       page,
+  //       limit
+  //     });
 
-      setPaginatedUsers(response);
-    } catch (error) {
-      console.error('Error fetching users:', error);
-      setError('Error fetching users');
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  //     setPaginatedUsers(response);
+  //   } catch (error) {
+  //     console.error('Error fetching users:', error);
+  //     setError('Error fetching users');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }, []);
 
   useEffect(() => {
+    if (!user || paginatedUsers.totalUsers > 0) return;
     fetchAllUsers(1, 100, {});
-  }, []);
+  }, [paginatedUsers]);
 
   return (
-    <UserContext.Provider value={{ user, loading, error, paginatedUsers, fetchUsers, fetchAllUsers }}>
+    <UserContext.Provider value={{ user, loading, error, paginatedUsers, fetchAllUsers }}>
       {children}
     </UserContext.Provider>
   );

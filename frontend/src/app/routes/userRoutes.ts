@@ -1,6 +1,20 @@
 
 export const userRoutes = [
   {
+    path: '/user',
+    lazy: async () => {
+      const { ProfilePage } = await import('~users/routes');
+      return { Component: ProfilePage };
+    }
+  },
+  {
+    path: '/user/settings',
+    lazy: async () => {
+      const { SettingsPage } = await import('~users/routes');
+      return { Component: SettingsPage };
+    }
+  },
+  {
     path: '/users',
     lazy: async () => {
       const { UsersPage } = await import('~users/routes');
