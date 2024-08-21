@@ -7,6 +7,7 @@ import { isEqual } from 'lodash';
 import { useTaskContext } from '~/features/tasks/context';
 import { useUser } from '~users/context';
 import { TaskHeader, TaskDetailsForm, ActivityLog, Attachments } from '~tasks/components';
+import { getUsernameById } from '~users/utils/helpers';
 
 export const TaskDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -20,7 +21,7 @@ export const TaskDetailPage: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
   const toast = useToast();
-  const { user } = useUser();
+  const { user, paginatedUsers } = useUser();
 
   useEffect(() => {
     const foundTask = paginatedTasks.tasks.find((task) => task._id === id);
@@ -57,7 +58,11 @@ export const TaskDetailPage: React.FC = () => {
 
     if (original.dueDate !== updated.dueDate) changes.push(`Due date changed from "${original.dueDate}" to "${updated.dueDate}"`);
 
-    if (original.assignedTo !== updated.assignedTo) changes.push(`Task reassigned from "${original.assignedTo}" to "${updated.assignedTo}"`);
+    if (original.assignedTo !== updated.assignedTo) {
+      const originalUser = getUsernameById(paginatedUsers.users, original.assignedTo);
+      const updatedUser = getUsernameById(paginatedUsers.users, updated.assignedTo);
+      changes.push(`Task reassigned from "${originalUser}" to "${updatedUser}"`);
+    }
     
     if (changes.length == 0) {
       return false
@@ -89,7 +94,7 @@ export const TaskDetailPage: React.FC = () => {
         ...editedTask,
         activityLog: [
           {
-            user: user.email,
+            user: user.username,
             action: `Updated task: ${changes.join(', ')}`,
             timestamp: new Date(),
           },

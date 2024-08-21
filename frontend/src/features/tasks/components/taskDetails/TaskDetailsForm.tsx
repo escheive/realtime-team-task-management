@@ -2,6 +2,7 @@ import React from 'react';
 import { FormControl, FormLabel, Input, Select, Divider } from '@chakra-ui/react';
 import { ITask, TaskStatus, TaskPriority } from '~tasks/types';
 import { formatDateTimeLocal } from '~utils/helpers';
+import { useUser } from '~/features/users/context';
 
 interface TaskDetailsFormProps {
   task: ITask;
@@ -10,6 +11,7 @@ interface TaskDetailsFormProps {
 }
 
 export const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({ task, onInputChange, isDisabled }) => {
+  const { paginatedUsers } = useUser();
 
   return (
     <>
@@ -38,7 +40,17 @@ export const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({ task, onInputC
 
       <FormControl mb={4}>
         <FormLabel>Assigned To</FormLabel>
-        <Input name="assignedTo" value={task.assignedTo || ''} onChange={onInputChange} isDisabled={isDisabled} />
+        <Select
+          name='assignedTo'
+          value={task.assignedTo}
+          onChange={onInputChange}
+          isDisabled={isDisabled}
+        >
+          <option value=''>Unassigned</option>
+          {paginatedUsers.users.map((user) => (
+            <option key={user._id} value={user._id}>{user.username}</option>
+          ))}
+        </Select>
       </FormControl>
 
       <Divider my={6} />
