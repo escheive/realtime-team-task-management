@@ -22,6 +22,7 @@ import {
 } from '@chakra-ui/react';
 import { useUser } from '~users/context';
 import { deleteUser } from '~users/api';
+import { ColorModeToggle } from '~users/components/settings';
 
 export const SettingsPage = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -31,7 +32,7 @@ export const SettingsPage = () => {
 
   const handleDelete = async () => {
     if (!user) return;
-    
+
     if (confirmationText !== 'delete') {
       toast({
         title: 'Error',
@@ -85,12 +86,7 @@ export const SettingsPage = () => {
         <Heading as="h2" size="lg" mb={4}>
           Appearance
         </Heading>
-        <Stack spacing={4}>
-          <FormControl display="flex" alignItems="center">
-            <FormLabel mb="0">Dark Mode</FormLabel>
-            <Switch id="dark-mode" />
-          </FormControl>
-        </Stack>
+        <ColorModeToggle />
       </Box>
 
       {/* Danger Zone Section */}
