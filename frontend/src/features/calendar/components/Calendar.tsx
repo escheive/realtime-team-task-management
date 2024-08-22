@@ -1,10 +1,8 @@
 import { useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
-import DateSelectArg from '@fullcalendar/react';
-import EventClickArg from '@fullcalendar/react';
-import EventContentArg from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
+import { CalendarApi, DateSelectArg, EventClickArg, EventContentArg } from '@fullcalendar/core/index.js';
 
 export const Calendar = () => {
   const [events, setEvents] = useState([
@@ -14,7 +12,7 @@ export const Calendar = () => {
 
   const handleDateSelect = (selectInfo: DateSelectArg) => {
     let title = prompt('Enter event title');
-    let calendarApi = selectInfo.view.calendar;
+    let calendarApi: CalendarApi = selectInfo.view.calendar;
 
     calendarApi.unselect(); // clear date selection
 
