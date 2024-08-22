@@ -6,7 +6,7 @@ import { AuthProvider } from '~auth/context/AuthContext';
 import { TaskProvider } from '~/features/tasks/context';
 import { UserProvider } from '~users/context';
 import { PresenceProvider } from '~context/PresenceContext';
-import { theme } from '~/theme';
+import theme from '~/theme';
 
 type AppProviderProps = {
   children: React.ReactNode;
