@@ -3,7 +3,7 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { CalendarApi, DateSelectArg, EventClickArg, EventContentArg } from '@fullcalendar/core/index.js';
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from '@chakra-ui/react';
+import { Box, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useStyleConfig } from '@chakra-ui/react';
 
 export const Calendar = () => {
   const [events, setEvents] = useState([
@@ -12,6 +12,8 @@ export const Calendar = () => {
   ]);
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const styles = useStyleConfig('Calendar', {});
 
   const handleDateSelect = (selectInfo: DateSelectArg) => {
     let title = prompt('Enter event title');
@@ -44,7 +46,7 @@ export const Calendar = () => {
   };
 
   return (
-    <>
+    <Box sx={styles}>
       <FullCalendar
         plugins={[ dayGridPlugin, interactionPlugin ]}
         initialView='dayGridMonth'
@@ -70,6 +72,6 @@ export const Calendar = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </>
+    </Box>
   );
 };

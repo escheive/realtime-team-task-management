@@ -27,11 +27,8 @@ const Sidebar = ({ isOpen, onOpen, onClose }: { isOpen: boolean, onOpen: () => v
         <Box display={isOpen ? "block" : "none"}>
           <Stack spacing={4} mt={4}>
             {LINKS.map((link) => (
-              <NavLink to={link.to}>{link.label}</NavLink>
+              <NavLink key={link.to} to={link.to}>{link.label}</NavLink>
             ))}
-            {/* <NavLink to="/">Dashboard</NavLink>
-            <NavLink to="/tasks">Tasks</NavLink>
-            <NavLink to="/users">Users</NavLink> */}
           </Stack>
         </Box>
       </Box>

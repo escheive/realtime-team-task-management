@@ -38,8 +38,6 @@ export const Dashboard = () => {
       <Button
         as={RouterLink}
         to='/tasks/new'
-        colorScheme='blue'
-        variant='solid'
         size='lg'
         mb={4}
       >
