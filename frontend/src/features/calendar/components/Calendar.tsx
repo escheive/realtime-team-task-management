@@ -3,12 +3,15 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { CalendarApi, DateSelectArg, EventClickArg, EventContentArg } from '@fullcalendar/core/index.js';
+import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from '@chakra-ui/react';
 
 export const Calendar = () => {
   const [events, setEvents] = useState([
     { id: '1', title: 'Event 1', date: '2024-09-01' },
     { id: '2', title: 'Event 2', date: '2024-09-05' },
   ]);
+  const [selectedEvent, setSelectedEvent] = useState<any>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleDateSelect = (selectInfo: DateSelectArg) => {
     let title = prompt('Enter event title');
@@ -22,9 +25,13 @@ export const Calendar = () => {
   };
 
   const handleEventClick = (clickInfo: EventClickArg) => {
-    if (window.confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
-      clickInfo.event.remove();
-    }
+    setSelectedEvent(clickInfo.event);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedEvent(null);
   };
 
   const renderEventContent = (eventContent: EventContentArg) => {
@@ -37,14 +44,32 @@ export const Calendar = () => {
   };
 
   return (
-    <FullCalendar
-      plugins={[ dayGridPlugin, interactionPlugin ]}
-      initialView='dayGridMonth'
-      selectable={true}
-      select={handleDateSelect}
-      events={events}
-      eventContent={renderEventContent}
-      eventClick={handleEventClick}
-    />
+    <>
+      <FullCalendar
+        plugins={[ dayGridPlugin, interactionPlugin ]}
+        initialView='dayGridMonth'
+        selectable={true}
+        select={handleDateSelect}
+        events={events}
+        eventContent={renderEventContent}
+        eventClick={handleEventClick}
+      />
+
+      <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>{selectedEvent?.title}</ModalHeader>
+          <ModalBody>
+            <p><strong>Date:</strong> {selectedEvent?.start?.toISOString().split('T')[0]}</p>
+            {/* Add more event details here */}
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="blue" onClick={handleCloseModal}>
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
   );
 };
