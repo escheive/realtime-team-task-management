@@ -13,6 +13,7 @@ import { UserPresenceList } from '~components/users/UserPresenceList';
 
 const Links = [
   { to: '/', label: 'Dashboard' },
+  { to: '/calendar', label: 'Calendar' },
   { to: '/tasks', label: 'Tasks' },
   { to: '/users', label: 'Users' },
 ];

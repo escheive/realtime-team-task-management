@@ -2,6 +2,13 @@ import { Box, Stack, IconButton } from "@chakra-ui/react";
 import NavLink from "./NavLink";
 import { ArrowLeftIcon, ArrowRightIcon } from "@chakra-ui/icons";
 
+const LINKS = [
+  { to: '/', label: 'Dashboard' },
+  { to: '/calendar', label: 'Calendar' },
+  { to: '/tasks', label: 'Tasks' },
+  { to: '/users', label: 'Users' },
+];
+
 const Sidebar = ({ isOpen, onOpen, onClose }: { isOpen: boolean, onOpen: () => void, onClose: () => void }) => {
   return (
     <>
@@ -19,9 +26,12 @@ const Sidebar = ({ isOpen, onOpen, onClose }: { isOpen: boolean, onOpen: () => v
         {/* Hide content when sidebar is closed */}
         <Box display={isOpen ? "block" : "none"}>
           <Stack spacing={4} mt={4}>
-            <NavLink to="/">Dashboard</NavLink>
+            {LINKS.map((link) => (
+              <NavLink to={link.to}>{link.label}</NavLink>
+            ))}
+            {/* <NavLink to="/">Dashboard</NavLink>
             <NavLink to="/tasks">Tasks</NavLink>
-            <NavLink to="/users">Users</NavLink>
+            <NavLink to="/users">Users</NavLink> */}
           </Stack>
         </Box>
       </Box>

@@ -3,7 +3,7 @@ import { AppRoot } from '~app/root';
 import { authRoutes } from './authRoutes';
 import { taskRoutes } from './taskRoutes';
 import { userRoutes } from './userRoutes';
-import { dashboardRoute, ProtectedRoute } from './miscRoutes';
+import { calendarRoute, dashboardRoute, ProtectedRoute } from './miscRoutes';
 
 const router = createBrowserRouter([
   ...authRoutes,
@@ -16,6 +16,7 @@ const router = createBrowserRouter([
     ),
     children: [
       dashboardRoute,
+      calendarRoute,
       ...taskRoutes,
       ...userRoutes,
     ]

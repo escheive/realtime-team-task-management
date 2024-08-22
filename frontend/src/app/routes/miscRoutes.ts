@@ -21,3 +21,11 @@ export const dashboardRoute = {
   }
 }
 
+export const calendarRoute = {
+  path: '/calendar',
+  lazy: async () => {
+    const { CalendarPage } = await import('~calendar/routes');
+    return { Component: CalendarPage }
+  }
+}
+
